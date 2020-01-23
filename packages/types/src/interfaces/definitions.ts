@@ -38,3 +38,6 @@ export { default as parachains } from './parachains/definitions';
 // pull in metadata & rpc last, assuming that is uses info from above
 export { default as metadata } from './metadata/definitions';
 export { default as rpc } from './rpc/definitions';
+
+// polymesh types
+export { default as polymesh } from "./polymesh/definitions";

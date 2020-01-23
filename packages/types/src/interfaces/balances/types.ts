@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 
 import { Set, Struct } from '@polkadot/types/codec';
-import { Balance, BlockNumber, LockIdentifier } from '@polkadot/types/interfaces/runtime';
+import { BlockNumber, LockIdentifier } from '@polkadot/types/interfaces/runtime';
+import { Balance } from '@polkadot/types/interfaces/polymesh';
 
 /** Struct */
 export interface BalanceLock extends Struct {

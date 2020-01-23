@@ -4,43 +4,42 @@
 
 export default {
   types: {
-    DigestOf: 'Digest',
+    DigestOf: "Digest",
     DispatchError: {
       _enum: {
-        Other: 'Null',
-        CannotLookup: 'Null',
-        BadOrigin: 'Null',
-        Module: 'DispatchErrorModule'
+        Other: "Null",
+        CannotLookup: "Null",
+        BadOrigin: "Null",
+        Module: "DispatchErrorModule"
       }
     },
     DispatchErrorModule: {
-      index: 'u8',
-      error: 'u8'
+      index: "u8",
+      error: "u8"
     },
     DispatchErrorTo198: {
-      module: 'Option<u8>',
-      error: 'u8'
+      module: "Option<u8>",
+      error: "u8"
     },
-    DispatchResult: 'Result<(), DispatchError>',
-    DispatchResultOf: 'DispatchResult',
-    DispatchResultTo198: 'Result<(), Text>',
-    Event: 'GenericEvent',
-    EventId: '[u8; 2]',
-    EventIndex: 'u32',
+    DispatchResult: "Result<(), DispatchError>",
+    DispatchResultOf: "DispatchResult",
+    DispatchResultTo198: "Result<(), Text>",
+    Event: "GenericEvent",
+    EventId: "[u8; 2]",
+    EventIndex: "u32",
     EventRecord: {
-      phase: 'Phase',
-      event: 'Event',
-      topics: 'Vec<Hash>'
+      phase: "Phase",
+      event: "Event",
+      topics: "Vec<Hash>"
     },
     EventRecordTo76: {
-      phase: 'Phase',
-      event: 'Event'
+      phase: "Phase",
+      event: "Event"
     },
-    Key: 'Bytes',
     Phase: {
       _enum: {
-        ApplyExtrinsic: 'u32',
-        Finalization: 'Null'
+        ApplyExtrinsic: "u32",
+        Finalization: "Null"
       }
     }
   }

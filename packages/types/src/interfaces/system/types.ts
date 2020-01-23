@@ -3,7 +3,7 @@
 
 import { Codec, ITuple } from '@polkadot/types/types';
 import { Enum, Option, Result, Struct, Vec } from '@polkadot/types/codec';
-import { Bytes, GenericEvent, Text, u32, u8 } from '@polkadot/types/primitive';
+import { GenericEvent, Text, u32, u8 } from '@polkadot/types/primitive';
 import { Digest, Hash } from '@polkadot/types/interfaces/runtime';
 
 /** Digest */
@@ -92,9 +92,6 @@ export interface EventRecordTo76 extends Struct {
   /** Event */
   readonly event: Event;
 }
-
-/** Bytes */
-export interface Key extends Bytes {}
 
 /** Enum */
 export interface Phase extends Enum {

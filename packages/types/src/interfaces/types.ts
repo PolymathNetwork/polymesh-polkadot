@@ -30,3 +30,4 @@ export * from './claims/types';
 export * from './parachains/types';
 export * from './metadata/types';
 export * from './rpc/types';
+export * from './polymesh/types';

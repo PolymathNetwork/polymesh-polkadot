@@ -3,7 +3,7 @@
 
 import { Enum, Struct } from '@polkadot/types/codec';
 import { GenericVote, u32 } from '@polkadot/types/primitive';
-import { Balance } from '@polkadot/types/interfaces/runtime';
+import { Balance } from '@polkadot/types/interfaces/polymesh';
 
 /** u32 */
 export interface ApprovalFlag extends u32 {}

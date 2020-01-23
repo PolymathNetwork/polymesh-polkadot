@@ -3,7 +3,8 @@
 
 import { Codec, ITuple } from '@polkadot/types/types';
 import { Compact, Enum, Struct } from '@polkadot/types/codec';
-import { Bytes, Fixed64, GenericAccountId, GenericAccountIndex, GenericAddress, GenericBlock, GenericCall, GenericConsensusEngineId, GenericDigest, GenericDigestItem, GenericExtrinsic, GenericExtrinsicEra, GenericExtrinsicPayload, GenericExtrinsicPayloadUnknown, GenericExtrinsicPayloadV1, GenericExtrinsicPayloadV2, GenericExtrinsicPayloadV3, GenericExtrinsicPayloadV4, GenericExtrinsicUnknown, GenericExtrinsicV1, GenericExtrinsicV2, GenericExtrinsicV3, GenericExtrinsicV4, GenericImmortalEra, GenericMortalEra, GenericOrigin, GenericSignerPayload, H256, H512, Null, StorageData, StorageKey, bool, u128, u32, u64, u8 } from '@polkadot/types/primitive';
+import { Bytes, Fixed64, GenericAccountId, GenericAccountIndex, GenericAddress, GenericBlock, GenericCall, GenericConsensusEngineId, GenericDigest, GenericDigestItem, GenericExtrinsic, GenericExtrinsicEra, GenericExtrinsicPayload, GenericExtrinsicPayloadUnknown, GenericExtrinsicPayloadV1, GenericExtrinsicPayloadV2, GenericExtrinsicPayloadV3, GenericExtrinsicPayloadV4, GenericExtrinsicUnknown, GenericExtrinsicV1, GenericExtrinsicV2, GenericExtrinsicV3, GenericExtrinsicV4, GenericImmortalEra, GenericMortalEra, GenericOrigin, GenericSignerPayload, H256, H512, Null, StorageData, StorageKey, bool, u32, u64, u8 } from '@polkadot/types/primitive';
+import { Balance } from '@polkadot/types/interfaces/polymesh';
 
 /** GenericAccountId */
 export interface AccountId extends GenericAccountId {}
@@ -19,9 +20,6 @@ export interface Address extends GenericAddress {}
 
 /** u32 */
 export interface AssetId extends u32 {}
-
-/** u128 */
-export interface Balance extends u128 {}
 
 /** Balance */
 export interface BalanceOf extends Balance {}
@@ -160,9 +158,6 @@ export interface KeyValue extends ITuple<[StorageKey, StorageData]> {}
 
 /** Uint8Array, Codec */
 export interface LockIdentifier extends Uint8Array, Codec {}
-
-/** u64 */
-export interface Moment extends u64 {}
 
 /** GenericMortalEra */
 export interface MortalEra extends GenericMortalEra {}

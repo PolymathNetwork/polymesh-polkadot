@@ -3,7 +3,8 @@
 
 import { Struct, Vec } from '@polkadot/types/codec';
 import { u16 } from '@polkadot/types/primitive';
-import { AccountId, Balance, BlockNumber } from '@polkadot/types/interfaces/runtime';
+import { AccountId, BlockNumber } from '@polkadot/types/interfaces/runtime';
+import { Balance } from '@polkadot/types/interfaces/polymesh';
 
 /** Struct */
 export interface ActiveRecovery extends Struct {
