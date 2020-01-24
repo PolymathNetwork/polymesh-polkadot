@@ -1,230 +1,281 @@
-export default {
-  types: {
-    Balance: "u128",
-    IdentityId: "[u8;32]",
-    SecurityToken: {
-      name: "Vec<u8>",
-      total_supply: "Balance",
-      owner_did: "IdentityId",
-      divisible: "bool"
+export default { types: {
+    "Balance": "u128",
+    "IdentityId":"[u8;32]",
+    "Ticker": "[u8; 12]",
+    "AssetType": {
+        "_enum": {
+            "Equity": "",
+            "Debt": "",
+            "Commodity": "",
+            "StructuredProduct": "",
+            "Custom": "Vec<u8>"
+        }
     },
-    Restriction: {
-      name: "Vec<u8>",
-      token_id: "u32",
-      can_transfer: "bool"
+    "IdentifierType": {
+        "_enum": {
+            "Isin": "",
+            "Cusip": "",
+            "Custom": "Vec<u8>"
+        }
     },
-    Whitelist: {
-      investor_did: "IdentityId",
-      canSendAfter: "Moment",
-      canReceiveAfter: "Moment"
+    "SecurityToken": {
+        "name": "Vec<u8>",
+        "total_supply": "Balance",
+        "owner_did": "IdentityId",
+        "divisible": "bool",
+        "asset_type": "AssetType"
     },
-    Issuer: {
-      did: "IdentityId",
-      access_level: "u16",
-      active: "bool"
+    "Restriction": {
+        "name": "Vec<u8>",
+        "token_id": "u32",
+        "can_transfer": "bool"
     },
-    Investor: {
-      did: "IdentityId",
-      access_level: "u16",
-      active: "bool",
-      jurisdiction: "u16"
+    "Whitelist": {
+        "investor_did": "IdentityId",
+        "canSendAfter": "Moment",
+        "canReceiveAfter": "Moment"
     },
-    LinkedKeyInfo: {
-      _enum: {
-        Unique: "IdentityId",
-        Group: "Vec<IdentityId>"
-      }
+    "Issuer": {
+        "did": "IdentityId",
+        "access_level": "u16",
+        "active": "bool"
     },
-    Key: "[u8;32]",
-    Permission: {
-      _enum: ["Full", "Admin", "Operator", "SpendFunds"]
+    "Investor": {
+        "did": "IdentityId",
+        "access_level": "u16",
+        "active": "bool",
+        "jurisdiction": "u16"
     },
-    Link: {
-      link_data: "LinkData",
-      expiry: "Option<Moment>",
-      next_link: "u64",
-      previous_link: "u64"
+    "LinkedKeyInfo": {
+        "_enum": {
+            "Unique": "IdentityId",
+            "Group": "Vec<IdentityId>"
+        }
     },
-    LinkData: {
-      _enum: {
-        TickerOwned: "Vec<u8>",
-        TokenOwned: "Vec<u8>"
-      }
+    "Key": "[u8;32]",
+    "Permission": {
+        "_enum": [
+            "Full",
+            "Admin",
+            "Operator",
+            "SpendFunds"
+       ]
     },
-    SignerType: {
-      _enum: ["External", "Identity", "Multisig", "Relayer"]
+    "Link": {
+        "link_data": "LinkData",
+        "expiry": "Option<Moment>",
+        "next_link": "u64",
+        "previous_link": "u64"
     },
-    Signer: {
-      _enum: {
-        Identity: "IdentityId",
-        Key: "Key"
-      }
+    "LinkData": {
+       "_enum": {
+            "TickerOwned": "Ticker",
+            "TokenOwned": "Ticker"
+       }
     },
-    SigningItem: {
-      signer: "Signer",
-      signer_type: "SignerType",
-      permissions: "Vec<Permission>"
+    "SignerType": {
+        "_enum": [
+            "External",
+            "Identity",
+            "Multisig",
+            "Relayer"
+        ]
     },
-    SigningItemWithAuth: {
-      signing_item: "SigningItem",
-      auth_signature: "Signature"
+    "Signer":{
+       "_enum": {
+            "Identity": "IdentityId",
+            "Key": "Key"
+        }
     },
-    IdentityRole: {
-      _enum: [
-        "Issuer",
-        "SimpleTokenIssuer",
-        "Validator",
-        "ClaimIssuer",
-        "Investor",
-        "NodeRunner",
-        "PM",
-        "KYCAMLClaimIssuer",
-        "AccreditedInvestorClaimIssuer",
-        "VerifiedIdentityClaimIssuer"
-      ]
+    "SigningItem": {
+        "signer": "Signer",
+        "signer_type": "SignerType",
+        "permissions": "Vec<Permission>"
     },
-    PreAuthorizedKeyInfo: {
-      target_id: "IdentityId",
-      signing_item: "SigningItem"
+    "SigningItemWithAuth":{
+        "signing_item": "SigningItem",
+        "auth_signature": "Signature"
     },
-    DidRecord: {
-      roles: "Vec<IdentityRole>",
-      master_key: "Key",
-      signing_items: "Vec<SigningItem>"
+    "IdentityRole": {
+        "_enum": [
+            "Issuer",
+            "SimpleTokenIssuer",
+            "Validator",
+            "ClaimIssuer",
+            "Investor",
+            "NodeRunner",
+            "PM",
+            "KYCAMLClaimIssuer",
+            "AccreditedInvestorClaimIssuer",
+            "VerifiedIdentityClaimIssuer"
+        ]
     },
-    Claim: {
-      issuance_date: "Moment",
-      expiry: "Moment",
-      claim_value: "ClaimValue"
+    "PreAuthorizedKeyInfo": {
+        "target_id": "IdentityId",
+        "signing_item": "SigningItem"
     },
-    ClaimMetaData: {
-      claim_key: "Vec<u8>",
-      claim_issuer: "IdentityId"
+    "DidRecord": {
+        "roles": "Vec<IdentityRole>",
+        "master_key": "Key",
+        "signing_items": "Vec<SigningItem>"
     },
-    ClaimValue: {
-      data_type: "DataTypes",
-      value: "Vec<u8>"
+    "Claim": {
+        "issuance_date": "Moment",
+        "expiry": "Moment",
+        "claim_value": "ClaimValue"
     },
-    ClaimRecord: {
-      did: "IdentityId",
-      claim_key: "Vec<u8>",
-      expiry: "Moment",
-      claim_value: "ClaimValue"
+    "ClaimMetaData": {
+        "claim_key": "Vec<u8>",
+        "claim_issuer": "IdentityId"
     },
-    DataTypes: {
-      _enum: ["U8", "U16", "U32", "U64", "U128", "Bool", "VecU8"]
+    "ClaimValue": {
+        "data_type": "DataTypes",
+        "value": "Vec<u8>"
     },
-    AssetRule: {
-      sender_rules: "Vec<RuleData>",
-      receiver_rules: "Vec<RuleData>"
+    "ClaimRecord": {
+        "did": "IdentityId",
+        "claim_key": "Vec<u8>",
+        "expiry": "Moment",
+        "claim_value": "ClaimValue"
     },
-    Operators: {
-      _enum: ["EqualTo", "NotEqualTo", "LessThan", "GreaterThan", "LessOrEqualTo", "GreaterOrEqualTo"]
+    "DataTypes": {
+        "_enum": [
+            "U8",
+            "U16",
+            "U32",
+            "U64",
+            "U128",
+            "Bool",
+            "VecU8"
+        ]
     },
-    RuleData: {
-      key: "Vec<u8>",
-      value: "Vec<u8>",
-      trusted_issuers: "Vec<IdentityId>",
-      operator: "Operators"
+    "AssetRule": {
+        "sender_rules": "Vec<RuleData>",
+        "receiver_rules":"Vec<RuleData>"
     },
-    STO: {
-      beneficiary_did: "IdentityId",
-      cap: "Balance",
-      sold: "Balance",
-      rate: "u64",
-      start_date: "Moment",
-      end_date: "Moment",
-      active: "bool"
+    "Operators": {
+        "_enum": [
+            "EqualTo",
+            "NotEqualTo",
+            "LessThan",
+            "GreaterThan",
+            "LessOrEqualTo",
+            "GreaterOrEqualTo"
+        ]
     },
-    Investment: {
-      investor_did: "IdentityId",
-      amount_paid: "Balance",
-      tokens_purchased: "Balance",
-      last_purchase_date: "Moment"
+    "RuleData": {
+        "key": "Vec<u8>",
+        "value": "Vec<u8>",
+        "trusted_issuers": "Vec<IdentityId>",
+        "operator": "Operators"
     },
-    SimpleTokenRecord: {
-      ticker: "Vec<u8>",
-      total_supply: "Balance",
-      owner_did: "IdentityId"
+    "STO": {
+        "beneficiary_did": "IdentityId",
+        "cap": "Balance",
+        "sold": "Balance",
+        "rate": "u64",
+        "start_date": "Moment",
+        "end_date": "Moment",
+        "active": "bool"
     },
-    FeeOf: "Balance",
-    TSMoment: "u64",
-    Moment: "u64",
-    Dividend: {
-      amount: "Balance",
-      active: "bool",
-      maturates_at: "Option<u64>",
-      expires_at: "Option<u64>",
-      payout_currency: "Option<Vec<u8>>",
-      checkpoint_id: "u64"
+    "Investment": {
+        "investor_did": "IdentityId",
+        "amount_paid": "Balance",
+        "tokens_purchased": "Balance",
+        "last_purchase_date": "Moment"
     },
-    TargetIdAuthorization: {
-      target_id: "IdentityId",
-      nonce: "u64",
-      expires_at: "Moment"
+    "SimpleTokenRecord": {
+        "ticker": "Ticker",
+        "total_supply": "Balance",
+        "owner_did": "IdentityId"
     },
-    TickerRegistration: {
-      owner: "IdentityId",
-      expiry: "Option<Moment>"
+    "FeeOf": "Balance",
+    "TSMoment": "u64",
+    "Moment": "u64",
+    "Dividend": {
+        "amount": "Balance",
+        "active": "bool",
+        "maturates_at": "Option<u64>",
+        "expires_at": "Option<u64>",
+        "payout_currency": "Option<Vec<u8>>",
+        "checkpoint_id": "u64"
     },
-    TickerRegistrationConfig: {
-      max_ticker_length: "u32",
-      registration_length: "Option<Moment>"
+    "TargetIdAuthorization": {
+        "target_id": "IdentityId",
+        "nonce": "u64",
+        "expires_at": "Moment"
     },
-    SignData: {
-      custodian_did: "IdentityId",
-      holder_did: "IdentityId",
-      ticker: "Vec<u8>",
-      value: "Balance",
-      nonce: "u16"
+    "TickerRegistration": {
+        "owner": "IdentityId",
+        "expiry": "Option<Moment>"
     },
-    Motion: {
-      title: "Vec<u8>",
-      info_link: "Vec<u8>",
-      choices: "Vec<Vec<u8>>"
+    "TickerRegistrationConfig": {
+        "max_ticker_length": "u8",
+        "registration_length": "Option<Moment>"
     },
-    Ballot: {
-      checkpoint_id: "u64",
-      voting_start: "Moment",
-      voting_end: "Moment",
-      motions: "Vec<Motion>"
+    "SignData": {
+        "custodian_did": "IdentityId",
+        "holder_did": "IdentityId",
+        "ticker": "Ticker",
+        "value": "Balance",
+        "nonce": "u16"
     },
-    MipsMetadata: {
-      index: "u32",
-      end: "u64",
-      proposal_hash: "Hash"
+    "Motion": {
+        "title": "Vec<u8>",
+        "info_link": "Vec<u8>",
+        "choices": "Vec<Vec<u8>>"
     },
-    Votes: {
-      index: "u32",
-      ayes: "Vec<(IdentityId, Balance)>",
-      nays: "Vec<(IdentityId, Balance)>"
+    "Ballot": {
+        "checkpoint_id": "u64",
+        "voting_start": "Moment",
+        "voting_end": "Moment",
+        "motions": "Vec<Motion>"
     },
-    MipsIndex: "u32",
-    TickerTransferApproval: {
-      authorized_by: "IdentityId",
-      next_ticker: "Option<Vec<u8>>",
-      previous_ticker: "Option<Vec<u8>>"
+    "MipsMetadata": {
+        "index": "u32",
+        "end": "u64",
+        "proposal_hash": "Hash"
     },
-    OffChainSignature: "H512",
-    PermissionedValidator: {
-      compliance: "Compliance"
+    "Votes": {
+        "index": "u32",
+        "ayes": "Vec<(IdentityId, Balance)>",
+        "nays": "Vec<(IdentityId, Balance)>"
     },
-    Authorization: {
-      authorization_data: "AuthorizationData",
-      authorized_by: "IdentityId",
-      expiry: "Option<Moment>",
-      next_authorization: "u64",
-      previous_authorization: "u64"
+    "MipsIndex": "u32",
+    "MipsPriority": {
+        "_enum": [
+            "High",
+            "Normal"
+        ]
     },
-    AuthorizationData: {
-      _enum: {
-        TransferTicker: "Vec<u8>",
-        Custom: "Vec<u8>"
-      }
+    "TickerTransferApproval": {
+        "authorized_by": "IdentityId",
+        "next_ticker": "Option<Ticker>",
+        "previous_ticker": "Option<Ticker>"
     },
-    Compliance: {
-      _enum: ["Pending", "Active"]
+    "OffChainSignature": "H512",
+    "PermissionedValidator": {
+        "compliance": "Compliance"
     },
-    AuthorizationNonce: "u64"
-  }
-};
+    "Authorization": {
+        "authorization_data": "AuthorizationData",
+        "authorized_by": "IdentityId",
+        "expiry": "Option<Moment>",
+        "next_authorization": "u64",
+        "previous_authorization": "u64"
+    },
+    "AuthorizationData": {
+        "_enum": {
+            "TransferTicker": "Ticker",
+            "Custom": "Vec<u8>"
+        }
+    },
+    "Compliance": {
+        "_enum": [
+            "Pending",
+            "Active"
+        ]
+    },
+    "AuthorizationNonce": "u64"
+}
+ }

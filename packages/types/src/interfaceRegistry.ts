@@ -32,7 +32,7 @@ import { EthereumAddress } from '@polkadot/types/interfaces/claims';
 import { AttestedCandidate, AuctionIndex, BalanceUpload, Bidder, CandidateReceipt, CollatorId, CollatorSignature, EgressQueueRoot, HeadData, IncomingParachain, IncomingParachainDeploy, IncomingParachainFixed, LeasePeriod, LeasePeriodOf, NewBidder, ParaId, ParaIdOf, ParaInfo, ParaScheduling, ParachainDispatchOrigin, Retriable, SlotRange, SubId, UpwardMessage, ValidatorIndex, ValidityAttestation, ValidityVote, WinningData, WinningDataEntry } from '@polkadot/types/interfaces/parachains';
 import { CallMetadataV0, DoubleMapTypeV10, DoubleMapTypeV11, DoubleMapTypeV3, DoubleMapTypeV4, DoubleMapTypeV5, DoubleMapTypeV6, DoubleMapTypeV7, DoubleMapTypeV8, DoubleMapTypeV9, ErrorMetadataV10, ErrorMetadataV11, ErrorMetadataV8, ErrorMetadataV9, EventMetadataLatest, EventMetadataV0, EventMetadataV1, EventMetadataV10, EventMetadataV11, EventMetadataV2, EventMetadataV3, EventMetadataV4, EventMetadataV5, EventMetadataV6, EventMetadataV7, EventMetadataV8, EventMetadataV9, FunctionArgumentMetadataLatest, FunctionArgumentMetadataV0, FunctionArgumentMetadataV1, FunctionArgumentMetadataV10, FunctionArgumentMetadataV11, FunctionArgumentMetadataV2, FunctionArgumentMetadataV3, FunctionArgumentMetadataV4, FunctionArgumentMetadataV5, FunctionArgumentMetadataV6, FunctionArgumentMetadataV7, FunctionArgumentMetadataV8, FunctionArgumentMetadataV9, FunctionMetadataLatest, FunctionMetadataV0, FunctionMetadataV1, FunctionMetadataV10, FunctionMetadataV11, FunctionMetadataV2, FunctionMetadataV3, FunctionMetadataV4, FunctionMetadataV5, FunctionMetadataV6, FunctionMetadataV7, FunctionMetadataV8, FunctionMetadataV9, MapKindV11, MapTypeV0, MapTypeV10, MapTypeV11, MapTypeV2, MapTypeV3, MapTypeV4, MapTypeV5, MapTypeV6, MapTypeV7, MapTypeV8, MapTypeV9, MetadataAll, MetadataLatest, MetadataV0, MetadataV1, MetadataV10, MetadataV11, MetadataV2, MetadataV3, MetadataV4, MetadataV5, MetadataV6, MetadataV7, MetadataV8, MetadataV9, ModuleConstantMetadataLatest, ModuleConstantMetadataV10, ModuleConstantMetadataV11, ModuleConstantMetadataV6, ModuleConstantMetadataV7, ModuleConstantMetadataV8, ModuleConstantMetadataV9, ModuleMetadataLatest, ModuleMetadataV0, ModuleMetadataV1, ModuleMetadataV10, ModuleMetadataV11, ModuleMetadataV2, ModuleMetadataV3, ModuleMetadataV4, ModuleMetadataV5, ModuleMetadataV6, ModuleMetadataV7, ModuleMetadataV8, ModuleMetadataV9, OuterDispatchCallV0, OuterDispatchMetadataV0, OuterEventEventMetadataEventsV0, OuterEventEventMetadataV0, OuterEventMetadataV0, PlainTypeLatest, PlainTypeV0, PlainTypeV10, PlainTypeV11, PlainTypeV2, PlainTypeV3, PlainTypeV4, PlainTypeV5, PlainTypeV6, PlainTypeV7, PlainTypeV8, PlainTypeV9, RuntimeModuleMetadataV0, StorageEntryMetadataLatest, StorageEntryMetadataV10, StorageEntryMetadataV11, StorageEntryMetadataV6, StorageEntryMetadataV7, StorageEntryMetadataV8, StorageEntryMetadataV9, StorageEntryModifierLatest, StorageEntryModifierV10, StorageEntryModifierV11, StorageEntryModifierV6, StorageEntryModifierV7, StorageEntryModifierV8, StorageEntryModifierV9, StorageEntryTypeLatest, StorageEntryTypeV10, StorageEntryTypeV11, StorageEntryTypeV6, StorageEntryTypeV7, StorageEntryTypeV8, StorageEntryTypeV9, StorageFunctionMetadataV0, StorageFunctionMetadataV1, StorageFunctionMetadataV2, StorageFunctionMetadataV3, StorageFunctionMetadataV4, StorageFunctionMetadataV5, StorageFunctionModifierV0, StorageFunctionModifierV1, StorageFunctionModifierV2, StorageFunctionModifierV3, StorageFunctionModifierV4, StorageFunctionModifierV5, StorageFunctionTypeV0, StorageFunctionTypeV1, StorageFunctionTypeV2, StorageFunctionTypeV3, StorageFunctionTypeV4, StorageFunctionTypeV5, StorageHasher, StorageHasherV10, StorageHasherV11, StorageHasherV4, StorageHasherV5, StorageHasherV6, StorageHasherV7, StorageHasherV8, StorageHasherV9, StorageMetadataV0, StorageMetadataV10, StorageMetadataV11, StorageMetadataV7, StorageMetadataV8, StorageMetadataV9 } from '@polkadot/types/interfaces/metadata';
 import { ApiId, BlockHash, ChainProperties, ExtrinsicOrHash, ExtrinsicStatus, Health, KeyValueOption, NetworkState, PeerInfo, RpcMethods, RuntimeDispatchInfo, RuntimeVersion, RuntimeVersionApi, StorageChangeSet } from '@polkadot/types/interfaces/rpc';
-import { AssetRule, Authorization, AuthorizationData, AuthorizationNonce, Balance, Ballot, Claim, ClaimMetaData, ClaimRecord, ClaimValue, Compliance, DataTypes, DidRecord, Dividend, FeeOf, IdentityId, IdentityRole, Investment, Investor, Issuer, Key, Link, LinkData, LinkedKeyInfo, MipsIndex, MipsMetadata, Moment, Motion, OffChainSignature, Operators, Permission, PermissionedValidator, PreAuthorizedKeyInfo, Restriction, RuleData, STO, SecurityToken, SignData, Signer, SignerType, SigningItem, SigningItemWithAuth, SimpleTokenRecord, TSMoment, TargetIdAuthorization, TickerRegistration, TickerRegistrationConfig, TickerTransferApproval, Votes, Whitelist } from '@polkadot/types/interfaces/polymesh';
+import { AssetRule, AssetType, Authorization, AuthorizationData, AuthorizationNonce, Balance, Ballot, Claim, ClaimMetaData, ClaimRecord, ClaimValue, Compliance, DataTypes, DidRecord, Dividend, FeeOf, IdentifierType, IdentityId, IdentityRole, Investment, Investor, Issuer, Key, Link, LinkData, LinkedKeyInfo, MipsIndex, MipsMetadata, MipsPriority, Moment, Motion, OffChainSignature, Operators, Permission, PermissionedValidator, PreAuthorizedKeyInfo, Restriction, RuleData, STO, SecurityToken, SignData, Signer, SignerType, SigningItem, SigningItemWithAuth, SimpleTokenRecord, TSMoment, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig, TickerTransferApproval, Votes, Whitelist } from '@polkadot/types/interfaces/polymesh';
 
 export interface InterfaceRegistry {
   bool: bool;
@@ -1454,6 +1454,15 @@ export interface InterfaceRegistry {
   IdentityId: IdentityId;
   'Option<IdentityId>': Option<IdentityId>;
   'Vec<IdentityId>': Vec<IdentityId>;
+  Ticker: Ticker;
+  'Option<Ticker>': Option<Ticker>;
+  'Vec<Ticker>': Vec<Ticker>;
+  AssetType: AssetType;
+  'Option<AssetType>': Option<AssetType>;
+  'Vec<AssetType>': Vec<AssetType>;
+  IdentifierType: IdentifierType;
+  'Option<IdentifierType>': Option<IdentifierType>;
+  'Vec<IdentifierType>': Vec<IdentifierType>;
   SecurityToken: SecurityToken;
   'Option<SecurityToken>': Option<SecurityToken>;
   'Vec<SecurityToken>': Vec<SecurityToken>;
@@ -1580,6 +1589,9 @@ export interface InterfaceRegistry {
   'Compact<MipsIndex>': Compact<MipsIndex>;
   'Option<MipsIndex>': Option<MipsIndex>;
   'Vec<MipsIndex>': Vec<MipsIndex>;
+  MipsPriority: MipsPriority;
+  'Option<MipsPriority>': Option<MipsPriority>;
+  'Vec<MipsPriority>': Vec<MipsPriority>;
   TickerTransferApproval: TickerTransferApproval;
   'Option<TickerTransferApproval>': Option<TickerTransferApproval>;
   'Vec<TickerTransferApproval>': Vec<TickerTransferApproval>;

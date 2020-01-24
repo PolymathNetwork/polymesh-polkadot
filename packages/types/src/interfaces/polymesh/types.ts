@@ -3,7 +3,7 @@
 
 import { Codec, ITuple } from '@polkadot/types/types';
 import { Enum, Option, Struct, Vec } from '@polkadot/types/codec';
-import { Bytes, H512, bool, u128, u16, u32, u64 } from '@polkadot/types/primitive';
+import { Bytes, H512, bool, u128, u16, u32, u64, u8 } from '@polkadot/types/primitive';
 import { Hash, Signature } from '@polkadot/types/interfaces/runtime';
 
 /** Struct */
@@ -12,6 +12,22 @@ export interface AssetRule extends Struct {
   readonly sender_rules: Vec<RuleData>;
   /** Vec<RuleData> */
   readonly receiver_rules: Vec<RuleData>;
+}
+
+/** Enum */
+export interface AssetType extends Enum {
+  /** 0:: Equity */
+  readonly isEquity: boolean;
+  /** 1:: Debt */
+  readonly isDebt: boolean;
+  /** 2:: Commodity */
+  readonly isCommodity: boolean;
+  /** 3:: StructuredProduct */
+  readonly isStructuredProduct: boolean;
+  /** 4:: Custom(Bytes) */
+  readonly isCustom: boolean;
+  /** Bytes */
+  readonly asCustom: Bytes;
 }
 
 /** Struct */
@@ -30,10 +46,10 @@ export interface Authorization extends Struct {
 
 /** Enum */
 export interface AuthorizationData extends Enum {
-  /** 0:: TransferTicker(Bytes) */
+  /** 0:: TransferTicker(Ticker) */
   readonly isTransferTicker: boolean;
-  /** Bytes */
-  readonly asTransferTicker: Bytes;
+  /** Ticker */
+  readonly asTransferTicker: Ticker;
   /** 1:: Custom(Bytes) */
   readonly isCustom: boolean;
   /** Bytes */
@@ -151,6 +167,18 @@ export interface Dividend extends Struct {
 /** Balance */
 export interface FeeOf extends Balance {}
 
+/** Enum */
+export interface IdentifierType extends Enum {
+  /** 0:: Isin */
+  readonly isIsin: boolean;
+  /** 1:: Cusip */
+  readonly isCusip: boolean;
+  /** 2:: Custom(Bytes) */
+  readonly isCustom: boolean;
+  /** Bytes */
+  readonly asCustom: Bytes;
+}
+
 /** Uint8Array, Codec */
 export interface IdentityId extends Uint8Array, Codec {}
 
@@ -229,14 +257,14 @@ export interface Link extends Struct {
 
 /** Enum */
 export interface LinkData extends Enum {
-  /** 0:: TickerOwned(Bytes) */
+  /** 0:: TickerOwned(Ticker) */
   readonly isTickerOwned: boolean;
-  /** Bytes */
-  readonly asTickerOwned: Bytes;
-  /** 1:: TokenOwned(Bytes) */
+  /** Ticker */
+  readonly asTickerOwned: Ticker;
+  /** 1:: TokenOwned(Ticker) */
   readonly isTokenOwned: boolean;
-  /** Bytes */
-  readonly asTokenOwned: Bytes;
+  /** Ticker */
+  readonly asTokenOwned: Ticker;
 }
 
 /** Enum */
@@ -262,6 +290,14 @@ export interface MipsMetadata extends Struct {
   readonly end: u64;
   /** Hash */
   readonly proposal_hash: Hash;
+}
+
+/** Enum */
+export interface MipsPriority extends Enum {
+  /** 0:: High */
+  readonly isHigh: boolean;
+  /** 1:: Normal */
+  readonly isNormal: boolean;
 }
 
 /** u64 */
@@ -354,6 +390,8 @@ export interface SecurityToken extends Struct {
   readonly owner_did: IdentityId;
   /** bool */
   readonly divisible: bool;
+  /** AssetType */
+  readonly asset_type: AssetType;
 }
 
 /** Struct */
@@ -362,8 +400,8 @@ export interface SignData extends Struct {
   readonly custodian_did: IdentityId;
   /** IdentityId */
   readonly holder_did: IdentityId;
-  /** Bytes */
-  readonly ticker: Bytes;
+  /** Ticker */
+  readonly ticker: Ticker;
   /** Balance */
   readonly value: Balance;
   /** u16 */
@@ -414,8 +452,8 @@ export interface SigningItemWithAuth extends Struct {
 
 /** Struct */
 export interface SimpleTokenRecord extends Struct {
-  /** Bytes */
-  readonly ticker: Bytes;
+  /** Ticker */
+  readonly ticker: Ticker;
   /** Balance */
   readonly total_supply: Balance;
   /** IdentityId */
@@ -450,6 +488,9 @@ export interface TargetIdAuthorization extends Struct {
   readonly expires_at: Moment;
 }
 
+/** Uint8Array, Codec */
+export interface Ticker extends Uint8Array, Codec {}
+
 /** Struct */
 export interface TickerRegistration extends Struct {
   /** IdentityId */
@@ -460,8 +501,8 @@ export interface TickerRegistration extends Struct {
 
 /** Struct */
 export interface TickerRegistrationConfig extends Struct {
-  /** u32 */
-  readonly max_ticker_length: u32;
+  /** u8 */
+  readonly max_ticker_length: u8;
   /** Option<Moment> */
   readonly registration_length: Option<Moment>;
 }
@@ -470,10 +511,10 @@ export interface TickerRegistrationConfig extends Struct {
 export interface TickerTransferApproval extends Struct {
   /** IdentityId */
   readonly authorized_by: IdentityId;
-  /** Option<Bytes> */
-  readonly next_ticker: Option<Bytes>;
-  /** Option<Bytes> */
-  readonly previous_ticker: Option<Bytes>;
+  /** Option<Ticker> */
+  readonly next_ticker: Option<Ticker>;
+  /** Option<Ticker> */
+  readonly previous_ticker: Option<Ticker>;
 }
 
 /** u64 */
