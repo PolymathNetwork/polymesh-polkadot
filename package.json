@@ -29,7 +29,17 @@
     "@babel/core": "^7.7.7",
     "@babel/register": "^7.7.7",
     "@babel/runtime": "^7.7.7",
+    "@commitlint/cli": "^7.6.1",
+    "@commitlint/config-conventional": "^7.6.0",
     "@polkadot/dev": "^0.32.14",
-    "@polkadot/ts": "^0.1.90"
+    "@polkadot/ts": "^0.1.90",
+    "@semantic-release/git": "^8.0.0",
+    "cz-conventional-changelog": "^3.0.2",
+    "husky": "^4.1.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
