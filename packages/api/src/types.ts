@@ -4,47 +4,54 @@
 
 // These two files add module augmentation so that `api.{query,consts}.*.*`
 // get typed. Import them to make these types effective.
-import './consts.types';
-import './query.types';
+import "./consts.types";
+import "./query.types";
 
-import { Constants } from '@polkadot/metadata/Decorated/types';
-import { UserRpc } from '@polkadot/rpc-core/types';
-import { Hash, RuntimeVersion } from '@polkadot/types/interfaces';
-import { AnyFunction, Callback, CallFunction, Codec, CodecArg, RegistryTypes, SignatureOptions, SignerPayloadJSON, SignerPayloadRaw, Registry } from '@polkadot/types/types';
-import { SubmittableResultImpl, SubmittableExtrinsic } from './submittable/types';
-import { DeriveAllSections } from './util/decorate';
+import { Constants } from "@polkadot/metadata/Decorated/types";
+import { UserRpc } from "@polkadot/rpc-core/types";
+import { Hash, RuntimeVersion } from "@polkadot/types/interfaces";
+import {
+  AnyFunction,
+  Callback,
+  CallFunction,
+  Codec,
+  CodecArg,
+  RegistryTypes,
+  SignatureOptions,
+  SignerPayloadJSON,
+  SignerPayloadRaw,
+  Registry
+} from "@polkadot/types/types";
+import { SubmittableResultImpl, SubmittableExtrinsic } from "./submittable/types";
+import { DeriveAllSections } from "./util/decorate";
 
-import BN from 'bn.js';
-import { Observable } from 'rxjs';
-import { DeriveCustom, ExactDerive } from '@polkadot/api-derive';
-import { RpcInterface } from '@polkadot/rpc-core/jsonrpc.types';
-import { ProviderInterface, ProviderInterfaceEmitted } from '@polkadot/rpc-provider/types';
-import { Metadata, u64 } from '@polkadot/types';
-import StorageKey, { StorageEntry } from '@polkadot/types/primitive/StorageKey';
+import BN from "bn.js";
+import { Observable } from "rxjs";
+import { DeriveCustom, ExactDerive } from "@polkadot/api-derive";
+import { RpcInterface } from "@polkadot/rpc-core/jsonrpc.types";
+import { ProviderInterface, ProviderInterfaceEmitted } from "@polkadot/rpc-provider/types";
+import { Metadata, u64 } from "@polkadot/types";
+import StorageKey, { StorageEntry } from "@polkadot/types/primitive/StorageKey";
 
-import ApiBase from './base';
+import ApiBase from "./base";
 
-export * from './submittable/types';
+export * from "./submittable/types";
 
 // Prepend an element V onto the beginning of a tuple T.
 // Cons<1, [2,3,4]> is [1,2,3,4]
-type Cons<V, T extends any[]> = ((v: V, ...t: T) => void) extends ((...r: infer R) => void)
-  ? R
-  : never;
+type Cons<V, T extends any[]> = ((v: V, ...t: T) => void) extends (...r: infer R) => void ? R : never;
 
 // Append an element V onto the end of a tuple T
 // Push<[1,2,3],4> is [1,2,3,4]
 // note that this DOES NOT PRESERVE optionality/readonly in tuples.
 // So unfortunately Push<[1, 2?, 3?], 4> is [1,2|undefined,3|undefined,4]
-type Push<T extends any[], V> = (
-  (
-    Cons<any, Required<T>> extends infer R
-      ? { [K in keyof R]: K extends keyof T ? T[K] : V }
-      : never
-  ) extends infer P
-    ? P extends any[] ? P : never
+type Push<T extends any[], V> = (Cons<any, Required<T>> extends infer R
+? { [K in keyof R]: K extends keyof T ? T[K] : V }
+: never) extends infer P
+  ? P extends any[]
+    ? P
     : never
-);
+  : never;
 
 // Returns the inner type of an Observable
 export type ObsInnerType<O extends Observable<any>> = O extends Observable<infer U> ? U : never;
@@ -57,7 +64,10 @@ export interface DecorateMethodOptions {
   methodName?: string;
 }
 
-export type DecorateMethod<ApiType extends ApiTypes> = <Method extends (...args: any[]) => Observable<any>>(method: Method, options?: DecorateMethodOptions) => any;
+export type DecorateMethod<ApiType extends ApiTypes> = <Method extends (...args: any[]) => Observable<any>>(
+  method: Method,
+  options?: DecorateMethodOptions
+) => any;
 
 // Here are the return types of these parts of the api:
 // - api.query.*.*: no exact typings
@@ -79,24 +89,20 @@ export interface PromiseResult<F extends AnyFunction> {
 }
 
 // FIXME The day TS has higher-kinded types, we can remove this hardcoded stuff
-export type PromiseOrObs<ApiType extends ApiTypes, T> = ApiType extends 'rxjs'
-  ? Observable<T>
-  : Promise<T>
+export type PromiseOrObs<ApiType extends ApiTypes, T> = ApiType extends "rxjs" ? Observable<T> : Promise<T>;
 
 // FIXME The day TS has higher-kinded types, we can remove this hardcoded stuff
-export type MethodResult<ApiType extends ApiTypes, F extends AnyFunction> = ApiType extends 'rxjs'
+export type MethodResult<ApiType extends ApiTypes, F extends AnyFunction> = ApiType extends "rxjs"
   ? RxResult<F>
   : PromiseResult<F>;
 
 export type DecoratedRpcSection<ApiType extends ApiTypes, Section> = {
-  [Method in keyof Section]: Section[Method] extends AnyFunction
-    ? MethodResult<ApiType, Section[Method]>
-    : never
-}
+  [Method in keyof Section]: Section[Method] extends AnyFunction ? MethodResult<ApiType, Section[Method]> : never;
+};
 
 export type DecoratedRpc<ApiType extends ApiTypes, AllSections> = {
-  [Section in keyof AllSections]: DecoratedRpcSection<ApiType, AllSections[Section]>
-}
+  [Section in keyof AllSections]: DecoratedRpcSection<ApiType, AllSections[Section]>;
+};
 
 interface StorageEntryObservableMulti {
   <T extends Codec>(args: (CodecArg[] | CodecArg)[]): Observable<T[]>;
@@ -114,7 +120,7 @@ export interface StorageEntryBase<ApiType extends ApiTypes, F extends AnyFunctio
   hash: (...args: Parameters<F>) => PromiseOrObs<ApiType, Hash>;
   key: (...args: Parameters<F>) => string;
   size: (...args: Parameters<F>) => PromiseOrObs<ApiType, u64>;
-  multi: ApiType extends 'rxjs' ? StorageEntryObservableMulti : StorageEntryPromiseMulti;
+  multi: ApiType extends "rxjs" ? StorageEntryObservableMulti : StorageEntryPromiseMulti;
 }
 
 export interface StorageEntryPromiseOverloads {
@@ -125,23 +131,23 @@ export interface StorageEntryPromiseOverloads {
   <T extends Codec>(arg1: CodecArg, arg2: CodecArg, callback: Callback<T>): UnsubscribePromise;
 }
 
-export type StorageEntryExact<ApiType extends ApiTypes, F extends AnyFunction> = MethodResult<ApiType, F> & StorageEntryBase<ApiType, F>
+export type StorageEntryExact<ApiType extends ApiTypes, F extends AnyFunction> = MethodResult<ApiType, F> &
+  StorageEntryBase<ApiType, F>;
 
 // This is the most generic typings we can have for a storage entry function
-type GenericStorageEntryFunction = (arg1?: CodecArg, arg2?: CodecArg) => Observable<Codec>
+type GenericStorageEntryFunction = (arg1?: CodecArg, arg2?: CodecArg) => Observable<Codec>;
 
-export type QueryableStorageEntry<ApiType extends ApiTypes> =
-  ApiType extends 'rxjs'
-    ? StorageEntryExact<'rxjs', GenericStorageEntryFunction>
-    : StorageEntryExact<'promise', GenericStorageEntryFunction> & StorageEntryPromiseOverloads;
+export type QueryableStorageEntry<ApiType extends ApiTypes> = ApiType extends "rxjs"
+  ? StorageEntryExact<"rxjs", GenericStorageEntryFunction>
+  : StorageEntryExact<"promise", GenericStorageEntryFunction> & StorageEntryPromiseOverloads;
 
 export interface QueryableModuleStorage<ApiType extends ApiTypes> {
   [index: string]: QueryableStorageEntry<ApiType>;
 }
 
 export type QueryableStorageMultiArg<ApiType extends ApiTypes> =
-  QueryableStorageEntry<ApiType> |
-  [QueryableStorageEntry<ApiType>, ...CodecArg[]];
+  | QueryableStorageEntry<ApiType>
+  | [QueryableStorageEntry<ApiType>, ...CodecArg[]];
 
 export interface QueryableStorageMultiBase<ApiType extends ApiTypes> {
   <T extends Codec[]>(calls: QueryableStorageMultiArg<ApiType>[]): Observable<T>;
@@ -151,15 +157,14 @@ export interface QueryableStorageMultiPromise<ApiType extends ApiTypes> {
   <T extends Codec[]>(calls: QueryableStorageMultiArg<ApiType>[], callback: Callback<T>): UnsubscribePromise;
 }
 
-export type QueryableStorageMulti<ApiType extends ApiTypes> =
-  ApiType extends 'rxjs'
-    ? QueryableStorageMultiBase<ApiType>
-    : QueryableStorageMultiPromise<ApiType>;
+export type QueryableStorageMulti<ApiType extends ApiTypes> = ApiType extends "rxjs"
+  ? QueryableStorageMultiBase<ApiType>
+  : QueryableStorageMultiPromise<ApiType>;
 
 // QueryableStorageExact will hold the exact typed api.query.*.* generated from
 // metadata. For now it's empty, it's ready to be module augmented.
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface QueryableStorageExact<ApiType extends ApiTypes> { }
+export interface QueryableStorageExact<ApiType extends ApiTypes> {}
 
 export interface QueryableStorage<ApiType extends ApiTypes> extends QueryableStorageExact<ApiType> {
   [index: string]: QueryableModuleStorage<ApiType>;
@@ -204,7 +209,7 @@ export interface ApiOptions {
   /**
    * @description An external signer which will be used to sign extrinsic when account passed in is not KeyringPair
    */
-  signer?: Signer;
+  signer?: PSigner;
   /**
    * @description The source object to use for runtime information (only used when cloning)
    */
@@ -228,23 +233,23 @@ export interface ApiOptions {
 export interface ApiInterfaceRx {
   consts: Constants;
   // TODO This needs to be typed correctly
-  derive: DeriveAllSections<'rxjs', ExactDerive>;
+  derive: DeriveAllSections<"rxjs", ExactDerive>;
   extrinsicType: number;
   genesisHash: Hash;
   hasSubscriptions: boolean;
   registry: Registry;
   runtimeMetadata: Metadata;
   runtimeVersion: RuntimeVersion;
-  query: QueryableStorage<'rxjs'>;
-  queryMulti: QueryableStorageMulti<'rxjs'>;
-  rpc: DecoratedRpc<'rxjs', RpcInterface>;
-  tx: SubmittableExtrinsics<'rxjs'>;
-  signer?: Signer;
+  query: QueryableStorage<"rxjs">;
+  queryMulti: QueryableStorageMulti<"rxjs">;
+  rpc: DecoratedRpc<"rxjs", RpcInterface>;
+  tx: SubmittableExtrinsics<"rxjs">;
+  signer?: PSigner;
 }
 
-export type ApiInterfaceEvents = ProviderInterfaceEmitted | 'ready';
+export type ApiInterfaceEvents = ProviderInterfaceEmitted | "ready";
 
-export type ApiTypes = 'promise' | 'rxjs';
+export type ApiTypes = "promise" | "rxjs";
 
 export interface SignerOptions extends SignatureOptions {
   blockNumber: BN;
@@ -263,7 +268,7 @@ export interface SignerResult {
   signature: string;
 }
 
-export interface Signer {
+export interface PSigner {
   /**
    * @description signs an extrinsic payload from a serialized form
    */
