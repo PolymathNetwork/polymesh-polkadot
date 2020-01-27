@@ -4,8 +4,7 @@
 import { Codec } from '@polkadot/types/types';
 import { Compact, Enum, Option, Raw, Struct } from '@polkadot/types/codec';
 import { Bytes, Null, bool, u32, u64, u8 } from '@polkadot/types/primitive';
-import { AccountId, BlockNumber, Hash } from '@polkadot/types/interfaces/runtime';
-import { Balance } from '@polkadot/types/interfaces/polymesh';
+import { AccountId, Balance, BlockNumber, Hash } from '@polkadot/types/interfaces/runtime';
 
 /** Struct */
 export interface AliveContractInfo extends Struct {

@@ -3,23 +3,24 @@
 
 import { Observable } from 'rxjs';
 import { Option, Raw, Vec } from '@polkadot/types/codec';
-import { Bytes, Null, bool, i8, u16, u32, u64 } from '@polkadot/types';
-import { AccountId, AccountIndex, BalanceOf, BlockNumber, Hash, Index, KeyTypeId, Perbill, ValidatorId, Weight, WeightMultiplier } from '@polkadot/types/interfaces/runtime';
+import { Bytes, bool, u16, u32, u64 } from '@polkadot/types';
+import { AccountId, AccountIndex, Balance, BalanceOf, BlockNumber, Hash, Index, KeyTypeId, Moment, Perbill, ValidatorId, Weight } from '@polkadot/types/interfaces/runtime';
 import { UncleEntryItem } from '@polkadot/types/interfaces/authorship';
 import { BabeAuthorityWeight, MaybeVrf } from '@polkadot/types/interfaces/babe';
 import { BalanceLock, VestingSchedule } from '@polkadot/types/interfaces/balances';
 import { ProposalIndex } from '@polkadot/types/interfaces/collective';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import { CodeHash, ContractInfo, Gas, PrefabWasmModule, Schedule } from '@polkadot/types/interfaces/contracts';
-import { Proposal } from '@polkadot/types/interfaces/democracy';
-import { AuthorityWeight, SetId, StoredPendingChange, StoredState } from '@polkadot/types/interfaces/grandpa';
+import { Proposal, ReferendumInfo } from '@polkadot/types/interfaces/democracy';
+import { AuthorityList, SetId, StoredPendingChange, StoredState } from '@polkadot/types/interfaces/grandpa';
 import { AuthIndex } from '@polkadot/types/interfaces/imOnline';
 import { Kind, OffenceDetails, OpaqueTimeSlot, ReportIdOf } from '@polkadot/types/interfaces/offences';
 import { Keys, SessionIndex } from '@polkadot/types/interfaces/session';
-import { EraIndex, EraPoints, Exposure, Forcing, MomentOf, RewardDestination, SlashJournalEntry, StakingLedger, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
+import { EraIndex, EraPoints, Exposure, Forcing, MomentOf, Nominations, RewardDestination, SlashingSpans, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
 import { DigestOf, EventIndex, EventRecord } from '@polkadot/types/interfaces/system';
 import { TreasuryProposal } from '@polkadot/types/interfaces/treasury';
-import { AssetRule, Authorization, AuthorizationNonce, Balance, Ballot, Claim, ClaimMetaData, DidRecord, Dividend, IdentityId, Investment, Key, Link, LinkedKeyInfo, MipsIndex, MipsMetadata, Moment, PermissionedValidator, PreAuthorizedKeyInfo, STO, SecurityToken, Signer, SimpleTokenRecord, TargetIdAuthorization, TickerRegistration, TickerRegistrationConfig, Votes } from '@polkadot/types/interfaces/polymesh';
+import { Multiplier } from '@polkadot/types/interfaces/txpayment';
+import { AssetRule, Authorization, AuthorizationNonce, Ballot, Claim, ClaimMetaData, DidRecord, Dividend, IdentifierType, IdentityId, Investment, Key, Link, LinkedKeyInfo, MipsMetadata, PermissionedValidator, PreAuthorizedKeyInfo, STO, SecurityToken, Signer, SimpleTokenRecord, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig, Votes } from '@polkadot/types/interfaces/polymesh';
 import { ITuple } from '@polkadot/types/types';
 
 declare module './types' {
@@ -30,17 +31,15 @@ declare module './types' {
       extrinsicCount: StorageEntryExact<ApiType, () => Observable<Option<u32>>> & QueryableStorageEntry<ApiType>;
       allExtrinsicsWeight: StorageEntryExact<ApiType, () => Observable<Option<Weight>>> & QueryableStorageEntry<ApiType>;
       allExtrinsicsLen: StorageEntryExact<ApiType, () => Observable<Option<u32>>> & QueryableStorageEntry<ApiType>;
-      nextWeightMultiplier: StorageEntryExact<ApiType, () => Observable<WeightMultiplier>> & QueryableStorageEntry<ApiType>;
       blockHash: StorageEntryExact<ApiType, (arg: BlockNumber | Uint8Array | number | string) => Observable<Hash>> & QueryableStorageEntry<ApiType>;
       extrinsicData: StorageEntryExact<ApiType, (arg: u32 | Uint8Array | number | string) => Observable<Bytes>> & QueryableStorageEntry<ApiType>;
-      randomMaterial: StorageEntryExact<ApiType, () => Observable<ITuple<[i8, Vec<Hash>]>>> & QueryableStorageEntry<ApiType>;
       number: StorageEntryExact<ApiType, () => Observable<BlockNumber>> & QueryableStorageEntry<ApiType>;
       parentHash: StorageEntryExact<ApiType, () => Observable<Hash>> & QueryableStorageEntry<ApiType>;
       extrinsicsRoot: StorageEntryExact<ApiType, () => Observable<Hash>> & QueryableStorageEntry<ApiType>;
       digest: StorageEntryExact<ApiType, () => Observable<DigestOf>> & QueryableStorageEntry<ApiType>;
       events: StorageEntryExact<ApiType, () => Observable<Vec<EventRecord>>> & QueryableStorageEntry<ApiType>;
       eventCount: StorageEntryExact<ApiType, () => Observable<EventIndex>> & QueryableStorageEntry<ApiType>;
-      eventTopics: StorageEntryExact<ApiType, (key1: Null, key2: Hash | Uint8Array | string) => Observable<Vec<ITuple<[BlockNumber, EventIndex]>>>> & QueryableStorageEntry<ApiType>;
+      eventTopics: StorageEntryExact<ApiType, (key1: ITuple<[]>, key2: Hash | Uint8Array | string) => Observable<Vec<ITuple<[BlockNumber, EventIndex]>>>> & QueryableStorageEntry<ApiType>;
     };
     babe: {
       [index: string]: QueryableStorageEntry<ApiType>;
@@ -89,7 +88,7 @@ declare module './types' {
       ledger: StorageEntryExact<ApiType, (arg: AccountId | Uint8Array | string) => Observable<Option<StakingLedger>>> & QueryableStorageEntry<ApiType>;
       payee: StorageEntryExact<ApiType, (arg: AccountId | Uint8Array | string) => Observable<RewardDestination>> & QueryableStorageEntry<ApiType>;
       validators: StorageEntryExact<ApiType, (arg: AccountId | Uint8Array | string) => Observable<ValidatorPrefs>> & QueryableStorageEntry<ApiType>;
-      nominators: StorageEntryExact<ApiType, (arg: AccountId | Uint8Array | string) => Observable<Vec<AccountId>>> & QueryableStorageEntry<ApiType>;
+      nominators: StorageEntryExact<ApiType, (arg: AccountId | Uint8Array | string) => Observable<Option<Nominations>>> & QueryableStorageEntry<ApiType>;
       stakers: StorageEntryExact<ApiType, (arg: AccountId | Uint8Array | string) => Observable<Exposure>> & QueryableStorageEntry<ApiType>;
       currentElected: StorageEntryExact<ApiType, () => Observable<Vec<AccountId>>> & QueryableStorageEntry<ApiType>;
       currentEra: StorageEntryExact<ApiType, () => Observable<EraIndex>> & QueryableStorageEntry<ApiType>;
@@ -99,8 +98,15 @@ declare module './types' {
       slotStake: StorageEntryExact<ApiType, () => Observable<BalanceOf>> & QueryableStorageEntry<ApiType>;
       forceEra: StorageEntryExact<ApiType, () => Observable<Forcing>> & QueryableStorageEntry<ApiType>;
       slashRewardFraction: StorageEntryExact<ApiType, () => Observable<Perbill>> & QueryableStorageEntry<ApiType>;
+      canceledSlashPayout: StorageEntryExact<ApiType, () => Observable<BalanceOf>> & QueryableStorageEntry<ApiType>;
+      unappliedSlashes: StorageEntryExact<ApiType, (arg: EraIndex | Uint8Array | number | string) => Observable<Vec<UnappliedSlash>>> & QueryableStorageEntry<ApiType>;
       bondedEras: StorageEntryExact<ApiType, () => Observable<Vec<ITuple<[EraIndex, SessionIndex]>>>> & QueryableStorageEntry<ApiType>;
-      eraSlashJournal: StorageEntryExact<ApiType, (arg: EraIndex | Uint8Array | number | string) => Observable<Vec<SlashJournalEntry>>> & QueryableStorageEntry<ApiType>;
+      validatorSlashInEra: StorageEntryExact<ApiType, (key1: EraIndex | Uint8Array | number | string, key2: AccountId | Uint8Array | string) => Observable<Option<ITuple<[Perbill, BalanceOf]>>>> & QueryableStorageEntry<ApiType>;
+      nominatorSlashInEra: StorageEntryExact<ApiType, (key1: EraIndex | Uint8Array | number | string, key2: AccountId | Uint8Array | string) => Observable<Option<BalanceOf>>> & QueryableStorageEntry<ApiType>;
+      slashingSpans: StorageEntryExact<ApiType, (arg: AccountId | Uint8Array | string) => Observable<Option<SlashingSpans>>> & QueryableStorageEntry<ApiType>;
+      spanSlash: StorageEntryExact<ApiType, (arg: ITuple<[AccountId, SpanIndex]>) => Observable<SpanRecord>> & QueryableStorageEntry<ApiType>;
+      earliestUnappliedSlash: StorageEntryExact<ApiType, () => Observable<Option<EraIndex>>> & QueryableStorageEntry<ApiType>;
+      storageVersion: StorageEntryExact<ApiType, () => Observable<u32>> & QueryableStorageEntry<ApiType>;
       permissionedValidators: StorageEntryExact<ApiType, (arg: AccountId | Uint8Array | string) => Observable<Option<PermissionedValidator>>> & QueryableStorageEntry<ApiType>;
     };
     offences: {
@@ -121,7 +127,7 @@ declare module './types' {
     };
     grandpa: {
       [index: string]: QueryableStorageEntry<ApiType>;
-      authorities: StorageEntryExact<ApiType, () => Observable<Vec<ITuple<[AuthorityId, AuthorityWeight]>>>> & QueryableStorageEntry<ApiType>;
+      authorities: StorageEntryExact<ApiType, () => Observable<AuthorityList>> & QueryableStorageEntry<ApiType>;
       state: StorageEntryExact<ApiType, () => Observable<StoredState>> & QueryableStorageEntry<ApiType>;
       pendingChange: StorageEntryExact<ApiType, () => Observable<Option<StoredPendingChange>>> & QueryableStorageEntry<ApiType>;
       nextForced: StorageEntryExact<ApiType, () => Observable<Option<BlockNumber>>> & QueryableStorageEntry<ApiType>;
@@ -133,11 +139,30 @@ declare module './types' {
       [index: string]: QueryableStorageEntry<ApiType>;
       gossipAt: StorageEntryExact<ApiType, () => Observable<BlockNumber>> & QueryableStorageEntry<ApiType>;
       keys: StorageEntryExact<ApiType, () => Observable<Vec<AuthorityId>>> & QueryableStorageEntry<ApiType>;
-      receivedHeartbeats: StorageEntryExact<ApiType, (key1: SessionIndex | Uint8Array | number | string, key2: AuthIndex | Uint8Array | number | string) => Observable<Bytes>> & QueryableStorageEntry<ApiType>;
+      receivedHeartbeats: StorageEntryExact<ApiType, (key1: SessionIndex | Uint8Array | number | string, key2: AuthIndex | Uint8Array | number | string) => Observable<Option<Bytes>>> & QueryableStorageEntry<ApiType>;
+      authoredBlocks: StorageEntryExact<ApiType, (key1: SessionIndex | Uint8Array | number | string, key2: ValidatorId | Uint8Array | string) => Observable<u32>> & QueryableStorageEntry<ApiType>;
+    };
+    randomnessCollectiveFlip: {
+      [index: string]: QueryableStorageEntry<ApiType>;
+      randomMaterial: StorageEntryExact<ApiType, () => Observable<Vec<Hash>>> & QueryableStorageEntry<ApiType>;
+    };
+    transactionPayment: {
+      [index: string]: QueryableStorageEntry<ApiType>;
+      nextFeeMultiplier: StorageEntryExact<ApiType, () => Observable<Multiplier>> & QueryableStorageEntry<ApiType>;
     };
     sudo: {
       [index: string]: QueryableStorageEntry<ApiType>;
       key: StorageEntryExact<ApiType, () => Observable<AccountId>> & QueryableStorageEntry<ApiType>;
+    };
+    multiSig: {
+      [index: string]: QueryableStorageEntry<ApiType>;
+      multiSigNonce: StorageEntryExact<ApiType, () => Observable<u64>> & QueryableStorageEntry<ApiType>;
+      multiSigSigners: StorageEntryExact<ApiType, (arg: ITuple<[AccountId, Signer]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      multiSigSignsRequired: StorageEntryExact<ApiType, (arg: AccountId | Uint8Array | string) => Observable<u64>> & QueryableStorageEntry<ApiType>;
+      multiSigTxDone: StorageEntryExact<ApiType, (arg: AccountId | Uint8Array | string) => Observable<u64>> & QueryableStorageEntry<ApiType>;
+      proposals: StorageEntryExact<ApiType, (arg: ITuple<[AccountId, u64]>) => Observable<Option<Proposal>>> & QueryableStorageEntry<ApiType>;
+      txApprovals: StorageEntryExact<ApiType, (arg: ITuple<[AccountId, u64]>) => Observable<u64>> & QueryableStorageEntry<ApiType>;
+      votes: StorageEntryExact<ApiType, (arg: ITuple<[AccountId, Signer, u64]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
     };
     contracts: {
       [index: string]: QueryableStorageEntry<ApiType>;
@@ -176,35 +201,38 @@ declare module './types' {
       proposalCount: StorageEntryExact<ApiType, () => Observable<u32>> & QueryableStorageEntry<ApiType>;
       proposalMetadata: StorageEntryExact<ApiType, () => Observable<Vec<MipsMetadata>>> & QueryableStorageEntry<ApiType>;
       deposits: StorageEntryExact<ApiType, (arg: Hash | Uint8Array | string) => Observable<Vec<ITuple<[AccountId, BalanceOf]>>>> & QueryableStorageEntry<ApiType>;
-      proposals: StorageEntryExact<ApiType, (arg: Hash | Uint8Array | string) => Observable<Option<Proposal>>> & QueryableStorageEntry<ApiType>;
+      proposals: StorageEntryExact<ApiType, (arg: Hash | Uint8Array | string) => Observable<Option<MIP>>> & QueryableStorageEntry<ApiType>;
       voting: StorageEntryExact<ApiType, (arg: Hash | Uint8Array | string) => Observable<Option<Votes>>> & QueryableStorageEntry<ApiType>;
-      referendumMetadata: StorageEntryExact<ApiType, () => Observable<Vec<ITuple<[MipsIndex, Hash]>>>> & QueryableStorageEntry<ApiType>;
+      referendumMetadata: StorageEntryExact<ApiType, () => Observable<Vec<ReferendumInfo>>> & QueryableStorageEntry<ApiType>;
       referendums: StorageEntryExact<ApiType, (arg: Hash | Uint8Array | string) => Observable<Option<Proposal>>> & QueryableStorageEntry<ApiType>;
     };
     asset: {
       [index: string]: QueryableStorageEntry<ApiType>;
       feeCollector: StorageEntryExact<ApiType, () => Observable<AccountId>> & QueryableStorageEntry<ApiType>;
-      tickers: StorageEntryExact<ApiType, (arg: Bytes | Uint8Array | string) => Observable<TickerRegistration>> & QueryableStorageEntry<ApiType>;
+      tickers: StorageEntryExact<ApiType, (arg: Ticker | Uint8Array | string) => Observable<TickerRegistration>> & QueryableStorageEntry<ApiType>;
       tickerConfig: StorageEntryExact<ApiType, () => Observable<TickerRegistrationConfig>> & QueryableStorageEntry<ApiType>;
-      tokens: StorageEntryExact<ApiType, (arg: Bytes | Uint8Array | string) => Observable<SecurityToken>> & QueryableStorageEntry<ApiType>;
-      balanceOf: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
-      allowance: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, IdentityId, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      tokens: StorageEntryExact<ApiType, (arg: Ticker | Uint8Array | string) => Observable<SecurityToken>> & QueryableStorageEntry<ApiType>;
+      balanceOf: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      identifiers: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, IdentifierType]>) => Observable<Bytes>> & QueryableStorageEntry<ApiType>;
+      allowance: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, IdentityId, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       assetCreationFee: StorageEntryExact<ApiType, () => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       tickerRegistrationFee: StorageEntryExact<ApiType, () => Observable<Balance>> & QueryableStorageEntry<ApiType>;
-      totalCheckpoints: StorageEntryExact<ApiType, (arg: Bytes | Uint8Array | string) => Observable<u64>> & QueryableStorageEntry<ApiType>;
-      checkpointTotalSupply: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, u64]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
-      checkpointBalance: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, IdentityId, u64]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
-      userCheckpoints: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, IdentityId]>) => Observable<Vec<u64>>> & QueryableStorageEntry<ApiType>;
-      documents: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, Bytes]>) => Observable<ITuple<[Bytes, Bytes, Moment]>>> & QueryableStorageEntry<ApiType>;
-      custodianAllowance: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, IdentityId, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
-      totalCustodyAllowance: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
-      authenticationNonce: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, IdentityId, u16]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      totalCheckpoints: StorageEntryExact<ApiType, (arg: Ticker | Uint8Array | string) => Observable<u64>> & QueryableStorageEntry<ApiType>;
+      checkpointTotalSupply: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, u64]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      checkpointBalance: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, IdentityId, u64]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      userCheckpoints: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, IdentityId]>) => Observable<Vec<u64>>> & QueryableStorageEntry<ApiType>;
+      documents: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<ITuple<[Bytes, Bytes, Moment]>>> & QueryableStorageEntry<ApiType>;
+      custodianAllowance: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, IdentityId, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      totalCustodyAllowance: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      authenticationNonce: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, IdentityId, u16]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      fundingRound: StorageEntryExact<ApiType, (arg: Ticker | Uint8Array | string) => Observable<Bytes>> & QueryableStorageEntry<ApiType>;
+      issuedInFundingRound: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
     };
     dividend: {
       [index: string]: QueryableStorageEntry<ApiType>;
-      dividends: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, u32]>) => Observable<Dividend>> & QueryableStorageEntry<ApiType>;
-      dividendCount: StorageEntryExact<ApiType, (arg: Bytes | Uint8Array | string) => Observable<u32>> & QueryableStorageEntry<ApiType>;
-      userPayoutCompleted: StorageEntryExact<ApiType, (arg: ITuple<[IdentityId, Bytes, u32]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      dividends: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, u32]>) => Observable<Dividend>> & QueryableStorageEntry<ApiType>;
+      dividendCount: StorageEntryExact<ApiType, (arg: Ticker | Uint8Array | string) => Observable<u32>> & QueryableStorageEntry<ApiType>;
+      userPayoutCompleted: StorageEntryExact<ApiType, (arg: ITuple<[IdentityId, Ticker, u32]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
     };
     identity: {
       [index: string]: QueryableStorageEntry<ApiType>;
@@ -228,39 +256,39 @@ declare module './types' {
     };
     generalTM: {
       [index: string]: QueryableStorageEntry<ApiType>;
-      activeRules: StorageEntryExact<ApiType, (arg: Bytes | Uint8Array | string) => Observable<Vec<AssetRule>>> & QueryableStorageEntry<ApiType>;
+      activeRules: StorageEntryExact<ApiType, (arg: Ticker | Uint8Array | string) => Observable<Vec<AssetRule>>> & QueryableStorageEntry<ApiType>;
     };
     voting: {
       [index: string]: QueryableStorageEntry<ApiType>;
-      ballots: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, Bytes]>) => Observable<Ballot>> & QueryableStorageEntry<ApiType>;
-      totalChoices: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, Bytes]>) => Observable<u64>> & QueryableStorageEntry<ApiType>;
-      votes: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, Bytes, IdentityId]>) => Observable<Vec<Balance>>> & QueryableStorageEntry<ApiType>;
-      results: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, Bytes]>) => Observable<Vec<Balance>>> & QueryableStorageEntry<ApiType>;
+      ballots: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<Ballot>> & QueryableStorageEntry<ApiType>;
+      totalChoices: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<u64>> & QueryableStorageEntry<ApiType>;
+      votes: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, Bytes, IdentityId]>) => Observable<Vec<Balance>>> & QueryableStorageEntry<ApiType>;
+      results: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<Vec<Balance>>> & QueryableStorageEntry<ApiType>;
     };
     sTOCapped: {
       [index: string]: QueryableStorageEntry<ApiType>;
-      stosByToken: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, u32]>) => Observable<STO>> & QueryableStorageEntry<ApiType>;
-      stoCount: StorageEntryExact<ApiType, (arg: Bytes | Uint8Array | string) => Observable<u32>> & QueryableStorageEntry<ApiType>;
-      allowedTokens: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, u32, u32]>) => Observable<Bytes>> & QueryableStorageEntry<ApiType>;
-      tokenIndexForSTO: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, u32, Bytes]>) => Observable<Option<u32>>> & QueryableStorageEntry<ApiType>;
-      tokensCountForSto: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, u32]>) => Observable<u32>> & QueryableStorageEntry<ApiType>;
-      investmentData: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, u32, IdentityId]>) => Observable<Investment>> & QueryableStorageEntry<ApiType>;
-      simpleTokenSpent: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, Bytes, u32, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      stosByToken: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, u32]>) => Observable<STO>> & QueryableStorageEntry<ApiType>;
+      stoCount: StorageEntryExact<ApiType, (arg: Ticker | Uint8Array | string) => Observable<u32>> & QueryableStorageEntry<ApiType>;
+      allowedTokens: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, u32, u32]>) => Observable<Ticker>> & QueryableStorageEntry<ApiType>;
+      tokenIndexForSTO: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, u32, Ticker]>) => Observable<Option<u32>>> & QueryableStorageEntry<ApiType>;
+      tokensCountForSto: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, u32]>) => Observable<u32>> & QueryableStorageEntry<ApiType>;
+      investmentData: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, u32, IdentityId]>) => Observable<Investment>> & QueryableStorageEntry<ApiType>;
+      simpleTokenSpent: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, Ticker, u32, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
     };
     percentageTM: {
       [index: string]: QueryableStorageEntry<ApiType>;
-      maximumPercentageEnabledForToken: StorageEntryExact<ApiType, (arg: Bytes | Uint8Array | string) => Observable<u16>> & QueryableStorageEntry<ApiType>;
+      maximumPercentageEnabledForToken: StorageEntryExact<ApiType, (arg: Ticker | Uint8Array | string) => Observable<u16>> & QueryableStorageEntry<ApiType>;
     };
     exemption: {
       [index: string]: QueryableStorageEntry<ApiType>;
-      exemptionList: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, u16, IdentityId]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      exemptionList: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, u16, IdentityId]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
     };
     simpleToken: {
       [index: string]: QueryableStorageEntry<ApiType>;
-      allowance: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, IdentityId, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
-      balanceOf: StorageEntryExact<ApiType, (arg: ITuple<[Bytes, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      allowance: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, IdentityId, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      balanceOf: StorageEntryExact<ApiType, (arg: ITuple<[Ticker, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       creationFee: StorageEntryExact<ApiType, () => Observable<Balance>> & QueryableStorageEntry<ApiType>;
-      tokens: StorageEntryExact<ApiType, (arg: Bytes | Uint8Array | string) => Observable<SimpleTokenRecord>> & QueryableStorageEntry<ApiType>;
+      tokens: StorageEntryExact<ApiType, (arg: Ticker | Uint8Array | string) => Observable<SimpleTokenRecord>> & QueryableStorageEntry<ApiType>;
     };
     kYCServiceProviders: {
       [index: string]: QueryableStorageEntry<ApiType>;

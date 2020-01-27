@@ -3,8 +3,7 @@
 
 import { ITuple } from '@polkadot/types/types';
 import { Option, Struct, Vec } from '@polkadot/types/codec';
-import { AccountId, BlockNumber, Hash } from '@polkadot/types/interfaces/runtime';
-import { Balance } from '@polkadot/types/interfaces/polymesh';
+import { AccountId, Balance, BlockNumber, Hash } from '@polkadot/types/interfaces/runtime';
 
 /** Struct */
 export interface OpenTip extends Struct {

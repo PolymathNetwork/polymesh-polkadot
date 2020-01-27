@@ -2,11 +2,10 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 
 import { Bytes, u32, u64 } from '@polkadot/types';
-import { BalanceOf, BlockNumber, Permill } from '@polkadot/types/interfaces/runtime';
+import { Balance, BalanceOf, BlockNumber, Moment, Permill } from '@polkadot/types/interfaces/runtime';
 import { Gas } from '@polkadot/types/interfaces/contracts';
 import { SessionIndex } from '@polkadot/types/interfaces/session';
 import { EraIndex } from '@polkadot/types/interfaces/staking';
-import { Balance, Moment } from '@polkadot/types/interfaces/polymesh';
 import { Codec } from '@polkadot/types/types';
 
 declare module '@polkadot/metadata/Decorated/types' {

@@ -5,6 +5,12 @@
 export default {
   types: {
     MemberCount: 'u32',
-    ProposalIndex: 'u32'
+    ProposalIndex: 'u32',
+    /* Votes: {
+      index: 'ProposalIndex',
+      threshold: 'MemberCount',
+      ayes: 'Vec<AccountId>',
+      nays: 'Vec<AccountId>'
+    } */
   }
 };

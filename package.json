@@ -12,16 +12,15 @@
     "typescript": "^3.7.4"
   },
   "scripts": {
+    "autogen:polymesh-api": "ts-node packages/types/src/scripts/polymeshApi.ts",
     "build": "yarn build:interfaces && polkadot-dev-build-ts",
-    "build:interfaces": "yarn polymesh:schema && node packages/types/src/scripts/interfacesTsWrapper.js",
+    "build:interfaces": "node packages/types/src/scripts/interfacesTsWrapper.js",
     "circular": "madge --circular --extensions ts ./",
     "docs": "node packages/types/src/scripts/MetadataMdWrapper.js && polkadot-dev-build-docs",
     "chain:info": "node packages/types/src/scripts/extractChainWrapper.js",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx . && tsc --noEmit --pretty",
     "clean": "polkadot-dev-clean-build",
     "postinstall": "polkadot-dev-yarn-only",
-    "polymesh:schema": "ts-node packages/types/src/scripts/polymeshSchema.ts",
-    "polymesh:metadata": "node packages/types/src/scripts/polymeshMetadataWrapper.js",
     "test": "jest --coverage --runInBand --testPathIgnorePatterns e2e",
     "test:all": "jest",
     "test:one": "jest",

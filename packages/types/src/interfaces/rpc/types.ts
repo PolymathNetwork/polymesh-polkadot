@@ -4,8 +4,7 @@
 import { Codec, ITuple } from '@polkadot/types/types';
 import { Enum, Option, Struct, Vec } from '@polkadot/types/codec';
 import { Bytes, StorageData, StorageKey, Text, bool, u32, u64, u8 } from '@polkadot/types/primitive';
-import { BlockNumber, DispatchClass, Hash, Weight } from '@polkadot/types/interfaces/runtime';
-import { Balance } from '@polkadot/types/interfaces/polymesh';
+import { Balance, BlockNumber, DispatchClass, Hash, Weight } from '@polkadot/types/interfaces/runtime';
 
 /** Uint8Array, Codec */
 export interface ApiId extends Uint8Array, Codec {}

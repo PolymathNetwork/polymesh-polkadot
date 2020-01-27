@@ -2,8 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 
 import { Compact, Enum, Struct } from '@polkadot/types/codec';
-import { AccountId } from '@polkadot/types/interfaces/runtime';
-import { Balance } from '@polkadot/types/interfaces/polymesh';
+import { AccountId, Balance } from '@polkadot/types/interfaces/runtime';
 
 /** Struct */
 export interface AssetOptions extends Struct {

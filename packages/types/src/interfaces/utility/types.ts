@@ -3,8 +3,7 @@
 
 import { Struct, Vec } from '@polkadot/types/codec';
 import { u32 } from '@polkadot/types/primitive';
-import { AccountId, BlockNumber } from '@polkadot/types/interfaces/runtime';
-import { Balance } from '@polkadot/types/interfaces/polymesh';
+import { AccountId, Balance, BlockNumber } from '@polkadot/types/interfaces/runtime';
 
 /** Struct */
 export interface Multisig extends Struct {

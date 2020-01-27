@@ -6,7 +6,7 @@ import schema from "../interfaces/polymesh/definitions";
 const MD_PATH = "./packages/types/src/scripts/generateTypes/tmp";
 
 async function main() {
-  const provider = new WsProvider("ws://78.47.58.121:9944");
+  const provider = new WsProvider(process.argv[2]);
   const api = await ApiPromise.create({
     provider,
     types: schema.types

@@ -3,8 +3,8 @@
 
 import { Codec, ITuple } from '@polkadot/types/types';
 import { Enum, Option, Struct, Vec } from '@polkadot/types/codec';
-import { Bytes, H512, bool, u128, u16, u32, u64, u8 } from '@polkadot/types/primitive';
-import { Hash, Signature } from '@polkadot/types/interfaces/runtime';
+import { Bytes, H256, H512, bool, u16, u32, u64, u8 } from '@polkadot/types/primitive';
+import { Balance, Hash, Moment, Signature } from '@polkadot/types/interfaces/runtime';
 
 /** Struct */
 export interface AssetRule extends Struct {
@@ -50,17 +50,22 @@ export interface AuthorizationData extends Enum {
   readonly isTransferTicker: boolean;
   /** Ticker */
   readonly asTransferTicker: Ticker;
-  /** 1:: Custom(Bytes) */
+  /** 1:: AddMultiSigSigner */
+  readonly isAddMultiSigSigner: boolean;
+  /** 2:: TransferTokenOwnership(Ticker) */
+  readonly isTransferTokenOwnership: boolean;
+  /** Ticker */
+  readonly asTransferTokenOwnership: Ticker;
+  /** 3:: Custom(Bytes) */
   readonly isCustom: boolean;
   /** Bytes */
   readonly asCustom: Bytes;
+  /** 4:: NoData */
+  readonly isNoData: boolean;
 }
 
 /** u64 */
 export interface AuthorizationNonce extends u64 {}
-
-/** u128 */
-export interface Balance extends u128 {}
 
 /** Struct */
 export interface Ballot extends Struct {
@@ -179,8 +184,8 @@ export interface IdentifierType extends Enum {
   readonly asCustom: Bytes;
 }
 
-/** Uint8Array, Codec */
-export interface IdentityId extends Uint8Array, Codec {}
+/** H256 */
+export interface IdentityId extends H256 {}
 
 /** Enum */
 export interface IdentityRole extends Enum {
@@ -216,28 +221,6 @@ export interface Investment extends Struct {
   readonly tokens_purchased: Balance;
   /** Moment */
   readonly last_purchase_date: Moment;
-}
-
-/** Struct */
-export interface Investor extends Struct {
-  /** IdentityId */
-  readonly did: IdentityId;
-  /** u16 */
-  readonly access_level: u16;
-  /** bool */
-  readonly active: bool;
-  /** u16 */
-  readonly jurisdiction: u16;
-}
-
-/** Struct */
-export interface Issuer extends Struct {
-  /** IdentityId */
-  readonly did: IdentityId;
-  /** u16 */
-  readonly access_level: u16;
-  /** bool */
-  readonly active: bool;
 }
 
 /** Uint8Array, Codec */
@@ -300,9 +283,6 @@ export interface MipsPriority extends Enum {
   readonly isNormal: boolean;
 }
 
-/** u64 */
-export interface Moment extends u64 {}
-
 /** Struct */
 export interface Motion extends Struct {
   /** Bytes */
@@ -356,16 +336,6 @@ export interface PreAuthorizedKeyInfo extends Struct {
   readonly target_id: IdentityId;
   /** SigningItem */
   readonly signing_item: SigningItem;
-}
-
-/** Struct */
-export interface Restriction extends Struct {
-  /** Bytes */
-  readonly name: Bytes;
-  /** u32 */
-  readonly token_id: u32;
-  /** bool */
-  readonly can_transfer: bool;
 }
 
 /** Struct */
@@ -426,8 +396,8 @@ export interface SignerType extends Enum {
   readonly isExternal: boolean;
   /** 1:: Identity */
   readonly isIdentity: boolean;
-  /** 2:: Multisig */
-  readonly isMultisig: boolean;
+  /** 2:: MultiSig */
+  readonly isMultiSig: boolean;
   /** 3:: Relayer */
   readonly isRelayer: boolean;
 }
@@ -517,9 +487,6 @@ export interface TickerTransferApproval extends Struct {
   readonly previous_ticker: Option<Ticker>;
 }
 
-/** u64 */
-export interface TSMoment extends u64 {}
-
 /** Struct */
 export interface Votes extends Struct {
   /** u32 */
@@ -528,14 +495,4 @@ export interface Votes extends Struct {
   readonly ayes: Vec<ITuple<[IdentityId, Balance]>>;
   /** Vec<ITuple<[IdentityId, Balance]>> */
   readonly nays: Vec<ITuple<[IdentityId, Balance]>>;
-}
-
-/** Struct */
-export interface Whitelist extends Struct {
-  /** IdentityId */
-  readonly investor_did: IdentityId;
-  /** Moment */
-  readonly canSendAfter: Moment;
-  /** Moment */
-  readonly canReceiveAfter: Moment;
 }

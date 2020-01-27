@@ -6,7 +6,7 @@ import * as fs from "fs";
   rimraf.sync("./Polymesh");
   rimraf.sync("./packages/types/src/interfaces/polymesh");
 
-  const branch = process.argv[2] || "master";
+  const branch = process.argv[2];
   const repo = await Git.Clone.clone("https://github.com/PolymathNetwork/Polymesh", "Polymesh");
   const commit = await repo.getBranchCommit(branch);
   const schemaFile = await commit.getEntry("polymesh_schema.json");

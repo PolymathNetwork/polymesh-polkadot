@@ -4,8 +4,7 @@
 import { ITuple } from '@polkadot/types/types';
 import { Enum, Struct } from '@polkadot/types/codec';
 import { Bytes, i8, u32, u64 } from '@polkadot/types/primitive';
-import { AccountId } from '@polkadot/types/interfaces/runtime';
-import { Balance } from '@polkadot/types/interfaces/polymesh';
+import { AccountId, Balance } from '@polkadot/types/interfaces/runtime';
 
 /** Struct */
 export interface AccountInfo extends Struct {
