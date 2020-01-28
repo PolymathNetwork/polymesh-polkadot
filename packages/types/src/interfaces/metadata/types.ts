@@ -917,11 +917,11 @@ export interface StorageHasher extends StorageHasherV10 {}
 
 /** Enum */
 export interface StorageHasherV10 extends Enum {
-  /** 0:: Blake2128 */
+  /** 0:: Blake2_128 */
   readonly isBlake2128: boolean;
-  /** 1:: Blake2256 */
+  /** 1:: Blake2_256 */
   readonly isBlake2256: boolean;
-  /** 2:: Blake2128Concat */
+  /** 2:: Blake2_128Concat */
   readonly isBlake2128Concat: boolean;
   /** 3:: Twox128 */
   readonly isTwox128: boolean;

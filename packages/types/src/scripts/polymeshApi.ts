@@ -1,11 +1,14 @@
-const { exec } = require("child_process");
+const { execSync } = require("child_process");
 
 (async () => {
   const branch = process.argv[2] || "master";
-  const provider = process.argv[3] || "ws://78.47.58.121:9944";
+  const provider = process.argv[3] || "http://78.47.58.121:9933";
 
+  console.log("Building Polymesh schema...");
+  execSync(`ts-node packages/types/src/scripts/polymeshSchema.ts ${branch}`);
+  console.log("Building Polymesh metadata...");
+  execSync(`ts-node packages/types/src/scripts/polymeshMetadata.ts ${provider}`);
   console.log("Building interfaces...");
-  exec(
-    `ts-node packages/types/src/scripts/polymeshSchema.ts ${branch} && node packages/types/src/scripts/polymeshMetadataWrapper.js ${provider} && node packages/types/src/scripts/interfacesTsWrapper.js`
-  );
+  execSync(`node packages/types/src/scripts/interfacesTsWrapper.js`);
+  console.log("Done!");
 })();

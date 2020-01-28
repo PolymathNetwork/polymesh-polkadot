@@ -155,5 +155,5 @@ function generateForMeta (definitions: object, registry: Registry, meta: Metadat
 export default function generateQuery (): void {
   const registry = new TypeRegistry();
 
-  return generateForMeta(defaultDefinitions, registry, new Metadata(registry, polymeshJson));
+  return generateForMeta(defaultDefinitions, registry, new Metadata(registry, polymeshJson.result));
 }

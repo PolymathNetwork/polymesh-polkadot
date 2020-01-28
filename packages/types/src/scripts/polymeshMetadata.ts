@@ -1,23 +1,16 @@
-import { ApiPromise, WsProvider } from "@polkadot/api/index";
 import * as rimraf from "rimraf";
 import * as fs from "fs";
-import schema from "../interfaces/polymesh/definitions";
+import { execSync } from "child_process";
 
 const MD_PATH = "./packages/types/src/scripts/generateTypes/tmp";
 
 async function main() {
-  const provider = new WsProvider(process.argv[2]);
-  const api = await ApiPromise.create({
-    provider,
-    types: schema.types
-  });
-
-  // Retrieve queries via rpc calls
-  const [metadata] = await Promise.all([api.runtimeMetadata]);
-
+  const result = execSync(
+    `curl -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "state_getMetadata", "params":[]}' ${process.argv[2]}`
+  );
   rimraf.sync(MD_PATH);
   fs.mkdirSync(MD_PATH);
-  fs.writeFileSync(`${MD_PATH}/polymesh_metadata.json`, metadata);
+  fs.writeFileSync(`${MD_PATH}/polymesh_metadata.json`, result.toString());
 }
 
 main()

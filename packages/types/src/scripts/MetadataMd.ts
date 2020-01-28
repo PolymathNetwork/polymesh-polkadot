@@ -249,7 +249,7 @@ function writeToEventsMd (metadata: MetadataLatest): void {
 }
 
 const registry = new TypeRegistry();
-const decorated = new Decorated(registry, polymeshJson);
+const decorated = new Decorated(registry, polymeshJson.result);
 const latest = decorated.metadata.asLatest;
 
 writeToRpcMd();
