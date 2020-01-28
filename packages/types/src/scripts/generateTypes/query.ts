@@ -12,7 +12,7 @@ import { stringLowerFirst } from '@polkadot/util';
 import { Metadata } from '../..';
 import { TypeRegistry } from '../../codec';
 import { createImportCode, createImports, FOOTER, formatType, getSimilarTypes, HEADER, indent, setImports, TypeImports } from '../util';
-import meta from './tmp/polymesh_metadata';
+import polymeshMetadata from './tmp/polymesh_metadata';
 
 // If the StorageEntry returns T, output `Option<T>` if the modifier is optional
 /** @internal */
@@ -155,5 +155,5 @@ function generateForMeta (definitions: object, registry: Registry, meta: Metadat
 export default function generateQuery (): void {
   const registry = new TypeRegistry();
 
-  return generateForMeta(defaultDefinitions, registry, new Metadata(registry, meta));
+  return generateForMeta(defaultDefinitions, registry, new Metadata(registry, polymeshMetadata));
 }

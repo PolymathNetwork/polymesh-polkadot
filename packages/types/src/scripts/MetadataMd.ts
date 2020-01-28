@@ -6,7 +6,7 @@ import { MetadataLatest, ModuleMetadataLatest } from '../interfaces/metadata';
 
 import fs from 'fs';
 import Decorated from '@polkadot/metadata/Decorated';
-import meta from './generateTypes/tmp/polymesh_metadata';
+import polymeshMetadata from './generateTypes/tmp/polymesh_metadata';
 import { stringCamelCase, stringLowerFirst } from '@polkadot/util';
 
 import interfaces from '../../../type-jsonrpc/src';
@@ -249,7 +249,7 @@ function writeToEventsMd (metadata: MetadataLatest): void {
 }
 
 const registry = new TypeRegistry();
-const decorated = new Decorated(registry, meta);
+const decorated = new Decorated(registry, polymeshMetadata);
 const latest = decorated.metadata.asLatest;
 
 writeToRpcMd();

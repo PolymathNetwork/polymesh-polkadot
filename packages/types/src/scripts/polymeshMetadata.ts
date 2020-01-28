@@ -13,8 +13,8 @@ async function main() {
   fs.writeFileSync(
     `${MD_PATH}/polymesh_metadata.ts`,
     `
-  const meta = '${JSON.parse(result.toString()).result}';
-  export default meta;
+  const polymeshMetadata = '${JSON.parse(result.toString()).result}';
+  export default polymeshMetadata;
   `
   );
 }
