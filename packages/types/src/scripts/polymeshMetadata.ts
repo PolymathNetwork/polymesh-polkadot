@@ -10,7 +10,13 @@ async function main() {
   );
   rimraf.sync(MD_PATH);
   fs.mkdirSync(MD_PATH);
-  fs.writeFileSync(`${MD_PATH}/polymesh_metadata.json`, result.toString());
+  fs.writeFileSync(
+    `${MD_PATH}/polymesh_metadata.ts`,
+    `
+  const meta = '${JSON.parse(result.toString()).result}';
+  export default meta;
+  `
+  );
 }
 
 main()
