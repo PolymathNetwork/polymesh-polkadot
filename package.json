@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-beta.18",
+  "version": "1.0.0-beta.25",
   "private": true,
   "engines": {
     "yarn": "^1.10.1"
@@ -9,7 +9,7 @@
   ],
   "resolutions": {
     "babel-core": "^7.0.0-bridge.0",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.5"
   },
   "scripts": {
     "autogen:polymesh-api": "ts-node packages/types/src/scripts/polymeshApi.ts",
@@ -28,13 +28,13 @@
     "commit": "npx git-cz"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/register": "^7.7.7",
-    "@babel/runtime": "^7.7.7",
+    "@babel/core": "^7.8.3",
+    "@babel/register": "^7.8.3",
+    "@babel/runtime": "^7.8.3",
     "@commitlint/cli": "^7.6.1",
-    "@commitlint/config-conventional": "^7.6.0",
-    "@polkadot/dev": "^0.32.14",
-    "@polkadot/ts": "^0.1.90",
+    "@commitlint/config-conventional": "^7.6.0", 
+    "@polkadot/dev": "^0.32.17",
+    "@polkadot/ts": "^0.1.91",
     "@semantic-release/git": "^8.0.0",
     "@types/nodegit": "^0.26.1",
     "@types/rimraf": "^2.0.3",

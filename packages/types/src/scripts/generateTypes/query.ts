@@ -16,6 +16,7 @@ import { createImportCode, createImports, FOOTER, formatType, getSimilarTypes, H
 import polymeshJson from './tmp/polymesh_metadata.json';
 
 // If the StorageEntry returns T, output `Option<T>` if the modifier is optional
+/** @internal */
 function addModifier (storageEntry: StorageEntryMetadataLatest, returnType: string): string {
   if (storageEntry.modifier.isOptional) {
     return `Option<${returnType}>`;
@@ -25,6 +26,7 @@ function addModifier (storageEntry: StorageEntryMetadataLatest, returnType: stri
 }
 
 // From a storage entry metadata, we return [args, returnType]
+/** @internal */
 function entrySignature (definitions: object, registry: Registry, storageEntry: StorageEntryMetadataLatest, imports: TypeImports): [string, string] {
   if (storageEntry.type.isPlain) {
     setImports(definitions, imports, [storageEntry.type.asPlain.toString()]);
@@ -67,6 +69,7 @@ function entrySignature (definitions: object, registry: Registry, storageEntry: 
 }
 
 // Generate types for one storage entry in a module
+/** @internal */
 function generateEntry (definitions: object, registry: Registry, storageEntry: StorageEntryMetadataLatest, imports: TypeImports): string[] {
   const [args, returnType] = entrySignature(definitions, registry, storageEntry, imports);
 
@@ -76,6 +79,7 @@ function generateEntry (definitions: object, registry: Registry, storageEntry: S
 }
 
 // Generate types for one module
+/** @internal */
 function generateModule (definitions: object, registry: Registry, modul: ModuleMetadataLatest, imports: TypeImports): string[] {
   if (modul.storage.isNone) {
     return [];
@@ -95,6 +99,7 @@ function generateModule (definitions: object, registry: Registry, modul: ModuleM
 
 // Generate `packages/api/src/query.types.ts` for a particular
 // metadata
+/** @internal */
 function generateForMeta (definitions: object, registry: Registry, meta: Metadata): void {
   console.log('Writing packages/api/src/query.types.ts');
 
@@ -148,6 +153,7 @@ function generateForMeta (definitions: object, registry: Registry, meta: Metadat
 }
 
 // Call `generateForMeta()` with current static metadata
+/** @internal */
 export default function generateQuery (): void {
   const registry = new TypeRegistry();
 

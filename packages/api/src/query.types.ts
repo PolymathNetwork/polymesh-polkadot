@@ -294,5 +294,9 @@ declare module './types' {
       [index: string]: QueryableStorageEntry<ApiType>;
       members: StorageEntryExact<ApiType, () => Observable<Vec<IdentityId>>> & QueryableStorageEntry<ApiType>;
     };
+    statistic: {
+      [index: string]: QueryableStorageEntry<ApiType>;
+      investorCountPerAsset: StorageEntryExact<ApiType, (arg: Ticker | Uint8Array | string) => Observable<Counter>> & QueryableStorageEntry<ApiType>;
+    };
   }
 }
