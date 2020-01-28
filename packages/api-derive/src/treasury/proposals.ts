@@ -4,7 +4,7 @@
 
 import { ApiInterfaceRx } from '@polkadot/api/types';
 import { ProposalIndex, TreasuryProposal } from '@polkadot/types/interfaces';
-import { DerivedCollectiveProposals, DerivedTreasuryProposal, DerivedTreasuryProposals } from '../types';
+import { DerivedTreasuryProposal, DerivedTreasuryProposals } from '../types';
 
 import { Observable, combineLatest, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -16,25 +16,17 @@ interface Result {
   allIds: ProposalIndex[];
   allProposals: Option<TreasuryProposal>[];
   approvalIds: ProposalIndex[];
-  councilProposals: DerivedCollectiveProposals;
   proposalCount: ProposalIndex;
 }
 
-function parseResult (_api: ApiInterfaceRx, { allIds, allProposals, approvalIds, councilProposals, proposalCount }: Result): DerivedTreasuryProposals {
+function parseResult (_api: ApiInterfaceRx, { allIds, allProposals, approvalIds, proposalCount }: Result): DerivedTreasuryProposals {
   const approvals: DerivedTreasuryProposal[] = [];
   const proposals: DerivedTreasuryProposal[] = [];
-  const councilTreasury = councilProposals.filter(({ proposal: { methodName, sectionName } }): boolean =>
-    sectionName === 'treasury' &&
-    ['approveProposal', 'rejectProposal'].includes(methodName)
-  );
 
   allIds.forEach((id, index): void => {
     if (allProposals[index].isSome) {
-      const council = councilTreasury
-        .filter(({ proposal }): boolean => id.eq(proposal.args[0]))
-        .sort((a, b): number => a.proposal.methodName.localeCompare(b.proposal.methodName));
       const isApproval = approvalIds.some((approvalId): boolean => approvalId.eq(id));
-      const derived = { council, id, proposal: allProposals[index].unwrap() };
+      const derived = { id, proposal: allProposals[index].unwrap() };
 
       if (isApproval) {
         approvals.push(derived);
@@ -62,11 +54,10 @@ function retrieveProposals (api: ApiInterfaceRx, proposalCount: ProposalIndex, a
   const allIds = [...proposalIds, ...approvalIds];
 
   return combineLatest([
-    api.query.treasury.proposals.multi<Option<TreasuryProposal>>(allIds),
-    api.derive.council.proposals()
+    api.query.treasury.proposals.multi<Option<TreasuryProposal>>(allIds)
   ]).pipe(
-    map(([allProposals, councilProposals]: [Option<TreasuryProposal>[], DerivedCollectiveProposals]): DerivedTreasuryProposals =>
-      parseResult(api, { allIds, allProposals, approvalIds, councilProposals, proposalCount })
+    map(([allProposals]: [Option<TreasuryProposal>[]]): DerivedTreasuryProposals =>
+      parseResult(api, { allIds, allProposals, approvalIds, proposalCount })
     )
   );
 }

@@ -7,7 +7,6 @@ import { Registry } from '../../types';
 import * as defaultDefinitions from '../../interfaces/definitions';
 
 import fs from 'fs';
-import staticData from '@polkadot/metadata/Metadata/static';
 import { stringLowerFirst } from '@polkadot/util';
 
 import { Metadata } from '../..';

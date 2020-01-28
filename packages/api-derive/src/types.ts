@@ -213,7 +213,6 @@ export interface DerivedStakingOverview extends DeriveSessionIndexes {
 }
 
 export interface DerivedTreasuryProposal {
-  council: DerivedCollectiveProposal[];
   id: ProposalIndex;
   proposal: TreasuryProposal;
 }

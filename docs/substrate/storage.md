@@ -49,6 +49,8 @@ The following sections contain Storage methods are part of the default Substrate
 
 - **[staking](#staking)**
 
+- **[statistic](#statistic)**
+
 - **[sToCapped](#sToCapped)**
 
 - **[sudo](#sudo)**
@@ -768,6 +770,14 @@ ___
 ### validatorSlashInEra(`EraIndex, AccountId`): `Option<(Perbill,BalanceOf)>`
 - **interface**: api.query.staking.validatorSlashInEra
 - **summary**: All slashing events on validators, mapped by era to the highest slash proportion and slash value of the era.
+
+___
+
+
+## statistic
+
+### investorCountPerAsset(`Ticker`): `Counter`
+- **interface**: api.query.statistic.investorCountPerAsset
 
 ___
 
