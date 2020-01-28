@@ -85,7 +85,6 @@ function generateModule (definitions: object, registry: Registry, modul: ModuleM
   }
 
   return [indent(4)(`${stringLowerFirst(modul.name.toString())}: {`)]
-    .concat(indent(6)('[index: string]: QueryableStorageEntry<ApiType>;'))
     .concat(
       modul.storage.unwrap().items
         .reduce((acc, storageEntry): string[] => {
