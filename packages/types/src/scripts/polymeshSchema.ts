@@ -17,4 +17,5 @@ import * as fs from "fs";
     "./packages/types/src/interfaces/polymesh/definitions.ts",
     `export default { types: ${blob.toString()} }`
   );
+  rimraf.sync("./Polymesh");
 })();

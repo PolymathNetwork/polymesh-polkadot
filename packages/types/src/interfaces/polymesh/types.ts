@@ -240,14 +240,14 @@ export interface Link extends Struct {
 
 /** Enum */
 export interface LinkData extends Enum {
-  /** 0:: TickerOwned(Ticker) */
+  /** 0:: TickerOwned(Bytes) */
   readonly isTickerOwned: boolean;
-  /** Ticker */
-  readonly asTickerOwned: Ticker;
-  /** 1:: TokenOwned(Ticker) */
+  /** Bytes */
+  readonly asTickerOwned: Bytes;
+  /** 1:: TokenOwned(Bytes) */
   readonly isTokenOwned: boolean;
-  /** Ticker */
-  readonly asTokenOwned: Ticker;
+  /** Bytes */
+  readonly asTokenOwned: Bytes;
 }
 
 /** Enum */

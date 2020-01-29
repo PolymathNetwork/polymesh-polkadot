@@ -5,6 +5,7 @@
 import generateConstsTypes from './generateTypes/consts';
 import generateInterfaceRegistry from './generateTypes/interfaceRegistry';
 import generateQueryTypes from './generateTypes/query';
+import generateTxTypes from './generateTypes/tx';
 import generateRpcTypes from './generateTypes/rpc';
 import generateTsDef from './generateTypes/tsDef';
 
@@ -13,6 +14,7 @@ function main (): void {
   generateConstsTypes();
   generateInterfaceRegistry();
   generateQueryTypes();
+  generateTxTypes();
   generateRpcTypes();
   generateTsDef();
 }

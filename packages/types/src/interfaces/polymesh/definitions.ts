@@ -51,12 +51,6 @@ export default { types: {
         "next_link": "u64",
         "previous_link": "u64"
     },
-    "LinkData": {
-       "_enum": {
-            "TickerOwned": "Ticker",
-            "TokenOwned": "Ticker"
-       }
-    },
     "SignerType": {
         "_enum": [
             "External",
