@@ -26,7 +26,7 @@ function addModifier (storageEntry: StorageEntryMetadataLatest, returnType: stri
 /** @internal */
 function entrySignature (definitions: object, registry: Registry, callEntry: FunctionMetadataV10, imports: TypeImports): [string] {
 
-  return [Call.filterOrigin(callEntry).map(({ name, type }): string => `${name}: ` + '`' + type + '`').join(', ')];
+  return [Call.filterOrigin(callEntry).map(({ name, type }): string => `${name}: ${type}`).join(', ')];
 
 }
 
@@ -36,7 +36,7 @@ function generateEntry (definitions: object, registry: Registry, callEntry: Func
   const [args] = entrySignature(definitions, registry, callEntry, imports);
 
   return [
-    `${stringLowerFirst(callEntry.name.toString())}: SubmittableExtrinsicFunction<ApiType, (${args})>;`
+    `${stringLowerFirst(callEntry.name.toString())}: ((${args}) => SubmittableExtrinsic<ApiType>) & CallFunction;`
   ];
 }
 
@@ -98,7 +98,7 @@ function generateForMeta (definitions: object, registry: Registry, meta: Metadat
   const interfaceStart =
     [
       "declare module './types' {",
-      indent(2)('export interface SubmittableExtrinsic<ApiType> {\n')
+      indent(2)('export interface SubmittableExtrinsicsExact<ApiType> {\n')
     ].join('\n');
   const interfaceEnd = `\n${indent(2)('}')}\n}`;
 

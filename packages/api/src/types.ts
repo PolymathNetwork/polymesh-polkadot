@@ -178,9 +178,13 @@ export interface SubmittableModuleExtrinsics<ApiType extends ApiTypes> {
   [index: string]: SubmittableExtrinsicFunction<ApiType>;
 }
 
-export interface SubmittableExtrinsics<ApiType extends ApiTypes> {
+// SubmittableExtrinsicsExact will hold the exact typed api.tx.*.* generated from
+// metadata. For now it's empty, it's ready to be module augmented.
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface SubmittableExtrinsicsExact<ApiType extends ApiTypes> {}
+
+export interface SubmittableExtrinsics<ApiType extends ApiTypes> extends SubmittableExtrinsicsExact<ApiType> {
   (extrinsic: Uint8Array | string): SubmittableExtrinsic<ApiType>;
-  [index: string]: SubmittableModuleExtrinsics<ApiType>;
 }
 
 export interface ApiOptions {
