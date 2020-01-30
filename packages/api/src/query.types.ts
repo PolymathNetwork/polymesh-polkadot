@@ -11,7 +11,7 @@ import { BalanceLock, VestingSchedule } from '@polkadot/types/interfaces/balance
 import { ProposalIndex } from '@polkadot/types/interfaces/collective';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import { CodeHash, ContractInfo, Gas, PrefabWasmModule, Schedule } from '@polkadot/types/interfaces/contracts';
-import { Proposal, ReferendumInfo } from '@polkadot/types/interfaces/democracy';
+import { Proposal } from '@polkadot/types/interfaces/democracy';
 import { AuthorityList, SetId, StoredPendingChange, StoredState } from '@polkadot/types/interfaces/grandpa';
 import { AuthIndex } from '@polkadot/types/interfaces/imOnline';
 import { Kind, OffenceDetails, OpaqueTimeSlot, ReportIdOf } from '@polkadot/types/interfaces/offences';
@@ -20,7 +20,7 @@ import { EraIndex, EraPoints, Exposure, Forcing, MomentOf, Nominations, RewardDe
 import { DigestOf, EventIndex, EventRecord } from '@polkadot/types/interfaces/system';
 import { TreasuryProposal } from '@polkadot/types/interfaces/treasury';
 import { Multiplier } from '@polkadot/types/interfaces/txpayment';
-import { AssetRule, Authorization, AuthorizationNonce, Ballot, Claim, ClaimMetaData, DidRecord, Dividend, IdentifierType, IdentityId, Investment, Key, Link, LinkedKeyInfo, MipsMetadata, PermissionedValidator, PreAuthorizedKeyInfo, STO, SecurityToken, Signer, SimpleTokenRecord, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig, Votes } from '@polkadot/types/interfaces/polymesh';
+import { AssetRule, Authorization, AuthorizationNonce, Ballot, Claim, ClaimMetaData, Counter, DidRecord, Dividend, IdentifierType, IdentityId, Investment, Key, Link, LinkedKeyInfo, MIP, MipsMetadata, PermissionedValidator, PreAuthorizedKeyInfo, ProportionMatch, ReferendumInfo, STO, SecurityToken, Signer, SimpleTokenRecord, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig, Votes } from '@polkadot/types/interfaces/polymesh';
 import { ITuple } from '@polkadot/types/types';
 
 declare module './types' {

@@ -1,33 +1,34 @@
 
-import { ModuleMetadataLatest, StorageEntryMetadataLatest, CallMetadataV0, FunctionMetadataV10 } from '../../interfaces/metadata';
+import { ModuleMetadataLatest, FunctionMetadataV10 } from '../../interfaces/metadata';
 import { Registry } from '../../types';
 import * as defaultDefinitions from '../../interfaces/definitions';
-import Call from '../../primitive/Generic/Call';
 
 import fs from 'fs';
-import { stringLowerFirst } from '@polkadot/util';
+import { stringLowerFirst, stringCamelCase } from '@polkadot/util';
 
 import { Metadata } from '../..';
 import { TypeRegistry } from '../../codec';
 import { createImportCode, createImports, FOOTER, formatType, getSimilarTypes, HEADER, indent, setImports, TypeImports } from '../util';
 import polymeshMetadata from './tmp/polymesh_metadata';
 
-// If the StorageEntry returns T, output `Option<T>` if the modifier is optional
-/** @internal */
-function addModifier (storageEntry: StorageEntryMetadataLatest, returnType: string): string {
-  if (storageEntry.modifier.isOptional) {
-    return `Option<${returnType}>`;
-  }
-
-  return returnType;
-}
-
 // From a storage entry metadata, we return [args, returnType]
 /** @internal */
 function entrySignature (definitions: object, registry: Registry, callEntry: FunctionMetadataV10, imports: TypeImports): [string] {
 
-  return [Call.filterOrigin(callEntry).map(({ name, type }): string => `${name}: ${type}`).join(', ')];
-
+  var args:string[] = [];
+  callEntry.args.map(({ name, type }) => {
+    const similarTypes = getSimilarTypes(definitions, registry, type.toString(), imports);
+    if (!RegExp(/(\(|\))\1+/g).test(similarTypes[0])) {
+      setImports(definitions, imports, [
+        ...similarTypes,
+        type.toString()
+      ]);
+      args.push(`_${name.toString()}: ${similarTypes.map((type) => formatType(definitions, type, imports)).join(' | ')}`)
+    } else {
+      args.push(`_${name.toString()}: ${similarTypes}`)
+    }
+  })
+  return [args.join(', ')];
 }
 
 // Generate types for one call entry in a module
@@ -36,7 +37,7 @@ function generateEntry (definitions: object, registry: Registry, callEntry: Func
   const [args] = entrySignature(definitions, registry, callEntry, imports);
 
   return [
-    `${stringLowerFirst(callEntry.name.toString())}: ((${args}) => SubmittableExtrinsic<ApiType>) & CallFunction;`
+    `${stringCamelCase(callEntry.name.toString())}: ((${args}) => SubmittableExtrinsic<ApiType>) & CallFunction;`
   ];
 }
 
@@ -74,8 +75,12 @@ function generateForMeta (definitions: object, registry: Registry, meta: Metadat
 
   const header = createImportCode(HEADER, [
     {
-      file: 'rxjs',
-      types: ['Observable']
+      file: '@polkadot/api/types',
+      types: ['SubmittableExtrinsic']
+    },
+    {
+      file: '@polkadot/types/types',
+      types: ['CallFunction']
     },
     {
       file: '@polkadot/types/codec',

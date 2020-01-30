@@ -30,12 +30,6 @@ export default { types: {
             "Group": "Vec<IdentityId>"
         }
     },
-    "LinkData": {
-        "_enum": {
-            "TickerOwned": "Vec<u8>",
-            "TokenOwned": "Vec<u8>"
-        }
-    },
     "Key": "[u8;32]",
     "Permission": {
         "_enum": [
@@ -50,6 +44,12 @@ export default { types: {
         "expiry": "Option<Moment>",
         "next_link": "u64",
         "previous_link": "u64"
+    },
+    "LinkData": {
+       "_enum": {
+            "TickerOwned": "Ticker",
+            "TokenOwned": "Ticker"
+       }
     },
     "SignerType": {
         "_enum": [
@@ -224,6 +224,15 @@ export default { types: {
             "Normal"
         ]
     },
+    "MIP": {
+        "index": "MipsIndex",
+        "proposal":"Call"
+    },
+    "ReferendumInfo": {
+        "index": "MipsIndex",
+        "priority": "MipsPriority",
+        "proposal_hash": "Hash"
+    },
     "TickerTransferApproval": {
         "authorized_by": "IdentityId",
         "next_ticker": "Option<Ticker>",
@@ -242,6 +251,8 @@ export default { types: {
     },
     "AuthorizationData": {
         "_enum": {
+            "AttestMasterKeyRotation": "IdentityId",
+            "RotateMasterKey": "IdentityId",
             "TransferTicker": "Ticker",
             "AddMultiSigSigner": "",
             "TransferTokenOwnership": "Ticker",
@@ -255,6 +266,13 @@ export default { types: {
             "Active"
         ]
     },
-    "AuthorizationNonce": "u64"
+    "ProportionMatch": {
+        "_enum": [ 
+            "AtLeast",
+            "MoreThan"
+        ]
+    },
+    "AuthorizationNonce": "u64",
+    "Counter": "u64"
 }
  }

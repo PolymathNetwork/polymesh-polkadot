@@ -1,7 +1,7 @@
 const { execSync } = require("child_process");
 
 (async () => {
-  const branch = process.argv[2] || "master";
+  const branch = process.argv[2] || "develop";
   const provider = process.argv[3] || "http://78.47.58.121:9933";
 
   console.log("Building Polymesh schema...");

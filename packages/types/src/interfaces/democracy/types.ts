@@ -1,10 +1,9 @@
 // Auto-generated via `yarn build:interfaces`, do not edit
 /* eslint-disable @typescript-eslint/no-empty-interface */
 
-import { Enum, Struct } from '@polkadot/types/codec';
+import { Enum } from '@polkadot/types/codec';
 import { u32 } from '@polkadot/types/primitive';
-import { BlockNumber, Call, Hash } from '@polkadot/types/interfaces/runtime';
-import { VoteThreshold } from '@polkadot/types/interfaces/elections';
+import { Call } from '@polkadot/types/interfaces/runtime';
 
 /** Enum */
 export interface Conviction extends Enum {
@@ -32,15 +31,3 @@ export interface Proposal extends Call {}
 
 /** u32 */
 export interface ReferendumIndex extends u32 {}
-
-/** Struct */
-export interface ReferendumInfo extends Struct {
-  /** BlockNumber */
-  readonly end: BlockNumber;
-  /** Hash */
-  readonly proposalHash: Hash;
-  /** VoteThreshold */
-  readonly threshold: VoteThreshold;
-  /** BlockNumber */
-  readonly delay: BlockNumber;
-}

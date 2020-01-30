@@ -4,7 +4,7 @@
 import { Codec, ITuple } from '@polkadot/types/types';
 import { Enum, Option, Struct, Vec } from '@polkadot/types/codec';
 import { Bytes, H256, H512, bool, u16, u32, u64, u8 } from '@polkadot/types/primitive';
-import { Balance, Hash, Moment, Signature } from '@polkadot/types/interfaces/runtime';
+import { Balance, Call, Hash, Moment, Signature } from '@polkadot/types/interfaces/runtime';
 
 /** Struct */
 export interface AssetRule extends Struct {
@@ -46,21 +46,29 @@ export interface Authorization extends Struct {
 
 /** Enum */
 export interface AuthorizationData extends Enum {
-  /** 0:: TransferTicker(Ticker) */
+  /** 0:: AttestMasterKeyRotation(IdentityId) */
+  readonly isAttestMasterKeyRotation: boolean;
+  /** IdentityId */
+  readonly asAttestMasterKeyRotation: IdentityId;
+  /** 1:: RotateMasterKey(IdentityId) */
+  readonly isRotateMasterKey: boolean;
+  /** IdentityId */
+  readonly asRotateMasterKey: IdentityId;
+  /** 2:: TransferTicker(Ticker) */
   readonly isTransferTicker: boolean;
   /** Ticker */
   readonly asTransferTicker: Ticker;
-  /** 1:: AddMultiSigSigner */
+  /** 3:: AddMultiSigSigner */
   readonly isAddMultiSigSigner: boolean;
-  /** 2:: TransferTokenOwnership(Ticker) */
+  /** 4:: TransferTokenOwnership(Ticker) */
   readonly isTransferTokenOwnership: boolean;
   /** Ticker */
   readonly asTransferTokenOwnership: Ticker;
-  /** 3:: Custom(Bytes) */
+  /** 5:: Custom(Bytes) */
   readonly isCustom: boolean;
   /** Bytes */
   readonly asCustom: Bytes;
-  /** 4:: NoData */
+  /** 6:: NoData */
   readonly isNoData: boolean;
 }
 
@@ -124,6 +132,9 @@ export interface Compliance extends Enum {
   /** 1:: Active */
   readonly isActive: boolean;
 }
+
+/** u64 */
+export interface Counter extends u64 {}
 
 /** Enum */
 export interface DataTypes extends Enum {
@@ -240,14 +251,14 @@ export interface Link extends Struct {
 
 /** Enum */
 export interface LinkData extends Enum {
-  /** 0:: TickerOwned(Bytes) */
+  /** 0:: TickerOwned(Ticker) */
   readonly isTickerOwned: boolean;
-  /** Bytes */
-  readonly asTickerOwned: Bytes;
-  /** 1:: TokenOwned(Bytes) */
+  /** Ticker */
+  readonly asTickerOwned: Ticker;
+  /** 1:: TokenOwned(Ticker) */
   readonly isTokenOwned: boolean;
-  /** Bytes */
-  readonly asTokenOwned: Bytes;
+  /** Ticker */
+  readonly asTokenOwned: Ticker;
 }
 
 /** Enum */
@@ -260,6 +271,14 @@ export interface LinkedKeyInfo extends Enum {
   readonly isGroup: boolean;
   /** Vec<IdentityId> */
   readonly asGroup: Vec<IdentityId>;
+}
+
+/** Struct */
+export interface MIP extends Struct {
+  /** MipsIndex */
+  readonly index: MipsIndex;
+  /** Call */
+  readonly proposal: Call;
 }
 
 /** u32 */
@@ -336,6 +355,24 @@ export interface PreAuthorizedKeyInfo extends Struct {
   readonly target_id: IdentityId;
   /** SigningItem */
   readonly signing_item: SigningItem;
+}
+
+/** Enum */
+export interface ProportionMatch extends Enum {
+  /** 0:: AtLeast */
+  readonly isAtLeast: boolean;
+  /** 1:: MoreThan */
+  readonly isMoreThan: boolean;
+}
+
+/** Struct */
+export interface ReferendumInfo extends Struct {
+  /** MipsIndex */
+  readonly index: MipsIndex;
+  /** MipsPriority */
+  readonly priority: MipsPriority;
+  /** Hash */
+  readonly proposal_hash: Hash;
 }
 
 /** Struct */

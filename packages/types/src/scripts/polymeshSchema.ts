@@ -8,7 +8,7 @@ import * as fs from "fs";
 
   const branch = process.argv[2];
   const repo = await Git.Clone.clone("https://github.com/PolymathNetwork/Polymesh", "Polymesh");
-  const commit = await repo.getBranchCommit(branch);
+  const commit = await repo.getBranchCommit(`refs/remotes/origin/${branch}`);
   const schemaFile = await commit.getEntry("polymesh_schema.json");
   const blob = await schemaFile.getBlob();
 
