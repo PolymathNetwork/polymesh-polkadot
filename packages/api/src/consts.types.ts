@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 
 import { Bytes, u32, u64 } from '@polkadot/types';
-import { Balance, BalanceOf, BlockNumber, Moment, Percent, Permill } from '@polkadot/types/interfaces/runtime';
+import { Balance, BalanceOf, BlockNumber, Moment, Permill } from '@polkadot/types/interfaces/runtime';
 import { Gas } from '@polkadot/types/interfaces/contracts';
 import { SessionIndex } from '@polkadot/types/interfaces/session';
 import { EraIndex } from '@polkadot/types/interfaces/staking';
@@ -25,11 +25,6 @@ declare module '@polkadot/metadata/Decorated/types' {
       transferFee: Balance & ConstantCodec;
       creationFee: Balance & ConstantCodec;
     };
-    transactionPayment: {
-      [index: string]: Codec;
-      transactionBaseFee: BalanceOf & ConstantCodec;
-      transactionByteFee: BalanceOf & ConstantCodec;
-    };
     staking: {
       [index: string]: Codec;
       sessionsPerEra: SessionIndex & ConstantCodec;
@@ -39,39 +34,15 @@ declare module '@polkadot/metadata/Decorated/types' {
       [index: string]: Codec;
       dedupKeyPrefix: Bytes & ConstantCodec;
     };
-    democracy: {
-      [index: string]: Codec;
-      enactmentPeriod: BlockNumber & ConstantCodec;
-      launchPeriod: BlockNumber & ConstantCodec;
-      votingPeriod: BlockNumber & ConstantCodec;
-      minimumDeposit: BalanceOf & ConstantCodec;
-      emergencyVotingPeriod: BlockNumber & ConstantCodec;
-      cooloffPeriod: BlockNumber & ConstantCodec;
-      preimageByteDeposit: BalanceOf & ConstantCodec;
-    };
-    elections: {
-      [index: string]: Codec;
-      candidacyBond: BalanceOf & ConstantCodec;
-      votingBond: BalanceOf & ConstantCodec;
-      desiredMembers: u32 & ConstantCodec;
-      desiredRunnersUp: u32 & ConstantCodec;
-      termDuration: BlockNumber & ConstantCodec;
-    };
     finalityTracker: {
       [index: string]: Codec;
       windowSize: BlockNumber & ConstantCodec;
       reportLatency: BlockNumber & ConstantCodec;
     };
-    treasury: {
+    transactionPayment: {
       [index: string]: Codec;
-      proposalBond: Permill & ConstantCodec;
-      proposalBondMinimum: BalanceOf & ConstantCodec;
-      spendPeriod: BlockNumber & ConstantCodec;
-      burn: Permill & ConstantCodec;
-      tipCountdown: BlockNumber & ConstantCodec;
-      tipFindersFee: Percent & ConstantCodec;
-      tipReportDepositBase: BalanceOf & ConstantCodec;
-      tipReportDepositPerByte: BalanceOf & ConstantCodec;
+      transactionBaseFee: BalanceOf & ConstantCodec;
+      transactionByteFee: BalanceOf & ConstantCodec;
     };
     contracts: {
       [index: string]: Codec;
@@ -92,14 +63,12 @@ declare module '@polkadot/metadata/Decorated/types' {
       maxValueSize: u32 & ConstantCodec;
       blockGasLimit: Gas & ConstantCodec;
     };
-    society: {
+    treasury: {
       [index: string]: Codec;
-      candidateDeposit: BalanceOf & ConstantCodec;
-      wrongSideDeduction: BalanceOf & ConstantCodec;
-      maxStrikes: u32 & ConstantCodec;
-      periodSpend: BalanceOf & ConstantCodec;
-      rotationPeriod: BlockNumber & ConstantCodec;
-      challengePeriod: BlockNumber & ConstantCodec;
+      proposalBond: Permill & ConstantCodec;
+      proposalBondMinimum: BalanceOf & ConstantCodec;
+      spendPeriod: BlockNumber & ConstantCodec;
+      burn: Permill & ConstantCodec;
     };
   }
 }

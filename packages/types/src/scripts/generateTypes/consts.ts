@@ -6,7 +6,7 @@ import { ModuleMetadataLatest } from '../../interfaces/metadata';
 import * as definitions from '../../interfaces/definitions';
 
 import fs from 'fs';
-import staticData from '@polkadot/metadata/Metadata/static';
+import polymeshMetadata from './tmp/polymesh_metadata';
 import { stringCamelCase } from '@polkadot/util';
 
 import { Metadata, TypeRegistry } from '../..';
@@ -90,5 +90,5 @@ function generateForMeta (meta: Metadata): void {
 export default function generateConsts (): void {
   const registry = new TypeRegistry();
 
-  return generateForMeta(new Metadata(registry, staticData));
+  return generateForMeta(new Metadata(registry, polymeshMetadata));
 }
