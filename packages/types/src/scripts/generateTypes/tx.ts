@@ -13,7 +13,9 @@ import polymeshMetadata from './tmp/polymesh_metadata';
 
 // From a storage entry metadata, we return [args, returnType]
 /** @internal */
-function entrySignature (definitions: object, registry: Registry, callEntry: FunctionMetadataV10, imports: TypeImports): [string] {
+function entrySignature (definitions: object, registry: Registry, callEntry: FunctionMetadataV10, imports: TypeImports): [string, string] {
+
+  const docs = callEntry.documentation.join('');
 
   var args:string[] = [];
   callEntry.args.map(({ name, type }) => {
@@ -32,16 +34,22 @@ function entrySignature (definitions: object, registry: Registry, callEntry: Fun
       args.push(`_${name.toString()}: Vec<ITuple<[${matches![1]}]>>`)
     }
   })
-  return [args.join(', ')];
+  return [args.join(', '), tsDoc(docs)];
+}
+
+// Generate documentation with tsdoc format
+/** @internal */
+function tsDoc(documentation: string): string {
+  return documentation === "" ? "" : `/**\n${indent(6)(indent(1)(`* ${documentation.toString().trim().replace(/^\w/, c => c.toLowerCase()).replace(/\.$/, '')}`))}\n${indent(7)('*/')}\n`.concat(indent(6)(""))
 }
 
 // Generate types for one call entry in a module
 /** @internal */
 function generateEntry (definitions: object, registry: Registry, callEntry: FunctionMetadataV10, imports: TypeImports): string[] {
-  const [args] = entrySignature(definitions, registry, callEntry, imports);
+  const [args, docs] = entrySignature(definitions, registry, callEntry, imports);
 
   return [
-    `${stringCamelCase(callEntry.name.toString())}: ((${args}) => SubmittableExtrinsic<ApiType>) & CallFunction;`
+    `${docs}${stringCamelCase(callEntry.name.toString())}: ((${args}) => SubmittableExtrinsic<ApiType>) & CallFunction;`
   ];
 }
 

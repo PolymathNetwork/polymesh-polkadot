@@ -24,13 +24,20 @@ function addModifier (storageEntry: StorageEntryMetadataLatest, returnType: stri
   return returnType;
 }
 
-// From a storage entry metadata, we return [args, returnType]
+// Generate documentation with tsdoc format
 /** @internal */
-function entrySignature (definitions: object, registry: Registry, storageEntry: StorageEntryMetadataLatest, imports: TypeImports): [string, string] {
+function tsDoc(documentation: string): string {
+  return documentation === "" ? "" : `/**\n${indent(6)(indent(1)(`* ${documentation.toString().trim().replace(/^\w/, c => c.toLowerCase()).replace(/\.$/, '')}`))}\n${indent(7)('*/')}\n`.concat(indent(6)(""))
+}
+
+// From a storage entry metadata, we return [args, returnType, docs]
+/** @internal */
+function entrySignature (definitions: object, registry: Registry, storageEntry: StorageEntryMetadataLatest, imports: TypeImports): [string, string, string] {
+  const docs = storageEntry.documentation.join('');
   if (storageEntry.type.isPlain) {
     setImports(definitions, imports, [storageEntry.type.asPlain.toString()]);
 
-    return ['', formatType(definitions, addModifier(storageEntry, storageEntry.type.asPlain.toString()), imports)];
+    return ['', formatType(definitions, addModifier(storageEntry, storageEntry.type.asPlain.toString()), imports), tsDoc(docs)];
   } else if (storageEntry.type.isMap) {
     // Find similar types of the `key` type
     const similarTypes = getSimilarTypes(definitions, registry, storageEntry.type.asMap.key.toString(), imports);
@@ -42,7 +49,8 @@ function entrySignature (definitions: object, registry: Registry, storageEntry: 
 
     return [
       `arg: ${similarTypes.map((type) => formatType(definitions, type, imports)).join(' | ')}`,
-      formatType(definitions, addModifier(storageEntry, storageEntry.type.asMap.value.toString()), imports)
+      formatType(definitions, addModifier(storageEntry, storageEntry.type.asMap.value.toString()), imports),
+      tsDoc(docs)
     ];
   } else if (storageEntry.type.isDoubleMap) {
     // Find similartypes of `key1` and `key2` types
@@ -60,7 +68,8 @@ function entrySignature (definitions: object, registry: Registry, storageEntry: 
 
     return [
       `key1: ${key1Types}, key2: ${key2Types}`,
-      formatType(definitions, addModifier(storageEntry, storageEntry.type.asDoubleMap.value.toString()), imports)
+      formatType(definitions, addModifier(storageEntry, storageEntry.type.asDoubleMap.value.toString()), imports),
+      tsDoc(docs)
     ];
   }
 
@@ -70,10 +79,10 @@ function entrySignature (definitions: object, registry: Registry, storageEntry: 
 // Generate types for one storage entry in a module
 /** @internal */
 function generateEntry (definitions: object, registry: Registry, storageEntry: StorageEntryMetadataLatest, imports: TypeImports): string[] {
-  const [args, returnType] = entrySignature(definitions, registry, storageEntry, imports);
+  const [args, returnType, docs] = entrySignature(definitions, registry, storageEntry, imports);
 
   return [
-    `${stringLowerFirst(storageEntry.name.toString())}: StorageEntryExact<ApiType, (${args}) => Observable<${returnType}>> & QueryableStorageEntry<ApiType>;`
+    `${docs}${stringLowerFirst(storageEntry.name.toString())}: StorageEntryExact<ApiType, (${args}) => Observable<${returnType}>> & QueryableStorageEntry<ApiType>;`
   ];
 }
 
