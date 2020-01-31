@@ -12,7 +12,8 @@ import { Proposal } from '@polkadot/types/interfaces/democracy';
 import { Heartbeat } from '@polkadot/types/interfaces/imOnline';
 import { Keys } from '@polkadot/types/interfaces/session';
 import { EraIndex, RewardDestination, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
-import { AssetRule, AssetType, AuthorizationData, Ballot, ClaimRecord, ClaimValue, IdentityId, Key, MipsIndex, OffChainSignature, Permission, ProportionMatch, Signer, SigningItem, SigningItemWithAuth, TargetIdAuthorization, Ticker } from '@polkadot/types/interfaces/polymesh';
+import { AssetRule, AssetType, AuthorizationData, Ballot, ClaimRecord, ClaimValue, IdentifierType, IdentityId, Key, MipsIndex, OffChainSignature, Permission, ProportionMatch, Signer, SigningItem, SigningItemWithAuth, TargetIdAuthorization, Ticker } from '@polkadot/types/interfaces/polymesh';
+import { ITuple } from '@polkadot/types/types';
 
 declare module './types' {
   export interface SubmittableExtrinsicsExact<ApiType> {
@@ -130,7 +131,7 @@ declare module './types' {
       registerTicker: ((_ticker: Ticker | Uint8Array | string) => SubmittableExtrinsic<ApiType>) & CallFunction;
       acceptTickerTransfer: ((_auth_id: u64 | Uint8Array | number | string) => SubmittableExtrinsic<ApiType>) & CallFunction;
       acceptTokenOwnershipTransfer: ((_auth_id: u64 | Uint8Array | number | string) => SubmittableExtrinsic<ApiType>) & CallFunction;
-      createToken: ((_did: IdentityId | Uint8Array | string, _name: Bytes | Uint8Array | string, _ticker: Ticker | Uint8Array | string, _total_supply: Balance | Uint8Array | number | string, _divisible: bool, _asset_type: AssetType, _identifiers: ((IdentifierType,Bytes))[]) => SubmittableExtrinsic<ApiType>) & CallFunction;
+      createToken: ((_did: IdentityId | Uint8Array | string, _name: Bytes | Uint8Array | string, _ticker: Ticker | Uint8Array | string, _total_supply: Balance | Uint8Array | number | string, _divisible: bool, _asset_type: AssetType, _identifiers: Vec<ITuple<[IdentifierType,Bytes]>>) => SubmittableExtrinsic<ApiType>) & CallFunction;
       renameToken: ((_ticker: Ticker | Uint8Array | string, _name: Bytes | Uint8Array | string) => SubmittableExtrinsic<ApiType>) & CallFunction;
       transfer: ((_did: IdentityId | Uint8Array | string, _ticker: Ticker | Uint8Array | string, _to_did: IdentityId | Uint8Array | string, _value: Balance | Uint8Array | number | string) => SubmittableExtrinsic<ApiType>) & CallFunction;
       controllerTransfer: ((_did: IdentityId | Uint8Array | string, _ticker: Ticker | Uint8Array | string, _from_did: IdentityId | Uint8Array | string, _to_did: IdentityId | Uint8Array | string, _value: Balance | Uint8Array | number | string, _data: Bytes | Uint8Array | string, _operator_data: Bytes | Uint8Array | string) => SubmittableExtrinsic<ApiType>) & CallFunction;
@@ -154,7 +155,7 @@ declare module './types' {
       increaseCustodyAllowanceOf: ((_ticker: Ticker | Uint8Array | string, _holder_did: IdentityId | Uint8Array | string, _holder_account_id: AccountId | Uint8Array | string, _custodian_did: IdentityId | Uint8Array | string, _caller_did: IdentityId | Uint8Array | string, _value: Balance | Uint8Array | number | string, _nonce: u16 | Uint8Array | number | string, _signature: OffChainSignature | Uint8Array | string) => SubmittableExtrinsic<ApiType>) & CallFunction;
       transferByCustodian: ((_ticker: Ticker | Uint8Array | string, _holder_did: IdentityId | Uint8Array | string, _custodian_did: IdentityId | Uint8Array | string, _receiver_did: IdentityId | Uint8Array | string, _value: Balance | Uint8Array | number | string) => SubmittableExtrinsic<ApiType>) & CallFunction;
       setFundingRound: ((_did: IdentityId | Uint8Array | string, _ticker: Ticker | Uint8Array | string, _name: Bytes | Uint8Array | string) => SubmittableExtrinsic<ApiType>) & CallFunction;
-      updateIdentifiers: ((_did: IdentityId | Uint8Array | string, _ticker: Ticker | Uint8Array | string, _identifiers: ((IdentifierType,Bytes))[]) => SubmittableExtrinsic<ApiType>) & CallFunction;
+      updateIdentifiers: ((_did: IdentityId | Uint8Array | string, _ticker: Ticker | Uint8Array | string, _identifiers: Vec<ITuple<[IdentifierType,Bytes]>>) => SubmittableExtrinsic<ApiType>) & CallFunction;
     };
     dividend: {
       new: ((_did: IdentityId | Uint8Array | string, _amount: Balance | Uint8Array | number | string, _ticker: Ticker | Uint8Array | string, _matures_at: Moment | Uint8Array | number | string, _expires_at: Moment | Uint8Array | number | string, _payout_ticker: Ticker | Uint8Array | string, _checkpoint_id: u64 | Uint8Array | number | string) => SubmittableExtrinsic<ApiType>) & CallFunction;
@@ -177,9 +178,9 @@ declare module './types' {
       getMyDid: (() => SubmittableExtrinsic<ApiType>) & CallFunction;
       addAuthorization: ((_target: Signer, _authorization_data: AuthorizationData, _expiry: Option<Moment>) => SubmittableExtrinsic<ApiType>) & CallFunction;
       addAuthorizationAsKey: ((_target: Signer, _authorization_data: AuthorizationData, _expiry: Option<Moment>) => SubmittableExtrinsic<ApiType>) & CallFunction;
-      batchAddAuthorization: ((_auths: ((Signer,AuthorizationData,Option<Moment>))[]) => SubmittableExtrinsic<ApiType>) & CallFunction;
+      batchAddAuthorization: ((_auths: Vec<ITuple<[Signer,AuthorizationData,Option<Moment>]>>) => SubmittableExtrinsic<ApiType>) & CallFunction;
       removeAuthorization: ((_target: Signer, _auth_id: u64 | Uint8Array | number | string) => SubmittableExtrinsic<ApiType>) & CallFunction;
-      batchRemoveAuthorization: ((_auth_identifiers: ((Signer,u64))[]) => SubmittableExtrinsic<ApiType>) & CallFunction;
+      batchRemoveAuthorization: ((_auth_identifiers: Vec<ITuple<[Signer,u64]>>) => SubmittableExtrinsic<ApiType>) & CallFunction;
       acceptAuthorization: ((_auth_id: u64 | Uint8Array | number | string) => SubmittableExtrinsic<ApiType>) & CallFunction;
       batchAcceptAuthorization: ((_auth_ids: u64|Uint8Array|number|string[]) => SubmittableExtrinsic<ApiType>) & CallFunction;
       authorizeJoinToIdentity: ((_target_id: IdentityId | Uint8Array | string) => SubmittableExtrinsic<ApiType>) & CallFunction;

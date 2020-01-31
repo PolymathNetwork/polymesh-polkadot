@@ -25,7 +25,11 @@ function entrySignature (definitions: object, registry: Registry, callEntry: Fun
       ]);
       args.push(`_${name.toString()}: ${similarTypes.map((type) => formatType(definitions, type, imports)).join(' | ')}`)
     } else {
-      args.push(`_${name.toString()}: ${similarTypes}`)
+      var matches = /\(\(([^)]+)\)\)/.exec(similarTypes[0]);
+      setImports(definitions, imports, [
+        `Vec<(${matches![1]})>`
+      ]);
+      args.push(`_${name.toString()}: Vec<ITuple<[${matches![1]}]>>`)
     }
   })
   return [args.join(', ')];
@@ -72,6 +76,8 @@ function generateForMeta (definitions: object, registry: Registry, meta: Metadat
 
     return acc.concat(storageEntries);
   }, [] as string[]);
+
+  imports.typesTypes["ITuple"] = true;
 
   const header = createImportCode(HEADER, [
     {
