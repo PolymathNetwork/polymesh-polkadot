@@ -10,12 +10,11 @@ import { Metadata } from '../..';
 import { TypeRegistry } from '../../codec';
 import { createImportCode, createImports, FOOTER, formatType, getSimilarTypes, HEADER, indent, setImports, TypeImports } from '../util';
 import polymeshMetadata from './tmp/polymesh_metadata';
+import { transformFile } from '@babel/core';
 
 // From a storage entry metadata, we return [args, returnType]
 /** @internal */
 function entrySignature (definitions: object, registry: Registry, callEntry: FunctionMetadataV10, imports: TypeImports): [string, string] {
-
-  const docs = callEntry.documentation.join('');
 
   var args:string[] = [];
   callEntry.args.map(({ name, type }) => {
@@ -34,13 +33,28 @@ function entrySignature (definitions: object, registry: Registry, callEntry: Fun
       args.push(`_${name.toString()}: Vec<ITuple<[${matches![1]}]>>`)
     }
   })
-  return [args.join(', '), tsDoc(docs)];
+  return [args.join(', '), tsDoc(callEntry)];
 }
 
 // Generate documentation with tsdoc format
 /** @internal */
-function tsDoc(documentation: string): string {
-  return documentation === "" ? "" : `/**\n${indent(6)(indent(1)(`* ${documentation.toString().trim().replace(/^\w/, c => c.toLowerCase()).replace(/\.$/, '')}`))}\n${indent(7)('*/')}\n`.concat(indent(6)(""))
+function tsDoc(callEntry: FunctionMetadataV10): string {
+  const lines = callEntry.documentation.toArray().map(text => text.toString());
+  const position = lines.indexOf(" # Arguments");
+  const args = position > 0 ? lines.slice(position + 1, lines.length - 1) : [];
+  const params = args.map(arg => {
+    return arg.trim().replace(/[`]/,'@param ').replace('`', ' -').replace('- -', '-').replace(/\.$/, '')
+  })
+
+  const documentation = callEntry.documentation.join('').replace(/#[^#]+$/, '');
+  let strarg = '';
+  if (params.length) {
+    strarg += indent(7)('*\n')
+    params.map(param => {
+      strarg += indent(7)(`${param.replace(/(\- [a-zA-Z]{1})/, c => c.toUpperCase())}\n`)
+    })
+  }
+  return documentation === "" ? "" : `/**\n${indent(6)(indent(1)(`* ${documentation.toString().trim().replace(/^\w/, c => c.toUpperCase()).replace(/\.$/, '')}`))}\n${strarg}${indent(7)('*/')}\n`.concat(indent(6)(""))
 }
 
 // Generate types for one call entry in a module
