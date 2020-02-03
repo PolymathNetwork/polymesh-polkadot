@@ -8,10 +8,10 @@ import { InclusionHeight, Uncle, UncleEntryItem } from '@polkadot/types/interfac
 import { RawAuraPreDigest } from '@polkadot/types/interfaces/aura';
 import { BabeAuthorityWeight, BabeBlockWeight, BabeWeight, MaybeVrf, RawBabePreDigest, RawBabePreDigestCompat, RawBabePreDigestPrimary, RawBabePreDigestPrimaryTo159, RawBabePreDigestSecondary, RawBabePreDigestSecondaryTo159, RawBabePreDigestTo159, SlotNumber, VrfData, VrfProof } from '@polkadot/types/interfaces/babe';
 import { BalanceLock, VestingSchedule, WithdrawReasons } from '@polkadot/types/interfaces/balances';
-import { MemberCount, ProposalIndex } from '@polkadot/types/interfaces/collective';
+import { MemberCount, ProposalIndex, Votes } from '@polkadot/types/interfaces/collective';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import { AliveContractInfo, CodeHash, ContractCallRequest, ContractExecResult, ContractExecResultSuccess, ContractInfo, ContractStorageKey, Gas, PrefabWasmModule, PrefabWasmModuleReserved, Schedule, SeedOf, TombstoneContractInfo, TrieId } from '@polkadot/types/interfaces/contracts';
-import { Conviction, PropIndex, Proposal, ReferendumIndex } from '@polkadot/types/interfaces/democracy';
+import { Conviction, PropIndex, Proposal, ReferendumIndex, ReferendumInfo } from '@polkadot/types/interfaces/democracy';
 import { AccountInfo, Amount, AssetOf, InherentOfflineReport, LockPeriods, NewAccountOutcome, OpaqueKey, SessionKey } from '@polkadot/types/interfaces/deprecated';
 import { ApprovalFlag, SetIndex, Vote, VoteIndex, VoteThreshold, VoterInfo } from '@polkadot/types/interfaces/elections';
 import { AssetOptions, Owner, PermissionLatest, PermissionVersions, PermissionsV1 } from '@polkadot/types/interfaces/genericAsset';
@@ -23,7 +23,7 @@ import { ActiveRecovery, RecoveryConfig } from '@polkadot/types/interfaces/recov
 import { FullIdentification, IdentificationTuple, Keys, SessionIndex, SessionKeys1, SessionKeys2, SessionKeys3, SessionKeys4, SessionKeys5, SessionKeys6 } from '@polkadot/types/interfaces/session';
 import { Bid, BidKind, BidKindVouch, SocietyJudgement, SocietyVote, StrikeCount, VouchingStatus } from '@polkadot/types/interfaces/society';
 import { EraIndex, EraPoints, EraRewards, Exposure, Forcing, IndividualExposure, MomentOf, Nominations, Points, RewardDestination, SlashJournalEntry, SlashingSpans, SlashingSpansTo204, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, UnappliedSlashOther, UnlockChunk, ValidatorPrefs, ValidatorPrefsTo145, ValidatorPrefsTo196 } from '@polkadot/types/interfaces/staking';
-import { DigestOf, DispatchError, DispatchErrorModule, DispatchErrorTo198, DispatchResult, DispatchResultOf, DispatchResultTo198, Event, EventId, EventIndex, EventRecord, EventRecordTo76, Phase } from '@polkadot/types/interfaces/system';
+import { DigestOf, DispatchError, DispatchErrorModule, DispatchErrorTo198, DispatchResult, DispatchResultOf, DispatchResultTo198, Event, EventId, EventIndex, EventRecord, EventRecordTo76, Key, Phase } from '@polkadot/types/interfaces/system';
 import { OpenTip, OpenTipFinder, OpenTipTip, TreasuryProposal } from '@polkadot/types/interfaces/treasury';
 import { Multiplier } from '@polkadot/types/interfaces/txpayment';
 import { Multisig, Timepoint } from '@polkadot/types/interfaces/utility';
@@ -32,7 +32,7 @@ import { EthereumAddress } from '@polkadot/types/interfaces/claims';
 import { AttestedCandidate, AuctionIndex, BalanceUpload, Bidder, CandidateReceipt, CollatorId, CollatorSignature, EgressQueueRoot, HeadData, IncomingParachain, IncomingParachainDeploy, IncomingParachainFixed, LeasePeriod, LeasePeriodOf, NewBidder, ParaId, ParaIdOf, ParaInfo, ParaScheduling, ParachainDispatchOrigin, Retriable, SlotRange, SubId, UpwardMessage, ValidatorIndex, ValidityAttestation, ValidityVote, WinningData, WinningDataEntry } from '@polkadot/types/interfaces/parachains';
 import { CallMetadataV0, DoubleMapTypeLatest, DoubleMapTypeV10, DoubleMapTypeV3, DoubleMapTypeV4, DoubleMapTypeV5, DoubleMapTypeV6, DoubleMapTypeV7, DoubleMapTypeV8, DoubleMapTypeV9, ErrorMetadataV10, ErrorMetadataV8, ErrorMetadataV9, EventMetadataLatest, EventMetadataV0, EventMetadataV1, EventMetadataV10, EventMetadataV2, EventMetadataV3, EventMetadataV4, EventMetadataV5, EventMetadataV6, EventMetadataV7, EventMetadataV8, EventMetadataV9, FunctionArgumentMetadataLatest, FunctionArgumentMetadataV0, FunctionArgumentMetadataV1, FunctionArgumentMetadataV10, FunctionArgumentMetadataV2, FunctionArgumentMetadataV3, FunctionArgumentMetadataV4, FunctionArgumentMetadataV5, FunctionArgumentMetadataV6, FunctionArgumentMetadataV7, FunctionArgumentMetadataV8, FunctionArgumentMetadataV9, FunctionMetadataLatest, FunctionMetadataV0, FunctionMetadataV1, FunctionMetadataV10, FunctionMetadataV2, FunctionMetadataV3, FunctionMetadataV4, FunctionMetadataV5, FunctionMetadataV6, FunctionMetadataV7, FunctionMetadataV8, FunctionMetadataV9, MapTypeLatest, MapTypeV0, MapTypeV10, MapTypeV2, MapTypeV3, MapTypeV4, MapTypeV5, MapTypeV6, MapTypeV7, MapTypeV8, MapTypeV9, MetadataAll, MetadataLatest, MetadataV0, MetadataV1, MetadataV10, MetadataV2, MetadataV3, MetadataV4, MetadataV5, MetadataV6, MetadataV7, MetadataV8, MetadataV9, ModuleConstantMetadataLatest, ModuleConstantMetadataV10, ModuleConstantMetadataV6, ModuleConstantMetadataV7, ModuleConstantMetadataV8, ModuleConstantMetadataV9, ModuleMetadataLatest, ModuleMetadataV0, ModuleMetadataV1, ModuleMetadataV10, ModuleMetadataV2, ModuleMetadataV3, ModuleMetadataV4, ModuleMetadataV5, ModuleMetadataV6, ModuleMetadataV7, ModuleMetadataV8, ModuleMetadataV9, OuterDispatchCallV0, OuterDispatchMetadataV0, OuterEventEventMetadataEventsV0, OuterEventEventMetadataV0, OuterEventMetadataV0, PlainTypeLatest, PlainTypeV0, PlainTypeV10, PlainTypeV2, PlainTypeV3, PlainTypeV4, PlainTypeV5, PlainTypeV6, PlainTypeV7, PlainTypeV8, PlainTypeV9, RuntimeModuleMetadataV0, StorageEntryMetadataLatest, StorageEntryMetadataV10, StorageEntryMetadataV6, StorageEntryMetadataV7, StorageEntryMetadataV8, StorageEntryMetadataV9, StorageEntryModifierLatest, StorageEntryModifierV10, StorageEntryModifierV6, StorageEntryModifierV7, StorageEntryModifierV8, StorageEntryModifierV9, StorageEntryTypeLatest, StorageEntryTypeV10, StorageEntryTypeV6, StorageEntryTypeV7, StorageEntryTypeV8, StorageEntryTypeV9, StorageFunctionMetadataV0, StorageFunctionMetadataV1, StorageFunctionMetadataV2, StorageFunctionMetadataV3, StorageFunctionMetadataV4, StorageFunctionMetadataV5, StorageFunctionModifierV0, StorageFunctionModifierV1, StorageFunctionModifierV2, StorageFunctionModifierV3, StorageFunctionModifierV4, StorageFunctionModifierV5, StorageFunctionTypeV0, StorageFunctionTypeV1, StorageFunctionTypeV2, StorageFunctionTypeV3, StorageFunctionTypeV4, StorageFunctionTypeV5, StorageHasher, StorageHasherV10, StorageHasherV4, StorageHasherV5, StorageHasherV6, StorageHasherV7, StorageHasherV8, StorageHasherV9, StorageMetadataLatest, StorageMetadataV0, StorageMetadataV10, StorageMetadataV7, StorageMetadataV8, StorageMetadataV9 } from '@polkadot/types/interfaces/metadata';
 import { ApiId, BlockHash, ChainProperties, ExtrinsicOrHash, ExtrinsicStatus, Health, KeyValueOption, NetworkState, PeerInfo, RpcMethods, RuntimeDispatchInfo, RuntimeVersion, RuntimeVersionApi, StorageChangeSet } from '@polkadot/types/interfaces/rpc';
-import { AssetRule, AssetType, Authorization, AuthorizationData, AuthorizationNonce, Ballot, Claim, ClaimMetaData, ClaimRecord, ClaimValue, Compliance, Counter, DataTypes, DidRecord, Dividend, FeeOf, IdentifierType, IdentityId, IdentityRole, Investment, Key, Link, LinkData, LinkedKeyInfo, MIP, MipsIndex, MipsMetadata, MipsPriority, Motion, OffChainSignature, Operators, Permission, PermissionedValidator, PreAuthorizedKeyInfo, ProportionMatch, ReferendumInfo, RuleData, STO, SecurityToken, SignData, Signer, SignerType, SigningItem, SigningItemWithAuth, SimpleTokenRecord, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig, TickerTransferApproval, Votes } from '@polkadot/types/interfaces/polymesh';
+import { AccountKey, AssetRule, AssetType, Authorization, AuthorizationData, AuthorizationNonce, Ballot, Claim, ClaimMetaData, ClaimRecord, ClaimValue, Compliance, Counter, DataTypes, DidRecord, Dividend, FeeOf, IdentifierType, IdentityId, IdentityRole, Investment, Link, LinkData, LinkedKeyInfo, MIP, MipsIndex, MipsMetadata, MipsPriority, Motion, OffChainSignature, Operators, Permission, PermissionedValidator, PolymeshReferendumInfo, PolymeshVotes, PreAuthorizedKeyInfo, ProportionMatch, RuleData, STO, SecurityToken, SignData, Signer, SignerType, SigningItem, SigningItemWithAuth, SimpleTokenRecord, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig, TickerTransferApproval } from '@polkadot/types/interfaces/polymesh';
 
 export interface InterfaceRegistry {
   bool: bool;
@@ -398,6 +398,9 @@ export interface InterfaceRegistry {
   'Compact<ProposalIndex>': Compact<ProposalIndex>;
   'Option<ProposalIndex>': Option<ProposalIndex>;
   'Vec<ProposalIndex>': Vec<ProposalIndex>;
+  Votes: Votes;
+  'Option<Votes>': Option<Votes>;
+  'Vec<Votes>': Vec<Votes>;
   AuthorityId: AuthorityId;
   'Option<AuthorityId>': Option<AuthorityId>;
   'Vec<AuthorityId>': Vec<AuthorityId>;
@@ -458,6 +461,9 @@ export interface InterfaceRegistry {
   'Compact<ReferendumIndex>': Compact<ReferendumIndex>;
   'Option<ReferendumIndex>': Option<ReferendumIndex>;
   'Vec<ReferendumIndex>': Vec<ReferendumIndex>;
+  ReferendumInfo: ReferendumInfo;
+  'Option<ReferendumInfo>': Option<ReferendumInfo>;
+  'Vec<ReferendumInfo>': Vec<ReferendumInfo>;
   NewAccountOutcome: NewAccountOutcome;
   'Option<NewAccountOutcome>': Option<NewAccountOutcome>;
   'Vec<NewAccountOutcome>': Vec<NewAccountOutcome>;
@@ -773,6 +779,9 @@ export interface InterfaceRegistry {
   EventRecordTo76: EventRecordTo76;
   'Option<EventRecordTo76>': Option<EventRecordTo76>;
   'Vec<EventRecordTo76>': Vec<EventRecordTo76>;
+  Key: Key;
+  'Option<Key>': Option<Key>;
+  'Vec<Key>': Vec<Key>;
   Phase: Phase;
   'Option<Phase>': Option<Phase>;
   'Vec<Phase>': Vec<Phase>;
@@ -1434,9 +1443,9 @@ export interface InterfaceRegistry {
   LinkedKeyInfo: LinkedKeyInfo;
   'Option<LinkedKeyInfo>': Option<LinkedKeyInfo>;
   'Vec<LinkedKeyInfo>': Vec<LinkedKeyInfo>;
-  Key: Key;
-  'Option<Key>': Option<Key>;
-  'Vec<Key>': Vec<Key>;
+  AccountKey: AccountKey;
+  'Option<AccountKey>': Option<AccountKey>;
+  'Vec<AccountKey>': Vec<AccountKey>;
   Permission: Permission;
   'Option<Permission>': Option<Permission>;
   'Vec<Permission>': Vec<Permission>;
@@ -1527,9 +1536,9 @@ export interface InterfaceRegistry {
   MipsMetadata: MipsMetadata;
   'Option<MipsMetadata>': Option<MipsMetadata>;
   'Vec<MipsMetadata>': Vec<MipsMetadata>;
-  Votes: Votes;
-  'Option<Votes>': Option<Votes>;
-  'Vec<Votes>': Vec<Votes>;
+  PolymeshVotes: PolymeshVotes;
+  'Option<PolymeshVotes>': Option<PolymeshVotes>;
+  'Vec<PolymeshVotes>': Vec<PolymeshVotes>;
   MipsIndex: MipsIndex;
   'Compact<MipsIndex>': Compact<MipsIndex>;
   'Option<MipsIndex>': Option<MipsIndex>;
@@ -1540,9 +1549,9 @@ export interface InterfaceRegistry {
   MIP: MIP;
   'Option<MIP>': Option<MIP>;
   'Vec<MIP>': Vec<MIP>;
-  ReferendumInfo: ReferendumInfo;
-  'Option<ReferendumInfo>': Option<ReferendumInfo>;
-  'Vec<ReferendumInfo>': Vec<ReferendumInfo>;
+  PolymeshReferendumInfo: PolymeshReferendumInfo;
+  'Option<PolymeshReferendumInfo>': Option<PolymeshReferendumInfo>;
+  'Vec<PolymeshReferendumInfo>': Vec<PolymeshReferendumInfo>;
   TickerTransferApproval: TickerTransferApproval;
   'Option<TickerTransferApproval>': Option<TickerTransferApproval>;
   'Vec<TickerTransferApproval>': Vec<TickerTransferApproval>;

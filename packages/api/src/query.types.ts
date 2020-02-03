@@ -8,19 +8,19 @@ import { AccountId, AccountIndex, Balance, BalanceOf, BlockNumber, Hash, Index, 
 import { UncleEntryItem } from '@polkadot/types/interfaces/authorship';
 import { BabeAuthorityWeight, MaybeVrf } from '@polkadot/types/interfaces/babe';
 import { BalanceLock, VestingSchedule } from '@polkadot/types/interfaces/balances';
-import { ProposalIndex } from '@polkadot/types/interfaces/collective';
+import { ProposalIndex, Votes } from '@polkadot/types/interfaces/collective';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import { CodeHash, ContractInfo, Gas, PrefabWasmModule, Schedule } from '@polkadot/types/interfaces/contracts';
-import { Proposal } from '@polkadot/types/interfaces/democracy';
+import { Proposal, ReferendumInfo } from '@polkadot/types/interfaces/democracy';
 import { AuthorityList, SetId, StoredPendingChange, StoredState } from '@polkadot/types/interfaces/grandpa';
 import { AuthIndex } from '@polkadot/types/interfaces/imOnline';
 import { Kind, OffenceDetails, OpaqueTimeSlot, ReportIdOf } from '@polkadot/types/interfaces/offences';
 import { Keys, SessionIndex } from '@polkadot/types/interfaces/session';
 import { EraIndex, EraPoints, Exposure, Forcing, MomentOf, Nominations, RewardDestination, SlashingSpans, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
-import { DigestOf, EventIndex, EventRecord } from '@polkadot/types/interfaces/system';
+import { DigestOf, EventIndex, EventRecord, Key } from '@polkadot/types/interfaces/system';
 import { TreasuryProposal } from '@polkadot/types/interfaces/treasury';
 import { Multiplier } from '@polkadot/types/interfaces/txpayment';
-import { AssetRule, Authorization, AuthorizationNonce, Ballot, Claim, ClaimMetaData, Counter, DidRecord, Dividend, IdentifierType, IdentityId, Investment, Key, Link, LinkedKeyInfo, MIP, MipsMetadata, PermissionedValidator, PreAuthorizedKeyInfo, ProportionMatch, ReferendumInfo, STO, SecurityToken, Signer, SimpleTokenRecord, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig, Votes } from '@polkadot/types/interfaces/polymesh';
+import { AssetRule, Authorization, AuthorizationNonce, Ballot, Claim, ClaimMetaData, Counter, DidRecord, Dividend, IdentifierType, IdentityId, Investment, Link, LinkedKeyInfo, MIP, MipsMetadata, PermissionedValidator, PreAuthorizedKeyInfo, ProportionMatch, STO, SecurityToken, Signer, SimpleTokenRecord, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig } from '@polkadot/types/interfaces/polymesh';
 import { ITuple } from '@polkadot/types/types';
 
 declare module './types' {

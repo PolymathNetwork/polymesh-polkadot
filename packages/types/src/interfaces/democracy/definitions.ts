@@ -25,13 +25,11 @@ export default {
     PropIndex: 'u32',
     Proposal: 'Call',
     ReferendumIndex: 'u32',
-    /*
     ReferendumInfo: {
       end: 'BlockNumber',
       proposalHash: 'Hash',
       threshold: 'VoteThreshold',
       delay: 'BlockNumber'
     }
-    */
   }
 };

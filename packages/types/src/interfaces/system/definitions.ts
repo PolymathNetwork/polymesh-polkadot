@@ -36,7 +36,7 @@ export default {
       phase: "Phase",
       event: "Event"
     },
-    // Key: "Bytes",
+    Key: "Bytes",
     Phase: {
       _enum: {
         ApplyExtrinsic: "u32",

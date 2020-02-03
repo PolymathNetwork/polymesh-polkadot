@@ -6,6 +6,9 @@ import { Enum, Option, Struct, Vec } from '@polkadot/types/codec';
 import { Bytes, H256, H512, bool, u16, u32, u64, u8 } from '@polkadot/types/primitive';
 import { Balance, Call, Hash, Moment, Signature } from '@polkadot/types/interfaces/runtime';
 
+/** Uint8Array, Codec */
+export interface AccountKey extends Uint8Array, Codec {}
+
 /** Struct */
 export interface AssetRule extends Struct {
   /** Vec<RuleData> */
@@ -158,8 +161,8 @@ export interface DataTypes extends Enum {
 export interface DidRecord extends Struct {
   /** Vec<IdentityRole> */
   readonly roles: Vec<IdentityRole>;
-  /** Key */
-  readonly master_key: Key;
+  /** AccountKey */
+  readonly master_key: AccountKey;
   /** Vec<SigningItem> */
   readonly signing_items: Vec<SigningItem>;
 }
@@ -233,9 +236,6 @@ export interface Investment extends Struct {
   /** Moment */
   readonly last_purchase_date: Moment;
 }
-
-/** Uint8Array, Codec */
-export interface Key extends Uint8Array, Codec {}
 
 /** Struct */
 export interface Link extends Struct {
@@ -350,6 +350,26 @@ export interface PermissionedValidator extends Struct {
 }
 
 /** Struct */
+export interface PolymeshReferendumInfo extends Struct {
+  /** MipsIndex */
+  readonly index: MipsIndex;
+  /** MipsPriority */
+  readonly priority: MipsPriority;
+  /** Hash */
+  readonly proposal_hash: Hash;
+}
+
+/** Struct */
+export interface PolymeshVotes extends Struct {
+  /** u32 */
+  readonly index: u32;
+  /** Vec<ITuple<[IdentityId, Balance]>> */
+  readonly ayes: Vec<ITuple<[IdentityId, Balance]>>;
+  /** Vec<ITuple<[IdentityId, Balance]>> */
+  readonly nays: Vec<ITuple<[IdentityId, Balance]>>;
+}
+
+/** Struct */
 export interface PreAuthorizedKeyInfo extends Struct {
   /** IdentityId */
   readonly target_id: IdentityId;
@@ -363,16 +383,6 @@ export interface ProportionMatch extends Enum {
   readonly isAtLeast: boolean;
   /** 1:: MoreThan */
   readonly isMoreThan: boolean;
-}
-
-/** Struct */
-export interface ReferendumInfo extends Struct {
-  /** MipsIndex */
-  readonly index: MipsIndex;
-  /** MipsPriority */
-  readonly priority: MipsPriority;
-  /** Hash */
-  readonly proposal_hash: Hash;
 }
 
 /** Struct */
@@ -421,10 +431,10 @@ export interface Signer extends Enum {
   readonly isIdentity: boolean;
   /** IdentityId */
   readonly asIdentity: IdentityId;
-  /** 1:: Key(Key) */
-  readonly isKey: boolean;
-  /** Key */
-  readonly asKey: Key;
+  /** 1:: AccountKey(AccountKey) */
+  readonly isAccountKey: boolean;
+  /** AccountKey */
+  readonly asAccountKey: AccountKey;
 }
 
 /** Enum */
@@ -522,14 +532,4 @@ export interface TickerTransferApproval extends Struct {
   readonly next_ticker: Option<Ticker>;
   /** Option<Ticker> */
   readonly previous_ticker: Option<Ticker>;
-}
-
-/** Struct */
-export interface Votes extends Struct {
-  /** u32 */
-  readonly index: u32;
-  /** Vec<ITuple<[IdentityId, Balance]>> */
-  readonly ayes: Vec<ITuple<[IdentityId, Balance]>>;
-  /** Vec<ITuple<[IdentityId, Balance]>> */
-  readonly nays: Vec<ITuple<[IdentityId, Balance]>>;
 }

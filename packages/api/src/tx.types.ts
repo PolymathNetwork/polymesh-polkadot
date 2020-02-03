@@ -12,7 +12,8 @@ import { Proposal } from '@polkadot/types/interfaces/democracy';
 import { Heartbeat } from '@polkadot/types/interfaces/imOnline';
 import { Keys } from '@polkadot/types/interfaces/session';
 import { EraIndex, RewardDestination, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
-import { AssetRule, AssetType, AuthorizationData, Ballot, ClaimRecord, ClaimValue, IdentifierType, IdentityId, Key, MipsIndex, OffChainSignature, Permission, ProportionMatch, Signer, SigningItem, SigningItemWithAuth, TargetIdAuthorization, Ticker } from '@polkadot/types/interfaces/polymesh';
+import { Key } from '@polkadot/types/interfaces/system';
+import { AssetRule, AssetType, AuthorizationData, Ballot, ClaimRecord, ClaimValue, IdentifierType, IdentityId, MipsIndex, OffChainSignature, Permission, ProportionMatch, Signer, SigningItem, SigningItemWithAuth, TargetIdAuthorization, Ticker } from '@polkadot/types/interfaces/polymesh';
 import { ITuple } from '@polkadot/types/types';
 
 declare module './types' {
