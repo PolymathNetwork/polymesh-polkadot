@@ -26,7 +26,6 @@ export interface DeriveAccountRegistration {
 export interface DeriveAccountInfo {
   accountId?: AccountId;
   accountIndex?: AccountIndex;
-  identity: DeriveAccountRegistration;
   nickname?: string;
 }
 

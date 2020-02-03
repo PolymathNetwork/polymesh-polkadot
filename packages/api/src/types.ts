@@ -244,7 +244,7 @@ export interface ApiInterfaceRx {
   registry: Registry;
   runtimeMetadata: Metadata;
   runtimeVersion: RuntimeVersion;
-  query: QueryableStorage<"rxjs">;
+  query: QueryableStorageExact<"rxjs">;
   queryMulti: QueryableStorageMulti<"rxjs">;
   rpc: DecoratedRpc<"rxjs", RpcInterface>;
   tx: SubmittableExtrinsics<"rxjs">;
