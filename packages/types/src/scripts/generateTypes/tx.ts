@@ -10,7 +10,6 @@ import { Metadata } from '../..';
 import { TypeRegistry } from '../../codec';
 import { createImportCode, createImports, FOOTER, formatType, getSimilarTypes, HEADER, indent, setImports, TypeImports } from '../util';
 import polymeshMetadata from './tmp/polymesh_metadata';
-import { transformFile } from '@babel/core';
 
 // From a storage entry metadata, we return [args, returnType]
 /** @internal */

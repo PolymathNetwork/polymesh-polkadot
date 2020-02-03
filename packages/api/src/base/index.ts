@@ -7,7 +7,7 @@ import { RpcInterface } from '@polkadot/rpc-core/jsonrpc.types';
 import { Hash, RuntimeVersion } from '@polkadot/types/interfaces';
 import { InterfaceRegistry } from '@polkadot/types/interfaceRegistry';
 import { CallFunction, InterfaceTypes, RegistryTypes, SignerPayloadRawBase } from '@polkadot/types/types';
-import { ApiInterfaceRx, ApiOptions, ApiTypes, DecoratedRpc, DecorateMethod, QueryableStorage, QueryableStorageMulti, SubmittableExtrinsics, Signer } from '../types';
+import { ApiInterfaceRx, ApiOptions, ApiTypes, DecoratedRpc, DecorateMethod, QueryableStorage, QueryableStorageMulti, SubmittableExtrinsics, PSigner } from '../types';
 
 import { Metadata, createType } from '@polkadot/types';
 import { assert, isString, isUndefined, u8aToHex, u8aToU8a } from '@polkadot/util';
@@ -19,7 +19,7 @@ interface KeyringSigner {
 }
 
 interface SignerRawOptions {
-  signer?: Signer;
+  signer?: PSigner;
 }
 
 let pkgJson: { name: string; version: string };
@@ -259,7 +259,7 @@ export default abstract class ApiBase<ApiType extends ApiTypes> extends Init<Api
   /**
    * @description Set an external signer which will be used to sign extrinsic when account passed in is not KeyringPair
    */
-  public setSigner (signer: Signer): void {
+  public setSigner (signer: PSigner): void {
     this._rx.signer = signer;
   }
 

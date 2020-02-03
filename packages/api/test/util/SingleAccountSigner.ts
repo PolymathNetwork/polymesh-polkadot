@@ -2,7 +2,7 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { Signer, SignerResult } from '@polkadot/api/types';
+import { PSigner, SignerResult } from '@polkadot/api/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { Registry, SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
 
@@ -11,7 +11,7 @@ import { hexToU8a, u8aToHex } from '@polkadot/util';
 
 let id = 0;
 
-export class SingleAccountSigner implements Signer {
+export class SingleAccountSigner implements PSigner {
   private keyringPair: KeyringPair;
 
   private registry: Registry;
