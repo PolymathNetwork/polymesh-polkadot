@@ -14,7 +14,7 @@
   },
   "scripts": {
     "autogen:polymesh-api": "ts-node packages/types/src/scripts/polymeshApi.ts",
-    "build": "yarn autogen:polymesh-api && polkadot-dev-build-ts",
+    "build": "yarn autogen:polymesh-api && polkadot-dev-build-ts && ./scripts/polymeshBuild.sh",
     "build:interfaces": "node packages/types/src/scripts/interfacesTsWrapper.js",
     "circular": "madge --circular --extensions ts ./",
     "docs": "node packages/types/src/scripts/MetadataMdWrapper.js && polkadot-dev-build-docs",
