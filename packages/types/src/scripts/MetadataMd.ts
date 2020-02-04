@@ -6,7 +6,7 @@ import { MetadataLatest, ModuleMetadataLatest } from '../interfaces/metadata';
 
 import fs from 'fs';
 import Decorated from '@polkadot/metadata/Decorated';
-import polymeshMetadata from './generateTypes/tmp/polymesh_metadata';
+import polymeshMetadata from './generate/tmp/polymesh_metadata';
 import { stringCamelCase, stringLowerFirst } from '@polkadot/util';
 
 import interfaces from '../../../type-jsonrpc/src';

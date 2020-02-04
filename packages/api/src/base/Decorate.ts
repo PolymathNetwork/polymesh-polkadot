@@ -3,10 +3,10 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 import { Constants, Storage } from '@polkadot/metadata/Decorated/types';
-import { RpcInterface } from '@polkadot/rpc-core/jsonrpc.types';
+import { RpcInterface } from '@polkadot/rpc-core/types';
 import { InterfaceRegistry } from '@polkadot/types/interfaceRegistry';
 import { Call, Hash, RuntimeVersion } from '@polkadot/types/interfaces';
-import { AnyFunction, CallFunction, Codec, CodecArg as Arg, ITuple, InterfaceTypes, ModulesWithCalls, Registry } from '@polkadot/types/types';
+import { AnyFunction, CallFunction, Codec, CodecArg as Arg, ITuple, InterfaceTypes, ModulesWithCalls, Registry, RegistryTypes } from '@polkadot/types/types';
 import { SubmittableExtrinsic } from '../submittable/types';
 import { ApiInterfaceRx, ApiOptions, ApiTypes, DecorateMethod, DecoratedRpc, DecoratedRpcSection, QueryableModuleStorage, QueryableStorage, QueryableStorageEntry, QueryableStorageMulti, QueryableStorageMultiArg, SubmittableExtrinsicFunction, SubmittableExtrinsics, SubmittableModuleExtrinsics } from '../types';
 
@@ -131,6 +131,8 @@ export default abstract class Decorate<ApiType extends ApiTypes> extends Events 
 
   public abstract createType <K extends InterfaceTypes> (type: K, ...params: any[]): InterfaceRegistry[K];
 
+  public abstract registerTypes (types?: RegistryTypes): void;
+
   /**
    * @returns `true` if the API operates with subscriptions
    */
@@ -220,8 +222,12 @@ export default abstract class Decorate<ApiType extends ApiTypes> extends Events 
     const creator = createSubmittable(this._type, this._rx as ApiInterfaceRx, decorateMethod);
 
     return Object.entries(extrinsics).reduce((out, [name, section]): SubmittableExtrinsics<ApiType> => {
-      out[name] = Object.entries(section).reduce((out, [name, method]): SubmittableModuleExtrinsics<ApiType> => {
-        out[name] = this.decorateExtrinsicEntry(method, creator);
+      (out as unknown as {
+        [index: string]: SubmittableModuleExtrinsics<ApiType>;
+      })[name] = Object.entries(section).reduce((out, [name, method]): SubmittableModuleExtrinsics<ApiType> => {
+        (out as unknown as {
+          [index: string]: SubmittableExtrinsicFunction<ApiType>;
+        })[name] = this.decorateExtrinsicEntry(method, creator);
 
         return out;
       }, {} as SubmittableModuleExtrinsics<ApiType>);
@@ -239,8 +245,12 @@ export default abstract class Decorate<ApiType extends ApiTypes> extends Events 
 
   protected decorateStorage<ApiType extends ApiTypes> (storage: Storage, decorateMethod: DecorateMethod<ApiType>): QueryableStorage<ApiType> {
     return Object.entries(storage).reduce((out, [name, section]): QueryableStorage<ApiType> => {
-      out[name] = Object.entries(section).reduce((out, [name, method]): QueryableModuleStorage<ApiType> => {
-        out[name] = this.decorateStorageEntry(method, decorateMethod);
+      (out as unknown as {
+        [index: string]: QueryableModuleStorage<ApiType>;
+      })[name] = Object.entries(section).reduce((out, [name, method]): QueryableModuleStorage<ApiType> => {
+        (out as unknown as {
+          [index: string]: QueryableStorageEntry<ApiType>;
+        })[name] = this.decorateStorageEntry(method, decorateMethod);
 
         return out;
       }, {} as QueryableModuleStorage<ApiType>);

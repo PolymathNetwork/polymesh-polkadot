@@ -8,20 +8,16 @@ import { AnyFunction } from '@polkadot/types/types';
 import { Observable } from 'rxjs';
 
 import * as accounts from './accounts';
-import * as balances from './balances';
 import * as chain from './chain';
 import * as contracts from './contracts';
-import * as democracy from './democracy';
-import * as elections from './elections';
 import * as imOnline from './imOnline';
 import * as session from './session';
-import * as society from './society';
 import * as staking from './staking';
 import * as treasury from './treasury';
 
 export * from './type';
 
-export const derive = { accounts, balances, chain, contracts, democracy, elections, imOnline, session, society, staking, treasury };
+export const derive = { accounts, chain, contracts, imOnline, session, staking, treasury };
 
 type DeriveSection<Section> = {
   [Method in keyof Section]: Section[Method] extends AnyFunction

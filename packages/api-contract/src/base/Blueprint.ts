@@ -7,12 +7,12 @@ import { AccountId, Address, Hash } from '@polkadot/types/interfaces';
 import { IKeyringPair } from '@polkadot/types/types';
 import { ApiObject, ContractABIPre } from '../types';
 
-import BN from 'bn.js';
+// import BN from 'bn.js';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+// import { map } from 'rxjs/operators';
 import { SubmittableResult } from '@polkadot/api';
 import { createType } from '@polkadot/types';
-import { assert } from '@polkadot/util';
+// import { assert } from '@polkadot/util';
 
 import Abi from '../Abi';
 import Contract from './Contract';
@@ -44,32 +44,33 @@ export default class Blueprint<ApiType extends ApiTypes> extends BaseWithTx<ApiT
     this.codeHash = createType(this.registry, 'Hash', codeHash);
   }
 
-  public deployContract (constructorIndex = 0, endowment: number | BN, maxGas: number | BN, ...params: any[]): BlueprintCreate<ApiType> {
-    assert(!!this.abi.constructors[constructorIndex], `Specified constructor index ${constructorIndex} does not exist`);
+  // NOTE @monitz87: commented this out because mesh doesn't have a `create` function in the `contract` runtime module
+  // public deployContract (constructorIndex = 0, endowment: number | BN, maxGas: number | BN, ...params: any[]): BlueprintCreate<ApiType> {
+  //   assert(!!this.abi.constructors[constructorIndex], `Specified constructor index ${constructorIndex} does not exist`);
 
-    return {
-      signAndSend: this.decorateMethod(
-        (account: IKeyringPair | string | AccountId | Address): BlueprintCreateResultSubscription<ApiType> => {
-          return this.apiContracts
-            .create(endowment, maxGas, this.codeHash, this.abi.constructors[constructorIndex](...params))
-            .signAndSend(account)
-            .pipe(map(this.createResult));
-        }
-      )
-    };
-  }
+  //   return {
+  //     signAndSend: this.decorateMethod(
+  //       (account: IKeyringPair | string | AccountId | Address): BlueprintCreateResultSubscription<ApiType> => {
+  //         return this.apiContracts
+  //           .create(endowment, maxGas, this.codeHash, this.abi.constructors[constructorIndex](...params))
+  //           .signAndSend(account)
+  //           .pipe(map(this.createResult));
+  //       }
+  //     )
+  //   };
+  // }
 
-  private createResult = (result: SubmittableResult): BlueprintCreateResult<ApiType> => {
-    let contract: Contract<ApiType> | undefined;
+  // private createResult = (result: SubmittableResult): BlueprintCreateResult<ApiType> => {
+  //   let contract: Contract<ApiType> | undefined;
 
-    if (result.isFinalized) {
-      const record = result.findRecord('contract', 'Instantiated');
+  //   if (result.isFinalized) {
+  //     const record = result.findRecord('contract', 'Instantiated');
 
-      if (record) {
-        contract = new Contract<ApiType>(this.api, this.abi, this.decorateMethod, record.event.data[1] as Address);
-      }
-    }
+  //     if (record) {
+  //       contract = new Contract<ApiType>(this.api, this.abi, this.decorateMethod, record.event.data[1] as Address);
+  //     }
+  //   }
 
-    return new BlueprintCreateResult(result, contract);
-  }
+  //   return new BlueprintCreateResult(result, contract);
+  // }
 }
