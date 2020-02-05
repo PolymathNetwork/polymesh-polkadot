@@ -6,6 +6,7 @@ do
     module=${dir%*/}
     mkdir ./build/${module##*/}
     cp -R ./packages/${module##*/}/build/. ./build/${module##*/}
+    rm ./build/${module##*/}/package.json
 done
 rm ./build/package.json
 cp ./package.json ./build
