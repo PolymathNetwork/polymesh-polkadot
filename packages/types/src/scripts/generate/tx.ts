@@ -3,13 +3,13 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { ModuleMetadataLatest } from '../../interfaces/metadata';
+import { ModuleMetadataLatest, FunctionMetadataV10 } from '../../interfaces/metadata';
 import * as defaultDefs from '../../interfaces/definitions';
 import { Registry } from '../../types';
 
 import staticData from './tmp/polymesh_metadata';
 import { Text, Vec } from '@polkadot/types';
-import { stringCamelCase } from '@polkadot/util';
+import { stringCamelCase, stringUpperFirst, stringLowerFirst } from '@polkadot/util';
 
 import { Metadata, TypeRegistry } from '../..';
 import { FOOTER, HEADER, TypeImports, createImportCode, createImports, formatType, getSimilarTypes, indent, setImports, writeFile } from '../util';
@@ -17,6 +17,10 @@ import { FOOTER, HEADER, TypeImports, createImportCode, createImports, formatTyp
 const MAPPED_NAMES: Record<string, string> = {
   new: 'updated'
 };
+
+let namespaces: string = '';
+let txTag: string = 'export type TxTag =';
+let txTags: string = 'export const TxTags = {\n';
 
 function mapName (_name: Text): string {
   const name = stringCamelCase(_name.toString());
@@ -45,6 +49,20 @@ function tsDoc (documentation: Vec<Text>): string {
   return docs === '' ? '' : indent(6)(`/**\n${indent(6)(indent(1)(`* ${docs.toString().trim().replace(/^\w/, c => c.toUpperCase()).replace(/\.$/, '')}`))}\n${strarg}${indent(7)('*/')}\n`);
 }
 
+// Generate namespaces file
+/** @internal */
+function generateNamespaces (moduleName: string, methods: FunctionMetadataV10[]): void {
+  const moduleNme = stringUpperFirst(stringCamelCase(moduleName));
+  txTag = txTag.concat(` ${moduleNme}Tx |`);
+  txTags = txTags.concat(`${stringLowerFirst(moduleName)}: ${moduleNme}Tx,\n`);
+  namespaces = namespaces.concat(`export enum ${moduleNme}Tx {\n`);
+  methods.forEach(({name}) => {
+    const nme = stringUpperFirst(stringCamelCase(name.toString()));
+    namespaces = namespaces.concat(`${nme} = '${nme}',\n`);
+  })
+  namespaces = namespaces.concat(`}\n`);
+}
+
 // Generate types for one module
 /** @internal */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -56,6 +74,11 @@ function generateModule (registry: Registry, allDefs: object, { calls, name }: M
   }
 
   setImports(allDefs, imports, ['SubmittableExtrinsic']);
+
+  generateNamespaces(name.toString(), allCalls.toArray());
+  writeFile('packages/api/src/types/namespaces.ts', (): string => {
+    return namespaces.concat(`${txTag.trim().slice(0, -1)};\n`).concat(txTags.concat('}'));
+  })
 
   // NOTE Not removing this concat yet, first see the fallout
   return [indent(4)(`${stringCamelCase(name.toString())}: {`)]
