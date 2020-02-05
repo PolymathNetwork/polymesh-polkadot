@@ -10,4 +10,4 @@ do
     rm ./build/${module}/package.json
 done
 rm ./build/package.json
-cp ./package.json ./build
+cp ./release-config/* ./build
