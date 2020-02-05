@@ -54,13 +54,13 @@ function tsDoc (documentation: Vec<Text>): string {
 function generateNamespaces (moduleName: string, methods: FunctionMetadataV10[]): void {
   const moduleNme = stringUpperFirst(stringCamelCase(moduleName));
   txTag = txTag.concat(` ${moduleNme}Tx |`);
-  txTags = txTags.concat(`${stringLowerFirst(moduleName)}: ${moduleNme}Tx,\n`);
+  txTags = txTags.concat(indent(4)(`${stringLowerFirst(moduleName)}: ${moduleNme}Tx,\n`));
   namespaces = namespaces.concat(`export enum ${moduleNme}Tx {\n`);
   methods.forEach(({name}) => {
     const nme = stringUpperFirst(stringCamelCase(name.toString()));
-    namespaces = namespaces.concat(`${nme} = '${nme}',\n`);
+    namespaces = namespaces.concat(indent(4)(`${nme} = '${nme}',\n`));
   })
-  namespaces = namespaces.concat(`}\n`);
+  namespaces = namespaces.concat(`}\n\n`);
 }
 
 // Generate types for one module
@@ -77,7 +77,7 @@ function generateModule (registry: Registry, allDefs: object, { calls, name }: M
 
   generateNamespaces(name.toString(), allCalls.toArray());
   writeFile('packages/api/src/types/namespaces.ts', (): string => {
-    return namespaces.concat(`${txTag.trim().slice(0, -1)};\n`).concat(txTags.concat('}'));
+    return namespaces.concat(`${txTag.trim().slice(0, -2)};\n\n`).concat(txTags.concat('}'));
   })
 
   // NOTE Not removing this concat yet, first see the fallout
