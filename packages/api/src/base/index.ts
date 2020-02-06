@@ -7,10 +7,11 @@ import { RpcInterface } from '@polkadot/rpc-core/types';
 import { Hash, RuntimeVersion } from '@polkadot/types/interfaces';
 import { InterfaceRegistry } from '@polkadot/types/interfaceRegistry';
 import { CallFunction, InterfaceTypes, RegistryError, RegistryTypes, SignerPayloadRawBase } from '@polkadot/types/types';
-import { ApiInterfaceRx, ApiOptions, ApiTypes, DecoratedRpc, DecorateMethod, QueryableStorage, QueryableStorageMulti, SubmittableExtrinsics, PSigner } from '../types';
+import { ApiInterfaceRx, ApiOptions, ApiTypes, DecoratedRpc, DecorateMethod, QueryableStorage, QueryableStorageMulti, SubmittableExtrinsics, Signer } from '../types';
 
 import { Metadata, createType } from '@polkadot/types';
 import { assert, isString, isUndefined, u8aToHex, u8aToU8a } from '@polkadot/util';
+import { default as polymesh } from '../../../types/src/interfaces/polymesh/definitions';
 
 import Init from './Init';
 
@@ -19,7 +20,7 @@ interface KeyringSigner {
 }
 
 interface SignerRawOptions {
-  signer?: PSigner;
+  signer?: Signer;
 }
 
 let pkgJson: { name: string; version: string };
@@ -57,7 +58,13 @@ export default abstract class ApiBase<ApiType extends ApiTypes> extends Init<Api
    * ```
    */
   constructor (options: ApiOptions = {}, type: ApiTypes, decorateMethod: DecorateMethod<ApiType>) {
-    super(options, type, decorateMethod);
+    super({
+      ...options,
+      types: {
+        ...options.types,
+        ...polymesh.types
+      }
+    }, type, decorateMethod);
   }
 
   /**
@@ -266,7 +273,7 @@ export default abstract class ApiBase<ApiType extends ApiTypes> extends Init<Api
   /**
    * @description Set an external signer which will be used to sign extrinsic when account passed in is not KeyringPair
    */
-  public setSigner (signer: PSigner): void {
+  public setSigner (signer: Signer): void {
     this._rx.signer = signer;
   }
 

@@ -26,6 +26,7 @@ export * from './base';
 export * from './rpc';
 export * from './storage';
 export * from './submittable';
+export * from './transaction-tags';
 
 export interface ApiOptions {
   /**
@@ -53,7 +54,7 @@ export interface ApiOptions {
   /**
    * @description An external signer which will be used to sign extrinsic when account passed in is not KeyringPair
    */
-  signer?: PSigner;
+  signer?: Signer;
   /**
    * @description The source object to use for runtime information (only used when cloning)
    */
@@ -88,7 +89,7 @@ export interface ApiInterfaceRx {
   queryMulti: QueryableStorageMulti<'rxjs'>;
   rpc: DecoratedRpc<'rxjs', RpcInterface>;
   tx: SubmittableExtrinsics<'rxjs'>;
-  signer?: PSigner;
+  signer?: Signer;
 }
 
 export type ApiInterfaceEvents = ProviderInterfaceEmitted | 'ready';
@@ -110,7 +111,7 @@ export interface SignerResult {
   signature: string;
 }
 
-export interface PSigner {
+export interface Signer {
   /**
    * @description signs an extrinsic payload from a serialized form
    */

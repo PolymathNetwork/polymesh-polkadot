@@ -290,6 +290,22 @@ export interface SecurityToken extends Struct {
   readonly asset_type: AssetType;
 }
 
+/** @name Signatory */
+export interface Signatory extends Enum {
+  readonly isIdentity: boolean;
+  readonly asIdentity: IdentityId;
+  readonly isAccountKey: boolean;
+  readonly asAccountKey: AccountKey;
+}
+
+/** @name SignatoryType */
+export interface SignatoryType extends Enum {
+  readonly isExternal: boolean;
+  readonly isIdentity: boolean;
+  readonly isMultiSig: boolean;
+  readonly isRelayer: boolean;
+}
+
 /** @name SignData */
 export interface SignData extends Struct {
   readonly custodian_did: IdentityId;
@@ -299,26 +315,10 @@ export interface SignData extends Struct {
   readonly nonce: u16;
 }
 
-/** @name Signer */
-export interface Signer extends Enum {
-  readonly isIdentity: boolean;
-  readonly asIdentity: IdentityId;
-  readonly isAccountKey: boolean;
-  readonly asAccountKey: AccountKey;
-}
-
-/** @name SignerType */
-export interface SignerType extends Enum {
-  readonly isExternal: boolean;
-  readonly isIdentity: boolean;
-  readonly isMultiSig: boolean;
-  readonly isRelayer: boolean;
-}
-
 /** @name SigningItem */
 export interface SigningItem extends Struct {
-  readonly signer: Signer;
-  readonly signer_type: SignerType;
+  readonly signer: Signatory;
+  readonly signer_type: SignatoryType;
   readonly permissions: Vec<Permission>;
 }
 
