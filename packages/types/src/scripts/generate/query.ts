@@ -82,7 +82,7 @@ function generateModule (allDefs: object, registry: Registry, { name, storage }:
       const [args, returnType] = entrySignature(allDefs, registry, storageEntry, imports);
 
       return createDocComments(6, storageEntry.documentation) +
-      indent(6)(`${stringLowerFirst(storageEntry.name.toString())}: AugmentedQuery<ApiType, (${args}) => Observable<${returnType}>> & QueryableStorageEntry<ApiType>;`);
+      indent(6)(`${stringLowerFirst(storageEntry.name.toString())}: AugmentedQuery<ApiType, (${args}) => Observable<${returnType}>>;`);
     }))
     .concat([indent(4)('};')]);
 }

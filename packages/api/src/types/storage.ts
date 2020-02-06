@@ -54,8 +54,8 @@ export interface StorageEntryPromiseOverloads {
 export interface QueryableModuleStorage<ApiType extends ApiTypes> {}
 
 export type QueryableStorageMultiArg<ApiType extends ApiTypes> =
-  QueryableStorageEntry<ApiType> |
-  [QueryableStorageEntry<ApiType>, ...CodecArg[]];
+  AugmentedQuery<ApiType, AnyFunction> |
+  [AugmentedQuery<ApiType, AnyFunction>, ...CodecArg[]];
 
 export interface QueryableStorageMultiBase<ApiType extends ApiTypes> {
   <T extends Codec[]>(calls: QueryableStorageMultiArg<ApiType>[]): Observable<T>;
