@@ -5,8 +5,7 @@
 import { ProviderInterface } from '@polkadot/rpc-provider/types';
 import { RpcMethod, RpcSection, RpcParam } from '@polkadot/jsonrpc/types';
 import { AnyJson, Codec, Registry } from '@polkadot/types/types';
-import { RpcInterface } from './jsonrpc.types';
-import { RpcInterfaceMethod, UserRpc } from './types';
+import { RpcInterface, RpcInterfaceMethod, UserRpc } from './types';
 
 import memoizee from 'memoizee';
 import { combineLatest, from, Observable, Observer, of, throwError } from 'rxjs';
@@ -34,6 +33,7 @@ const EMPTY_META = {
 };
 
 // utility method to create a nicely-formatted error
+/** @internal */
 function createErrorMessage ({ method, params, type }: RpcMethod, error: Error): string {
   const inputs = params.map(({ isOptional, name, type }): string =>
     `${name}${isOptional ? '?' : ''}: ${type}`

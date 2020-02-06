@@ -12,7 +12,7 @@ import { Option } from '@polkadot/types';
 
 type Result = [Hash[], Option<Proposal>[], Option<Votes>[]];
 
-export function proposals (api: ApiInterfaceRx, section: 'council' | 'technicalCommittee'): () => Observable<DerivedCollectiveProposal[]> {
+export function proposals (api: ApiInterfaceRx, section: 'polymeshCommittee'): () => Observable<DerivedCollectiveProposal[]> {
   return (): Observable<DerivedCollectiveProposal[]> =>
     api.query[section]
       ? api.query[section].proposals().pipe(

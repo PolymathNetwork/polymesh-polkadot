@@ -16,6 +16,7 @@ export { default as contracts } from './contracts/definitions';
 export { default as democracy } from './democracy/definitions';
 export { default as deprecated } from './deprecated/definitions';
 export { default as elections } from './elections/definitions';
+export { default as evm } from './evm/definitions';
 export { default as genericAsset } from './genericAsset/definitions';
 export { default as grandpa } from './grandpa/definitions';
 export { default as identity } from './identity/definitions';
@@ -29,6 +30,7 @@ export { default as system } from './system/definitions';
 export { default as treasury } from './treasury/definitions';
 export { default as txpayment } from './txpayment/definitions';
 export { default as utility } from './utility/definitions';
+export { default as vesting } from './vesting/definitions';
 
 // polkadot-specific types
 export { default as attestations } from './attestations/definitions';
@@ -38,3 +40,6 @@ export { default as parachains } from './parachains/definitions';
 // pull in metadata & rpc last, assuming that is uses info from above
 export { default as metadata } from './metadata/definitions';
 export { default as rpc } from './rpc/definitions';
+
+// polymesh types
+export { default as polymesh } from "./polymesh/definitions";

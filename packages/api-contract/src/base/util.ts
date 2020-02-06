@@ -2,10 +2,10 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { ApiTypes, DecorateMethod, DecoratedRpc, SubmittableModuleExtrinsics } from '@polkadot/api/types';
-import { ApiObject, ContractABIMessage, ContractABIPre, ContractBase, ContractMessage } from '../types';
-import { RpcInterface } from '@polkadot/rpc-core/jsonrpc.types';
+import { ApiTypes, DecorateMethod, DecoratedRpc, AugmentedSubmittables } from '@polkadot/api/types';
+import { RpcInterface } from '@polkadot/rpc-core/types';
 import { Registry } from '@polkadot/types/types';
+import { ApiObject, ContractABIMessage, ContractABIPre, ContractBase, ContractMessage } from '../types';
 
 import { assert, isFunction, stringCamelCase } from '@polkadot/util';
 import Abi from '../Abi';
@@ -54,7 +54,7 @@ export abstract class Base<ApiType extends ApiTypes> implements ContractBase<Api
 }
 
 export abstract class BaseWithTx<ApiType extends ApiTypes> extends Base<ApiType> {
-  protected get apiContracts (): SubmittableModuleExtrinsics<'rxjs'> {
+  protected get apiContracts (): AugmentedSubmittables<'rxjs'>['contracts'] {
     return this.api.rx.tx.contracts;
   }
 
