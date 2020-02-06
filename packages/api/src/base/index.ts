@@ -11,6 +11,7 @@ import { ApiInterfaceRx, ApiOptions, ApiTypes, DecoratedRpc, DecorateMethod, Que
 
 import { Metadata, createType } from '@polkadot/types';
 import { assert, isString, isUndefined, u8aToHex, u8aToU8a } from '@polkadot/util';
+import { default as polymesh } from '../../../types/src/interfaces/polymesh/definitions';
 
 import Init from './Init';
 
@@ -57,7 +58,13 @@ export default abstract class ApiBase<ApiType extends ApiTypes> extends Init<Api
    * ```
    */
   constructor (options: ApiOptions = {}, type: ApiTypes, decorateMethod: DecorateMethod<ApiType>) {
-    super(options, type, decorateMethod);
+    super({
+      ...options,
+      types: {
+        ...options.types,
+        ...polymesh.types
+      }
+    }, type, decorateMethod);
   }
 
   /**
