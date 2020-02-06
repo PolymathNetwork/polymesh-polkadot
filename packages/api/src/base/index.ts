@@ -11,7 +11,7 @@ import { ApiInterfaceRx, ApiOptions, ApiTypes, DecoratedRpc, DecorateMethod, Que
 
 import { Metadata, createType } from '@polkadot/types';
 import { assert, isString, isUndefined, u8aToHex, u8aToU8a } from '@polkadot/util';
-import { default as polymesh } from '../../../types/src/interfaces/polymesh/definitions';
+import polymesh from '@polkadot/types/interfaces/polymesh/definitions';
 
 import Init from './Init';
 
