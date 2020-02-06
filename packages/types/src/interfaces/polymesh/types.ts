@@ -125,6 +125,13 @@ export interface Dividend extends Struct {
   readonly checkpoint_id: u64;
 }
 
+/** @name Document */
+export interface Document extends Struct {
+  readonly name: Bytes;
+  readonly uri: Bytes;
+  readonly hash: Bytes;
+}
+
 /** @name FeeOf */
 export interface FeeOf extends Balance {}
 
@@ -283,6 +290,22 @@ export interface SecurityToken extends Struct {
   readonly asset_type: AssetType;
 }
 
+/** @name Signatory */
+export interface Signatory extends Enum {
+  readonly isIdentity: boolean;
+  readonly asIdentity: IdentityId;
+  readonly isAccountKey: boolean;
+  readonly asAccountKey: AccountKey;
+}
+
+/** @name SignatoryType */
+export interface SignatoryType extends Enum {
+  readonly isExternal: boolean;
+  readonly isIdentity: boolean;
+  readonly isMultiSig: boolean;
+  readonly isRelayer: boolean;
+}
+
 /** @name SignData */
 export interface SignData extends Struct {
   readonly custodian_did: IdentityId;
@@ -292,26 +315,10 @@ export interface SignData extends Struct {
   readonly nonce: u16;
 }
 
-/** @name Signer */
-export interface Signer extends Enum {
-  readonly isIdentity: boolean;
-  readonly asIdentity: IdentityId;
-  readonly isAccountKey: boolean;
-  readonly asAccountKey: AccountKey;
-}
-
-/** @name SignerType */
-export interface SignerType extends Enum {
-  readonly isExternal: boolean;
-  readonly isIdentity: boolean;
-  readonly isMultiSig: boolean;
-  readonly isRelayer: boolean;
-}
-
 /** @name SigningItem */
 export interface SigningItem extends Struct {
-  readonly signer: Signer;
-  readonly signer_type: SignerType;
+  readonly signer: Signatory;
+  readonly signer_type: SignatoryType;
   readonly permissions: Vec<Permission>;
 }
 
@@ -326,6 +333,22 @@ export interface SimpleTokenRecord extends Struct {
   readonly ticker: Ticker;
   readonly total_supply: Balance;
   readonly owner_did: IdentityId;
+}
+
+/** @name SmartExtension */
+export interface SmartExtension extends Struct {
+  readonly extension_type: SmartExtensionType;
+  readonly extension_name: Bytes;
+  readonly extension_id: IdentityId;
+  readonly is_archive: bool;
+}
+
+/** @name SmartExtensionType */
+export interface SmartExtensionType extends Enum {
+  readonly isTransferManager: boolean;
+  readonly isOfferings: boolean;
+  readonly isCustom: boolean;
+  readonly asCustom: Bytes;
 }
 
 /** @name STO */
