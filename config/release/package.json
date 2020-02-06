@@ -1,7 +1,6 @@
 {
   "name": "@polymathnetwork/polkadot",
   "version": "0.0.0",
-  "private": true,
   "engines": {
     "yarn": "^1.10.1"
   },
