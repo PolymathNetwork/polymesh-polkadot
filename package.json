@@ -14,7 +14,7 @@
   },
   "scripts": {
     "autogen:polymesh-api": "ts-node packages/types/src/scripts/polymeshApi.ts",
-    "build": "yarn autogen:polymesh-api && polkadot-dev-build-ts",
+    "build": "./scripts/build-package.sh && ttsc --outDir build && ./scripts/assemble-build.sh && ./scripts/cleanup.sh",
     "build:interfaces": "node packages/types/src/scripts/interfacesTsWrapper.js",
     "circular": "madge --circular --extensions ts ./",
     "docs": "node packages/types/src/scripts/MetadataMdWrapper.js && polkadot-dev-build-docs",
@@ -39,9 +39,11 @@
     "@semantic-release/git": "^8.0.0",
     "@types/nodegit": "^0.26.1",
     "@types/rimraf": "^2.0.3",
+    "@zerollup/ts-transform-paths": "1.7.11",   
     "nodegit": "^0.26.4",
     "rimraf": "^3.0.0",
     "ts-node": "^8.6.2",
+    "ttypescript": "1.5.10",
     "cz-conventional-changelog": "^3.0.2",
     "husky": "^4.1.0"
   },

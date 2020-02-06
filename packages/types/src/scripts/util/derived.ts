@@ -19,6 +19,7 @@ import Vote, { convictionNames as _voteConvictions } from '../../primitive/Gener
 import * as primitiveClasses from '../../primitive';
 import { formatType } from './formatting';
 import { setImports, TypeImports } from './imports';
+import { Tuple } from '../../codec';
 
 function arrayToStrType (arr: string[]): string {
   return `(${arr.map((c): string => `'${c}'`).join(' | ')})`;
@@ -128,6 +129,14 @@ export function getSimilarTypes (definitions: object, registry: Registry, type: 
     possibleTypes.push('string', 'Uint8Array');
   } else if (isChildClass(String, Clazz)) {
     possibleTypes.push('string');
+  } else if (isChildClass(Tuple, Clazz)) {
+    const subDef = getTypeDef(type).sub;
+
+    if (Array.isArray(subDef)) {
+      const subs = subDef.map(({ type }) => getSimilarTypes(definitions, registry, type, imports).join(' | '));
+
+      possibleTypes.push(`[${subs.join(', ')}]`);
+    }
   }
 
   return possibleTypes;

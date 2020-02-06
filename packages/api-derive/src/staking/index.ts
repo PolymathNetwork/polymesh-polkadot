@@ -3,7 +3,6 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 
 export * from './account';
-export * from './controllers';
 export * from './electedInfo';
 export * from './overview';
 export * from './query';
