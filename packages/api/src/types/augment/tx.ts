@@ -12,7 +12,7 @@ import { Heartbeat } from '@polkadot/types/interfaces/imOnline';
 import { Keys } from '@polkadot/types/interfaces/session';
 import { EraIndex, RewardDestination, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
 import { Key } from '@polkadot/types/interfaces/system';
-import { AssetRule, AssetType, AuthorizationData, Ballot, ClaimRecord, ClaimValue, IdentifierType, IdentityId, MipsIndex, OffChainSignature, Permission, ProportionMatch, Signer, SigningItem, SigningItemWithAuth, TargetIdAuthorization, Ticker } from '@polkadot/types/interfaces/polymesh';
+import { AccountKey, AssetRule, AssetType, AuthorizationData, Ballot, ClaimRecord, ClaimValue, Document, IdentifierType, IdentityId, MipsIndex, OffChainSignature, Permission, ProportionMatch, Signatory, SigningItem, SigningItemWithAuth, SmartExtension, TargetIdAuthorization, Ticker } from '@polkadot/types/interfaces/polymesh';
 import { SubmittableExtrinsic } from '@polkadot/api/submittable/types';
 
 declare module '@polkadot/api/types/submittable' {
@@ -134,19 +134,19 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Governance committee on 2/3 rds majority can introduce a new potential validator to the pool of validators. Staking module uses `PermissionedValidators` to ensure validators have completed KYB compliance and considers them for validation
        */
-      addPotentialValidator: AugmentedSubmittable<(_controller: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      addPotentialValidator: AugmentedSubmittable<(validator: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Remove a validator from the pool of validators. Effects are known in the next session. Staking module checks `PermissionedValidators` to ensure validators have completed KYB compliance
        */
-      removeValidator: AugmentedSubmittable<(_controller: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      removeValidator: AugmentedSubmittable<(validator: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Governance committee on 2/3 rds majority can update the compliance status of a validator as `Pending`
        */
-      complianceFailed: AugmentedSubmittable<(_controller: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      complianceFailed: AugmentedSubmittable<(validator: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Governance committee on 2/3 rds majority can update the compliance status of a validator as `Active`
        */
-      compliancePassed: AugmentedSubmittable<(_controller: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      compliancePassed: AugmentedSubmittable<(validator: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Validate the nominators KYC expiry time If an account from a given set of address is nominating then check the KYC expiry time of it and if it is expired then the account should be unbonded and removed from the nominating process. #<weight> - Depends on passed list of AccountId - Depends on the no. of claim issuers an accountId has for the KYC expiry
        */
@@ -223,7 +223,7 @@ declare module '@polkadot/api/types/submittable' {
        *
        * @param signers - Signers of the multisig (They need to accept authorization before they are actually added)
        */
-      createMultisig: AugmentedSubmittable<(_signers: Vec<Signer> | (Signer | { identity: any } | { accountKey: any } | string | Uint8Array)[], _sigsRequired: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      createMultisig: AugmentedSubmittable<(signers: Vec<Signatory> | (Signatory | { identity: any } | { accountKey: any } | string | Uint8Array)[], sigsRequired: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Creates a multisig proposal
        *
@@ -254,32 +254,22 @@ declare module '@polkadot/api/types/submittable' {
       approveAsKey: AugmentedSubmittable<(_multisig: AccountId | string | Uint8Array, _proposalId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Accept a multisig signer authorization given to signer's identity
-       *
-       * @param multisig - MultiSig address
        */
       acceptMultisigSignerAsIdentity: AugmentedSubmittable<(_authId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Accept a multisig signer authorization given to signer's key (AccountId)
-       *
-       * @param multisig - MultiSig address
        */
       acceptMultisigSignerAsKey: AugmentedSubmittable<(_authId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Add a signer to the multisig. This must be called by the multisig itself
-       *
-       * @param multisig - MultiSig address
        */
-      addMultisigSigner: AugmentedSubmittable<(_signer: Signer | { identity: any } | { accountKey: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      addMultisigSigner: AugmentedSubmittable<(signer: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Remove a signer from the multisig. This must be called by the multisig itself
-       *
-       * @param multisig - MultiSig address
        */
-      removeMultisigSigner: AugmentedSubmittable<(_signer: Signer | { identity: any } | { accountKey: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      removeMultisigSigner: AugmentedSubmittable<(signer: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Change number of sigs required by a multisig. This must be called by the multisig itself
-       *
-       * @param multisig - MultiSig address
        */
       changeSigsRequired: AugmentedSubmittable<(_sigsRequired: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
@@ -455,8 +445,21 @@ declare module '@polkadot/api/types/submittable' {
        * @param total_supply - The total supply of the token
        * @param divisible - A boolean to identify the divisibility status of the token
        * @param asset_type - The asset type
+       * @param identifiers - A vector of asset identifiers
        */
-      createToken: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _name: Bytes | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _totalSupply: Balance | AnyNumber | Uint8Array, _divisible: bool | boolean | Uint8Array, _assetType: AssetType | { equity: any } | { debt: any } | { commodity: any } | { structuredProduct: any } | { custom: any } | string | Uint8Array, _identifiers: Vec<ITuple<[IdentifierType, Bytes]>> | ([IdentifierType | { isin: any } | { cusip: any } | { custom: any } | string | Uint8Array, Bytes | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
+      createToken: AugmentedSubmittable<(did: IdentityId | string | Uint8Array, name: Bytes | string | Uint8Array, ticker: Ticker | string | Uint8Array, totalSupply: Balance | AnyNumber | Uint8Array, divisible: bool | boolean | Uint8Array, assetType: AssetType | { equity: any } | { debt: any } | { commodity: any } | { structuredProduct: any } | { custom: any } | string | Uint8Array, identifiers: Vec<ITuple<[IdentifierType, Bytes]>> | ([IdentifierType | { isin: any } | { cusip: any } | { custom: any } | string | Uint8Array, Bytes | string | Uint8Array])[], fundingRound: Option<Bytes> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Freezes transfers and minting of a given token
+       *
+       * @param origin - The signing key of the sender
+       */
+      freeze: AugmentedSubmittable<(ticker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Unfreezes transfers and minting of a given token
+       *
+       * @param origin - The signing key of the sender
+       */
+      unfreeze: AugmentedSubmittable<(ticker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Renames a given token
        *
@@ -603,30 +606,29 @@ declare module '@polkadot/api/types/submittable' {
        */
       isIssuable: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
-       * Used to get the documents details attach with the token
-       *
-       * @param _origin - Caller signing key
-       * @param ticker - Ticker of the token
-       */
-      getDocument: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _name: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
-      /**
-       * Used to set the details of the document, Only be called by the token owner
-       *
-       * @param origin - Signing key of the token owner
-       * @param did - DID of the token owner
-       * @param ticker - Ticker of the token
-       * @param name - Name of the document
-       * @param uri - Off chain URL of the document
-       */
-      setDocument: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _name: Bytes | string | Uint8Array, _uri: Bytes | string | Uint8Array, _documentHash: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
-      /**
-       * Used to remove the document details for the given token, Only be called by the token owner
+       * Add documents for a given token. To be called only by the token owner
        *
        * @param origin - Signing key of the token owner
        * @param did - DID of the token owner
        * @param ticker - Ticker of the token
        */
-      removeDocument: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _name: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      addDocuments: AugmentedSubmittable<(did: IdentityId | string | Uint8Array, ticker: Ticker | string | Uint8Array, documents: Vec<Document> | (Document | { name?: any; uri?: any; hash?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Remove documents for a given token. To be called only by the token owner
+       *
+       * @param origin - Signing key of the token owner
+       * @param did - DID of the token owner
+       * @param ticker - Ticker of the token
+       */
+      removeDocuments: AugmentedSubmittable<(did: IdentityId | string | Uint8Array, ticker: Ticker | string | Uint8Array, docIds: Vec<u64> | (u64 | AnyNumber | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Update documents for the given token, Only be called by the token owner
+       *
+       * @param origin - Signing key of the token owner
+       * @param did - DID of the token owner
+       * @param ticker - Ticker of the token
+       */
+      updateDocuments: AugmentedSubmittable<(did: IdentityId | string | Uint8Array, ticker: Ticker | string | Uint8Array, docs: Vec<ITuple<[u64, Document]>> | ([u64 | AnyNumber | Uint8Array, Document | { name?: any; uri?: any; hash?: any } | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * ERC-2258 Implementation Used to increase the allowance for a given custodian Any investor/token holder can add a custodian and transfer the token transfer ownership to the custodian Through that investor balance will remain the same but the given token are only transfer by the custodian. This implementation make sure to have an accurate investor count from omnibus wallets
        *
@@ -675,7 +677,28 @@ declare module '@polkadot/api/types/submittable' {
        * @param ticker - The ticker of the token
        * @param identifiers - The asset identifiers to be updated in the form of a vector of pairs
        */
-      updateIdentifiers: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _identifiers: Vec<ITuple<[IdentifierType, Bytes]>> | ([IdentifierType | { isin: any } | { cusip: any } | { custom: any } | string | Uint8Array, Bytes | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
+      updateIdentifiers: AugmentedSubmittable<(did: IdentityId | string | Uint8Array, ticker: Ticker | string | Uint8Array, identifiers: Vec<ITuple<[IdentifierType, Bytes]>> | ([IdentifierType | { isin: any } | { cusip: any } | { custom: any } | string | Uint8Array, Bytes | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Whitelisting the Smart-Extension address for a given ticker
+       *
+       * @param origin - Signatory who owns to ticker/asset
+       * @param ticker - Ticker for whom extension get added
+       */
+      addExtension: AugmentedSubmittable<(ticker: Ticker | string | Uint8Array, extensionDetails: SmartExtension | { extension_type?: any; extension_name?: any; extension_id?: any; is_archive?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Archived the extension. Extension will not be used to verify the compliance or any smart logic it posses
+       *
+       * @param origin - Signatory who owns the ticker/asset
+       * @param ticker - Ticker symbol of the asset
+       */
+      archiveExtension: AugmentedSubmittable<(ticker: Ticker | string | Uint8Array, extensionId: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Archived the extension. Extension will not be used to verify the compliance or any smart logic it posses
+       *
+       * @param origin - Signatory who owns the ticker/asset
+       * @param ticker - Ticker symbol of the asset
+       */
+      unarchiveExtension: AugmentedSubmittable<(ticker: Ticker | string | Uint8Array, extensionId: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     dividend: {
 
@@ -709,11 +732,17 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Removes specified signing keys of a DID if present
        */
-      removeSigningItems: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _signersToRemove: Vec<Signer> | (Signer | { identity: any } | { accountKey: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      removeSigningItems: AugmentedSubmittable<(did: IdentityId | string | Uint8Array, signersToRemove: Vec<Signatory> | (Signatory | { identity: any } | { accountKey: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Sets a new master key for a DID
        */
-      setMasterKey: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _newKey: Key | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      setMasterKey: AugmentedSubmittable<(did: IdentityId | string | Uint8Array, newKey: AccountKey | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Call this with the new master key. By invoking this method, caller accepts authorization with the new master key. If a KYC service provider approved this change, master key of the DID is updated
+       *
+       * @param owner_auth_id - Authorization from the owner who initiated the change
+       */
+      acceptMasterKey: AugmentedSubmittable<(rotationAuthId: u64 | AnyNumber | Uint8Array, kycAuthId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Adds new claim record or edits an existing one. Only called by did_issuer's signing key
        */
@@ -730,7 +759,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * It sets permissions for an specific `target_key` key. Only the master key of an identity is able to set signing key permissions
        */
-      setPermissionToSigner: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _signer: Signer | { identity: any } | { accountKey: any } | string | Uint8Array, _permissions: Vec<Permission> | (Permission | ('Full' | 'Admin' | 'Operator' | 'SpendFunds') | number | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      setPermissionToSigner: AugmentedSubmittable<(did: IdentityId | string | Uint8Array, signer: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, permissions: Vec<Permission> | (Permission | ('Full' | 'Admin' | 'Operator' | 'SpendFunds') | number | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * It disables all signing keys at `did` identity
        */
@@ -740,23 +769,23 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Adds an authorization
        */
-      addAuthorization: AugmentedSubmittable<(_target: Signer | { identity: any } | { accountKey: any } | string | Uint8Array, _authorizationData: AuthorizationData | { attestMasterKeyRotation: any } | { rotateMasterKey: any } | { transferTicker: any } | { addMultiSigSigner: any } | { transferTokenOwnership: any } | { custom: any } | { noData: any } | string | Uint8Array, _expiry: Option<Moment> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      addAuthorization: AugmentedSubmittable<(target: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, authorizationData: AuthorizationData | { attestMasterKeyRotation: any } | { rotateMasterKey: any } | { transferTicker: any } | { addMultiSigSigner: any } | { transferTokenOwnership: any } | { custom: any } | { noData: any } | string | Uint8Array, expiry: Option<Moment> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Adds an authorization as a key. To be used by signing keys that don't have an identity
        */
-      addAuthorizationAsKey: AugmentedSubmittable<(_target: Signer | { identity: any } | { accountKey: any } | string | Uint8Array, _authorizationData: AuthorizationData | { attestMasterKeyRotation: any } | { rotateMasterKey: any } | { transferTicker: any } | { addMultiSigSigner: any } | { transferTokenOwnership: any } | { custom: any } | { noData: any } | string | Uint8Array, _expiry: Option<Moment> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      addAuthorizationAsKey: AugmentedSubmittable<(target: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, authorizationData: AuthorizationData | { attestMasterKeyRotation: any } | { rotateMasterKey: any } | { transferTicker: any } | { addMultiSigSigner: any } | { transferTokenOwnership: any } | { custom: any } | { noData: any } | string | Uint8Array, expiry: Option<Moment> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Adds an array of authorization
        */
-      batchAddAuthorization: AugmentedSubmittable<(_auths: Vec<ITuple<[Signer, AuthorizationData, Option<Moment>]>> | ([Signer | { identity: any } | { accountKey: any } | string | Uint8Array, AuthorizationData | { attestMasterKeyRotation: any } | { rotateMasterKey: any } | { transferTicker: any } | { addMultiSigSigner: any } | { transferTokenOwnership: any } | { custom: any } | { noData: any } | string | Uint8Array, Option<Moment> | null | object | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
+      batchAddAuthorization: AugmentedSubmittable<(auths: Vec<ITuple<[Signatory, AuthorizationData, Option<Moment>]>> | ([Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, AuthorizationData | { attestMasterKeyRotation: any } | { rotateMasterKey: any } | { transferTicker: any } | { addMultiSigSigner: any } | { transferTokenOwnership: any } | { custom: any } | { noData: any } | string | Uint8Array, Option<Moment> | null | object | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Removes an authorization
        */
-      removeAuthorization: AugmentedSubmittable<(_target: Signer | { identity: any } | { accountKey: any } | string | Uint8Array, _authId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      removeAuthorization: AugmentedSubmittable<(target: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, authId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Removes an array of authorizations
        */
-      batchRemoveAuthorization: AugmentedSubmittable<(_authIdentifiers: Vec<ITuple<[Signer, u64]>> | ([Signer | { identity: any } | { accountKey: any } | string | Uint8Array, u64 | AnyNumber | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
+      batchRemoveAuthorization: AugmentedSubmittable<(authIdentifiers: Vec<ITuple<[Signatory, u64]>> | ([Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, u64 | AnyNumber | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Accepts an authorization
        */
@@ -772,7 +801,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Identity's master key or target key are allowed to reject a pre authorization to join. It only affects the authorization: if key accepted it previously, then this transaction shall have no effect
        */
-      unauthorizedJoinToIdentity: AugmentedSubmittable<(_signer: Signer | { identity: any } | { accountKey: any } | string | Uint8Array, _targetId: IdentityId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      unauthorizedJoinToIdentity: AugmentedSubmittable<(signer: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, targetId: IdentityId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * It adds signing keys to target identity `id`. Keys are directly added to identity because each of them has an authorization. Arguments:     - `origin` Master key of `id` identity.     - `id` Identity where new signing keys will be added.     - `additional_keys` New signing items (and their authorization data) to add to target     identity. Failure     - It can only called by master key owner.     - Keys should be able to linked to any identity
        */
@@ -780,11 +809,11 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * It revokes the `auth` off-chain authorization of `signer`. It only takes effect if the authorized transaction is not yet executed
        */
-      revokeOffchainAuthorization: AugmentedSubmittable<(_signer: Signer | { identity: any } | { accountKey: any } | string | Uint8Array, _auth: TargetIdAuthorization | { target_id?: any; nonce?: any; expires_at?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      revokeOffchainAuthorization: AugmentedSubmittable<(signer: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, auth: TargetIdAuthorization | { target_id?: any; nonce?: any; expires_at?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Query whether given signer identity has valid KYC or not
        *
-       * @param origin - Signer whose identity get checked
+       * @param origin - Signatory whose identity get checked
        */
       isMyIdentityHasValidKyc: AugmentedSubmittable<(_bufferTime: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };

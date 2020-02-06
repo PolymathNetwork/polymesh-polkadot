@@ -8,19 +8,19 @@ import { AccountId, AccountIndex, Balance, BalanceOf, BlockNumber, Hash, Index, 
 import { UncleEntryItem } from '@polkadot/types/interfaces/authorship';
 import { BabeAuthorityWeight, MaybeVrf } from '@polkadot/types/interfaces/babe';
 import { BalanceLock, VestingSchedule } from '@polkadot/types/interfaces/balances';
-import { ProposalIndex, Votes } from '@polkadot/types/interfaces/collective';
+import { ProposalIndex } from '@polkadot/types/interfaces/collective';
 import { AuthorityId } from '@polkadot/types/interfaces/consensus';
 import { CodeHash, ContractInfo, Gas, PrefabWasmModule, Schedule } from '@polkadot/types/interfaces/contracts';
-import { Proposal, ReferendumInfo } from '@polkadot/types/interfaces/democracy';
+import { Proposal } from '@polkadot/types/interfaces/democracy';
 import { AuthorityList, SetId, StoredPendingChange, StoredState } from '@polkadot/types/interfaces/grandpa';
 import { AuthIndex } from '@polkadot/types/interfaces/imOnline';
 import { Kind, OffenceDetails, OpaqueTimeSlot, ReportIdOf } from '@polkadot/types/interfaces/offences';
 import { Keys, SessionIndex } from '@polkadot/types/interfaces/session';
 import { EraIndex, EraPoints, Exposure, Forcing, MomentOf, Nominations, RewardDestination, SlashingSpans, SpanIndex, SpanRecord, StakingLedger, UnappliedSlash, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
-import { DigestOf, EventIndex, EventRecord, Key } from '@polkadot/types/interfaces/system';
+import { DigestOf, EventIndex, EventRecord } from '@polkadot/types/interfaces/system';
 import { TreasuryProposal } from '@polkadot/types/interfaces/treasury';
 import { Multiplier } from '@polkadot/types/interfaces/txpayment';
-import { AssetRule, Authorization, AuthorizationNonce, Ballot, Claim, ClaimMetaData, Counter, DidRecord, Dividend, IdentifierType, IdentityId, Investment, Link, LinkedKeyInfo, MIP, MipsMetadata, PermissionedValidator, PreAuthorizedKeyInfo, ProportionMatch, STO, SecurityToken, Signer, SimpleTokenRecord, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig } from '@polkadot/types/interfaces/polymesh';
+import { AccountKey, AssetRule, Authorization, AuthorizationNonce, Ballot, Claim, ClaimMetaData, Counter, DidRecord, Dividend, IdentifierType, IdentityId, Investment, Link, LinkedKeyInfo, MIP, MipsMetadata, PermissionedValidator, PolymeshReferendumInfo, PolymeshVotes, PreAuthorizedKeyInfo, ProportionMatch, STO, SecurityToken, Signatory, SimpleTokenRecord, SmartExtension, SmartExtensionType, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig } from '@polkadot/types/interfaces/polymesh';
 import { Observable } from 'rxjs';
 
 declare module '@polkadot/api/types/storage' {
@@ -196,7 +196,11 @@ declare module '@polkadot/api/types/storage' {
       /**
        * Signing key => Charge Fee to did?. Default is false i.e. the fee will be charged from user balance
        **/
-      chargeDid: AugmentedQuery<ApiType, (arg: Key | string | Uint8Array) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      chargeDid: AugmentedQuery<ApiType, (arg: AccountKey | string | Uint8Array) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      /**
+       * AccountId of the block rewards reserve
+       **/
+      blockRewardsReserve: AugmentedQuery<ApiType, () => Observable<AccountId>> & QueryableStorageEntry<ApiType>;
     };
     authorship: {
 
@@ -475,7 +479,7 @@ declare module '@polkadot/api/types/storage' {
       /**
        * Signers of a multisig. (mulisig, signer) => true/false
        **/
-      multiSigSigners: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, Signer]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      multiSigSigners: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, Signatory]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
       /**
        * Confirmations required before processing a multisig tx
        **/
@@ -496,7 +500,7 @@ declare module '@polkadot/api/types/storage' {
       /**
        * Individual multisig signer votes. (multi sig, signer, )
        **/
-      votes: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, Signer, u64]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      votes: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, Signatory, u64]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
     };
     contracts: {
 
@@ -555,9 +559,9 @@ declare module '@polkadot/api/types/storage' {
        **/
       proposalOf: AugmentedQuery<ApiType, (arg: Hash | string | Uint8Array) => Observable<Option<Proposal>>> & QueryableStorageEntry<ApiType>;
       /**
-       * Votes on a given proposal, if it is ongoing.
+       * PolymeshVotes on a given proposal, if it is ongoing.
        **/
-      voting: AugmentedQuery<ApiType, (arg: Hash | string | Uint8Array) => Observable<Option<Votes>>> & QueryableStorageEntry<ApiType>;
+      voting: AugmentedQuery<ApiType, (arg: Hash | string | Uint8Array) => Observable<Option<PolymeshVotes>>> & QueryableStorageEntry<ApiType>;
       /**
        * Proposals so far.
        **/
@@ -578,7 +582,7 @@ declare module '@polkadot/api/types/storage' {
        **/
       members: AugmentedQuery<ApiType, () => Observable<Vec<IdentityId>>> & QueryableStorageEntry<ApiType>;
     };
-    mIPS: {
+    mips: {
 
       /**
        * The minimum amount to be used as a deposit for a public referendum proposal.
@@ -611,14 +615,14 @@ declare module '@polkadot/api/types/storage' {
        **/
       proposals: AugmentedQuery<ApiType, (arg: Hash | string | Uint8Array) => Observable<Option<MIP>>> & QueryableStorageEntry<ApiType>;
       /**
-       * Votes on a given proposal, if it is ongoing.
+       * PolymeshVotes on a given proposal, if it is ongoing.
        * proposal hash -> voting info
        **/
-      voting: AugmentedQuery<ApiType, (arg: Hash | string | Uint8Array) => Observable<Option<Votes>>> & QueryableStorageEntry<ApiType>;
+      voting: AugmentedQuery<ApiType, (arg: Hash | string | Uint8Array) => Observable<Option<PolymeshVotes>>> & QueryableStorageEntry<ApiType>;
       /**
        * Active referendums.
        **/
-      referendumMetadata: AugmentedQuery<ApiType, () => Observable<Vec<ReferendumInfo>>> & QueryableStorageEntry<ApiType>;
+      referendumMetadata: AugmentedQuery<ApiType, () => Observable<Vec<PolymeshReferendumInfo>>> & QueryableStorageEntry<ApiType>;
       /**
        * Proposals that have met the quorum threshold to be put forward to a governance committee
        * proposal hash -> proposal
@@ -689,11 +693,6 @@ declare module '@polkadot/api/types/storage' {
        **/
       userCheckpoints: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId]>) => Observable<Vec<u64>>> & QueryableStorageEntry<ApiType>;
       /**
-       * The documents attached to the tokens
-       * (ticker, document name) -> (URI, document hash)
-       **/
-      documents: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<ITuple<[Bytes, Bytes, Moment]>>> & QueryableStorageEntry<ApiType>;
-      /**
        * Allowance provided to the custodian
        * (ticker, token holder, custodian) -> balance
        **/
@@ -718,6 +717,21 @@ declare module '@polkadot/api/types/storage' {
        * (ticker, funding round) -> balance
        **/
       issuedInFundingRound: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      /**
+       * List of Smart extension added for the given tokens
+       * ticker, AccountId (SE address) -> SmartExtension detail
+       **/
+      extensionDetails: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, AccountId]>) => Observable<SmartExtension>> & QueryableStorageEntry<ApiType>;
+      /**
+       * List of Smart extension added for the given tokens and for the given type
+       * ticker, type of SE -> address/AccountId of SE
+       **/
+      extensions: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, SmartExtensionType]>) => Observable<Vec<AccountId>>> & QueryableStorageEntry<ApiType>;
+      /**
+       * The set of frozen assets implemented as a membership map.
+       * ticker -> bool
+       **/
+      frozen: AugmentedQuery<ApiType, (arg: Ticker | string | Uint8Array) => Observable<bool>> & QueryableStorageEntry<ApiType>;
     };
     dividend: {
 
@@ -762,7 +776,7 @@ declare module '@polkadot/api/types/storage' {
        * DID -> array of (claim_key and claim_issuer)
        **/
       claimKeys: AugmentedQuery<ApiType, (arg: IdentityId | string | Uint8Array) => Observable<Vec<ClaimMetaData>>> & QueryableStorageEntry<ApiType>;
-      keyToIdentityIds: AugmentedQuery<ApiType, (arg: Key | string | Uint8Array) => Observable<Option<LinkedKeyInfo>>> & QueryableStorageEntry<ApiType>;
+      keyToIdentityIds: AugmentedQuery<ApiType, (arg: AccountKey | string | Uint8Array) => Observable<Option<LinkedKeyInfo>>> & QueryableStorageEntry<ApiType>;
       /**
        * How much does creating a DID cost
        **/
@@ -778,7 +792,7 @@ declare module '@polkadot/api/types/storage' {
       /**
        * Pre-authorize join to Identity.
        **/
-      preAuthorizedJoinDid: AugmentedQuery<ApiType, (arg: Signer | { identity: any } | { accountKey: any } | string | Uint8Array) => Observable<Vec<PreAuthorizedKeyInfo>>> & QueryableStorageEntry<ApiType>;
+      preAuthorizedJoinDid: AugmentedQuery<ApiType, (arg: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array) => Observable<Vec<PreAuthorizedKeyInfo>>> & QueryableStorageEntry<ApiType>;
       /**
        * Authorization nonce per Identity. Initially is 0.
        **/
@@ -786,23 +800,23 @@ declare module '@polkadot/api/types/storage' {
       /**
        * Inmediate revoke of any off-chain authorization.
        **/
-      revokeOffChainAuthorization: AugmentedQuery<ApiType, (arg: ITuple<[Signer, TargetIdAuthorization]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      revokeOffChainAuthorization: AugmentedQuery<ApiType, (arg: ITuple<[Signatory, TargetIdAuthorization]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
       /**
        * All authorizations that an identity has
        **/
-      authorizations: AugmentedQuery<ApiType, (arg: ITuple<[Signer, u64]>) => Observable<Authorization>> & QueryableStorageEntry<ApiType>;
+      authorizations: AugmentedQuery<ApiType, (arg: ITuple<[Signatory, u64]>) => Observable<Authorization>> & QueryableStorageEntry<ApiType>;
       /**
        * Auth id of the latest auth of an identity. Used to allow iterating over auths
        **/
-      lastAuthorization: AugmentedQuery<ApiType, (arg: Signer | { identity: any } | { accountKey: any } | string | Uint8Array) => Observable<u64>> & QueryableStorageEntry<ApiType>;
+      lastAuthorization: AugmentedQuery<ApiType, (arg: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array) => Observable<u64>> & QueryableStorageEntry<ApiType>;
       /**
        * All links that an identity/key has
        **/
-      links: AugmentedQuery<ApiType, (arg: ITuple<[Signer, u64]>) => Observable<Link>> & QueryableStorageEntry<ApiType>;
+      links: AugmentedQuery<ApiType, (arg: ITuple<[Signatory, u64]>) => Observable<Link>> & QueryableStorageEntry<ApiType>;
       /**
        * Link id of the latest auth of an identity/key. Used to allow iterating over links
        **/
-      lastLink: AugmentedQuery<ApiType, (arg: Signer | { identity: any } | { accountKey: any } | string | Uint8Array) => Observable<u64>> & QueryableStorageEntry<ApiType>;
+      lastLink: AugmentedQuery<ApiType, (arg: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array) => Observable<u64>> & QueryableStorageEntry<ApiType>;
     };
     generalTM: {
 
@@ -836,7 +850,7 @@ declare module '@polkadot/api/types/storage' {
        **/
       results: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<Vec<Balance>>> & QueryableStorageEntry<ApiType>;
     };
-    sTOCapped: {
+    stoCapped: {
 
       /**
        * Tokens can have multiple whitelists that (for now) check entries individually within each other
