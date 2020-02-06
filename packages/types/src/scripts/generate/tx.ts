@@ -93,7 +93,7 @@ function generateModule (registry: Registry, allDefs: object, { calls, name }: M
 
           setImports(allDefs, imports, [...similarTypes.filter((type): boolean => !type.startsWith('(') && !type.startsWith('{')), typeStr]);
 
-          return [`${nameStr}: ${similarTypes.join(' | ')}`, nameStr, typeStr];
+          return [`_${nameStr}: ${similarTypes.join(' | ')}`, nameStr, typeStr];
         })
         .map(([full]): string => full)
         .join(', ');
