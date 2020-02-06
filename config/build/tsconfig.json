@@ -1,0 +1,49 @@
+{
+  "extends": "./node_modules/@polkadot/dev/config/tsconfig",
+  "include": [
+    "packages"
+  ],
+  "exclude": [
+    "build/**/*",
+    "**/build/**/*",
+    "build-tmp/**/*",
+    "**/build-tmp/**/*",
+    "./packages/**/*.spec.ts",
+    "./packages/types/scripts",
+    "packages-tmp/**/*"    
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES6",
+    "paths":
+    {
+      "@polkadot/api": ["packages/api"],
+      "@polkadot/api/*": ["packages/api/*"],
+      "@polkadot/api-contract": ["packages/api-contract"],
+      "@polkadot/api-contract/*": ["packages/api-contract/*"],
+      "@polkadot/api-derive": ["packages/api-derive"],
+      "@polkadot/api-derive/*": ["packages/api-derive/*"],
+      "@polkadot/metadata": ["packages/metadata"],
+      "@polkadot/metadata/*": ["packages/metadata/*"],
+      "@polkadot/rpc-core": ["packages/rpc-core"],
+      "@polkadot/rpc-core/*": ["packages/rpc-core/*"],
+      "@polkadot/rpc-provider": ["packages/rpc-provider"],
+      "@polkadot/rpc-provider/*": ["packages/rpc-provider/*"],
+      "@polkadot/jsonrpc": ["packages/type-jsonrpc"],
+      "@polkadot/jsonrpc/*": ["packages/type-jsonrpc/*"],
+      "@polkadot/types": ["packages/types"],
+      "@polkadot/types/*": ["packages/types/*"],
+    },
+    "plugins": [
+      {
+        "transform": "@zerollup/ts-transform-paths",
+        "exclude": ["*"],
+      }      
+    ],
+    "skipLibCheck": true,
+    "typeRoots": [
+      "./node_modules/@polkadot/ts",
+      "./node_modules/@types"
+    ]
+  }
+}

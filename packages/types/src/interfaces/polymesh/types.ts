@@ -125,6 +125,13 @@ export interface Dividend extends Struct {
   readonly checkpoint_id: u64;
 }
 
+/** @name Document */
+export interface Document extends Struct {
+  readonly name: Bytes;
+  readonly uri: Bytes;
+  readonly hash: Bytes;
+}
+
 /** @name FeeOf */
 export interface FeeOf extends Balance {}
 
@@ -326,6 +333,22 @@ export interface SimpleTokenRecord extends Struct {
   readonly ticker: Ticker;
   readonly total_supply: Balance;
   readonly owner_did: IdentityId;
+}
+
+/** @name SmartExtension */
+export interface SmartExtension extends Struct {
+  readonly extension_type: SmartExtensionType;
+  readonly extension_name: Bytes;
+  readonly extension_id: IdentityId;
+  readonly is_archive: bool;
+}
+
+/** @name SmartExtensionType */
+export interface SmartExtensionType extends Enum {
+  readonly isTransferManager: boolean;
+  readonly isOfferings: boolean;
+  readonly isCustom: boolean;
+  readonly asCustom: Bytes;
 }
 
 /** @name STO */

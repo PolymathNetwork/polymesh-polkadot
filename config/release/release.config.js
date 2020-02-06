@@ -2,12 +2,10 @@ module.exports = {
   repositoryUrl: 'https://github.com/PolymathNetwork/polymesh-polkadot.git',
   branches: [
     'master',
-    'next',
-    'next-major',
     {
       name: 'beta',
-      prerelease: true,
-    },
+      prerelease: true
+    }
   ],
   /*
    * In this order the **prepare** step of @semantic-release/npm will run first
@@ -25,10 +23,10 @@ module.exports = {
     [
       '@semantic-release/npm',
       {
-        tarballDir: 'npm-package/',
-      },
+        tarballDir: 'npm-package/'
+      }
     ],
     '@semantic-release/git',
-    '@semantic-release/github',
-  ],
+    '@semantic-release/github'
+  ]
 };

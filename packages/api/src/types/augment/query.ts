@@ -321,7 +321,7 @@ declare module '@polkadot/api/types/storage' {
        * Records information about the maximum slash of a stash within a slashing span,
        * as well as how much reward has been paid out.
        **/
-      spanSlash: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, SpanIndex]>) => Observable<SpanRecord>> & QueryableStorageEntry<ApiType>;
+      spanSlash: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, SpanIndex]> | [AccountId | string | Uint8Array, SpanIndex | AnyNumber | Uint8Array]) => Observable<SpanRecord>> & QueryableStorageEntry<ApiType>;
       /**
        * The earliest era for which we have a pending, unapplied slash.
        **/
@@ -389,7 +389,7 @@ declare module '@polkadot/api/types/storage' {
        * The first key is always `DEDUP_KEY_PREFIX` to have all the data in the same branch of
        * the trie. Having all data in the same branch should prevent slowing down other queries.
        **/
-      keyOwner: AugmentedQuery<ApiType, (key1: Bytes | string | Uint8Array, key2: ITuple<[KeyTypeId, Bytes]>) => Observable<Option<ValidatorId>>> & QueryableStorageEntry<ApiType>;
+      keyOwner: AugmentedQuery<ApiType, (key1: Bytes | string | Uint8Array, key2: ITuple<[KeyTypeId, Bytes]> | [KeyTypeId | AnyNumber | Uint8Array, Bytes | string | Uint8Array]) => Observable<Option<ValidatorId>>> & QueryableStorageEntry<ApiType>;
     };
     grandpa: {
 
@@ -475,7 +475,7 @@ declare module '@polkadot/api/types/storage' {
       /**
        * Signers of a multisig. (mulisig, signer) => true/false
        **/
-      multiSigSigners: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, Signer]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      multiSigSigners: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, Signer]> | [AccountId | string | Uint8Array, Signer | { identity: any } | { accountKey: any } | string | Uint8Array]) => Observable<bool>> & QueryableStorageEntry<ApiType>;
       /**
        * Confirmations required before processing a multisig tx
        **/
@@ -488,15 +488,15 @@ declare module '@polkadot/api/types/storage' {
        * Proposals presented for voting to a multisig (multisig, proposal id) => Option<proposal>.
        * It is deleted after proposal is processed
        **/
-      proposals: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, u64]>) => Observable<Option<Proposal>>> & QueryableStorageEntry<ApiType>;
+      proposals: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, u64]> | [AccountId | string | Uint8Array, u64 | AnyNumber | Uint8Array]) => Observable<Option<Proposal>>> & QueryableStorageEntry<ApiType>;
       /**
        * Number of votes in favor of a tx. Mapping from (multisig, tx id) => no. of approvals.
        **/
-      txApprovals: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, u64]>) => Observable<u64>> & QueryableStorageEntry<ApiType>;
+      txApprovals: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, u64]> | [AccountId | string | Uint8Array, u64 | AnyNumber | Uint8Array]) => Observable<u64>> & QueryableStorageEntry<ApiType>;
       /**
        * Individual multisig signer votes. (multi sig, signer, )
        **/
-      votes: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, Signer, u64]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      votes: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, Signer, u64]> | [AccountId | string | Uint8Array, Signer | { identity: any } | { accountKey: any } | string | Uint8Array, u64 | AnyNumber | Uint8Array]) => Observable<bool>> & QueryableStorageEntry<ApiType>;
     };
     contracts: {
 
@@ -650,16 +650,16 @@ declare module '@polkadot/api/types/storage' {
        * Used to store the securityToken balance corresponds to ticker and Identity
        * (ticker, DID) -> balance
        **/
-      balanceOf: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      balanceOf: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId]> | [Ticker | string | Uint8Array, IdentityId | string | Uint8Array]) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       /**
        * A map of asset identifiers whose keys are pairs of a ticker name and an `IdentifierType`
        * and whose values are byte vectors.
        **/
-      identifiers: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentifierType]>) => Observable<Bytes>> & QueryableStorageEntry<ApiType>;
+      identifiers: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentifierType]> | [Ticker | string | Uint8Array, IdentifierType | { isin: any } | { cusip: any } | { custom: any } | string | Uint8Array]) => Observable<Bytes>> & QueryableStorageEntry<ApiType>;
       /**
        * (ticker, sender (DID), spender(DID)) -> allowance amount
        **/
-      allowance: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      allowance: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId, IdentityId]> | [Ticker | string | Uint8Array, IdentityId | string | Uint8Array, IdentityId | string | Uint8Array]) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       /**
        * cost in base currency to create a token
        **/
@@ -677,37 +677,37 @@ declare module '@polkadot/api/types/storage' {
        * Total supply of the token at the checkpoint
        * (ticker, checkpointId) -> total supply at given checkpoint
        **/
-      checkpointTotalSupply: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u64]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      checkpointTotalSupply: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u64]> | [Ticker | string | Uint8Array, u64 | AnyNumber | Uint8Array]) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       /**
        * Balance of a DID at a checkpoint
        * (ticker, DID, checkpoint ID) -> Balance of a DID at a checkpoint
        **/
-      checkpointBalance: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId, u64]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      checkpointBalance: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId, u64]> | [Ticker | string | Uint8Array, IdentityId | string | Uint8Array, u64 | AnyNumber | Uint8Array]) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       /**
        * Last checkpoint updated for a DID's balance
        * (ticker, DID) -> List of checkpoints where user balance changed
        **/
-      userCheckpoints: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId]>) => Observable<Vec<u64>>> & QueryableStorageEntry<ApiType>;
+      userCheckpoints: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId]> | [Ticker | string | Uint8Array, IdentityId | string | Uint8Array]) => Observable<Vec<u64>>> & QueryableStorageEntry<ApiType>;
       /**
        * The documents attached to the tokens
        * (ticker, document name) -> (URI, document hash)
        **/
-      documents: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<ITuple<[Bytes, Bytes, Moment]>>> & QueryableStorageEntry<ApiType>;
+      documents: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]> | [Ticker | string | Uint8Array, Bytes | string | Uint8Array]) => Observable<ITuple<[Bytes, Bytes, Moment]>>> & QueryableStorageEntry<ApiType>;
       /**
        * Allowance provided to the custodian
        * (ticker, token holder, custodian) -> balance
        **/
-      custodianAllowance: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      custodianAllowance: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId, IdentityId]> | [Ticker | string | Uint8Array, IdentityId | string | Uint8Array, IdentityId | string | Uint8Array]) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       /**
        * Total custodian allowance for a given token holder
        * (ticker, token holder) -> balance
        **/
-      totalCustodyAllowance: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      totalCustodyAllowance: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId]> | [Ticker | string | Uint8Array, IdentityId | string | Uint8Array]) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       /**
        * Store the nonce for off chain signature to increase the custody allowance
        * (ticker, token holder, nonce) -> bool
        **/
-      authenticationNonce: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId, u16]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      authenticationNonce: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId, u16]> | [Ticker | string | Uint8Array, IdentityId | string | Uint8Array, u16 | AnyNumber | Uint8Array]) => Observable<bool>> & QueryableStorageEntry<ApiType>;
       /**
        * The name of the current funding round.
        * ticker -> funding round
@@ -717,7 +717,7 @@ declare module '@polkadot/api/types/storage' {
        * The total balances of tokens issued in all recorded funding rounds.
        * (ticker, funding round) -> balance
        **/
-      issuedInFundingRound: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      issuedInFundingRound: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]> | [Ticker | string | Uint8Array, Bytes | string | Uint8Array]) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
     };
     dividend: {
 
@@ -725,7 +725,7 @@ declare module '@polkadot/api/types/storage' {
        * Dividend records; (ticker, dividend ID) => dividend entry
        * Note: contrary to checkpoint IDs, dividend IDs are 0-indexed.
        **/
-      dividends: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u32]>) => Observable<Dividend>> & QueryableStorageEntry<ApiType>;
+      dividends: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u32]> | [Ticker | string | Uint8Array, u32 | AnyNumber | Uint8Array]) => Observable<Dividend>> & QueryableStorageEntry<ApiType>;
       /**
        * How many dividends were created for a ticker so far; (ticker) => count
        **/
@@ -734,7 +734,7 @@ declare module '@polkadot/api/types/storage' {
        * Payout flags, decide whether a user already was paid their dividend
        * (DID, ticker, dividend_id) -> whether they got their payout
        **/
-      userPayoutCompleted: AugmentedQuery<ApiType, (arg: ITuple<[IdentityId, Ticker, u32]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      userPayoutCompleted: AugmentedQuery<ApiType, (arg: ITuple<[IdentityId, Ticker, u32]> | [IdentityId | string | Uint8Array, Ticker | string | Uint8Array, u32 | AnyNumber | Uint8Array]) => Observable<bool>> & QueryableStorageEntry<ApiType>;
     };
     identity: {
 
@@ -757,7 +757,7 @@ declare module '@polkadot/api/types/storage' {
       /**
        * (DID, claim_key, claim_issuer) -> Associated claims
        **/
-      claims: AugmentedQuery<ApiType, (arg: ITuple<[IdentityId, ClaimMetaData]>) => Observable<Claim>> & QueryableStorageEntry<ApiType>;
+      claims: AugmentedQuery<ApiType, (arg: ITuple<[IdentityId, ClaimMetaData]> | [IdentityId | string | Uint8Array, ClaimMetaData | { claim_key?: any; claim_issuer?: any } | string | Uint8Array]) => Observable<Claim>> & QueryableStorageEntry<ApiType>;
       /**
        * DID -> array of (claim_key and claim_issuer)
        **/
@@ -786,11 +786,11 @@ declare module '@polkadot/api/types/storage' {
       /**
        * Inmediate revoke of any off-chain authorization.
        **/
-      revokeOffChainAuthorization: AugmentedQuery<ApiType, (arg: ITuple<[Signer, TargetIdAuthorization]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      revokeOffChainAuthorization: AugmentedQuery<ApiType, (arg: ITuple<[Signer, TargetIdAuthorization]> | [Signer | { identity: any } | { accountKey: any } | string | Uint8Array, TargetIdAuthorization | { target_id?: any; nonce?: any; expires_at?: any } | string | Uint8Array]) => Observable<bool>> & QueryableStorageEntry<ApiType>;
       /**
        * All authorizations that an identity has
        **/
-      authorizations: AugmentedQuery<ApiType, (arg: ITuple<[Signer, u64]>) => Observable<Authorization>> & QueryableStorageEntry<ApiType>;
+      authorizations: AugmentedQuery<ApiType, (arg: ITuple<[Signer, u64]> | [Signer | { identity: any } | { accountKey: any } | string | Uint8Array, u64 | AnyNumber | Uint8Array]) => Observable<Authorization>> & QueryableStorageEntry<ApiType>;
       /**
        * Auth id of the latest auth of an identity. Used to allow iterating over auths
        **/
@@ -798,7 +798,7 @@ declare module '@polkadot/api/types/storage' {
       /**
        * All links that an identity/key has
        **/
-      links: AugmentedQuery<ApiType, (arg: ITuple<[Signer, u64]>) => Observable<Link>> & QueryableStorageEntry<ApiType>;
+      links: AugmentedQuery<ApiType, (arg: ITuple<[Signer, u64]> | [Signer | { identity: any } | { accountKey: any } | string | Uint8Array, u64 | AnyNumber | Uint8Array]) => Observable<Link>> & QueryableStorageEntry<ApiType>;
       /**
        * Link id of the latest auth of an identity/key. Used to allow iterating over links
        **/
@@ -816,25 +816,25 @@ declare module '@polkadot/api/types/storage' {
       /**
        * Mapping of ticker and ballot name -> ballot details
        **/
-      ballots: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<Ballot>> & QueryableStorageEntry<ApiType>;
+      ballots: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]> | [Ticker | string | Uint8Array, Bytes | string | Uint8Array]) => Observable<Ballot>> & QueryableStorageEntry<ApiType>;
       /**
        * Helper data to make voting cheaper.
        * (ticker, BallotName) -> NoOfChoices
        **/
-      totalChoices: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<u64>> & QueryableStorageEntry<ApiType>;
+      totalChoices: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]> | [Ticker | string | Uint8Array, Bytes | string | Uint8Array]) => Observable<u64>> & QueryableStorageEntry<ApiType>;
       /**
        * (Ticker, BallotName, DID) -> Vector of vote weights.
        * weight at 0 index means weight for choice 1 of motion 1.
        * weight at 1 index means weight for choice 2 of motion 1.
        * User must enter 0 vote weight if they don't want to vote for a choice.
        **/
-      votes: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes, IdentityId]>) => Observable<Vec<Balance>>> & QueryableStorageEntry<ApiType>;
+      votes: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes, IdentityId]> | [Ticker | string | Uint8Array, Bytes | string | Uint8Array, IdentityId | string | Uint8Array]) => Observable<Vec<Balance>>> & QueryableStorageEntry<ApiType>;
       /**
        * (Ticker, BallotName) -> Vector of current vote weights.
        * weight at 0 index means weight for choice 1 of motion 1.
        * weight at 1 index means weight for choice 2 of motion 1.
        **/
-      results: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]>) => Observable<Vec<Balance>>> & QueryableStorageEntry<ApiType>;
+      results: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Bytes]> | [Ticker | string | Uint8Array, Bytes | string | Uint8Array]) => Observable<Vec<Balance>>> & QueryableStorageEntry<ApiType>;
     };
     sTOCapped: {
 
@@ -842,7 +842,7 @@ declare module '@polkadot/api/types/storage' {
        * Tokens can have multiple whitelists that (for now) check entries individually within each other
        * (ticker, sto_id) -> STO
        **/
-      stosByToken: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u32]>) => Observable<STO>> & QueryableStorageEntry<ApiType>;
+      stosByToken: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u32]> | [Ticker | string | Uint8Array, u32 | AnyNumber | Uint8Array]) => Observable<STO>> & QueryableStorageEntry<ApiType>;
       /**
        * It returns the sto count corresponds to its ticker
        * ticker -> sto count
@@ -852,27 +852,27 @@ declare module '@polkadot/api/types/storage' {
        * List of SimpleToken tokens which will be accepted as the fund raised type for the STO
        * (asset_ticker, sto_id, index) -> simple_token_ticker
        **/
-      allowedTokens: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u32, u32]>) => Observable<Ticker>> & QueryableStorageEntry<ApiType>;
+      allowedTokens: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u32, u32]> | [Ticker | string | Uint8Array, u32 | AnyNumber | Uint8Array, u32 | AnyNumber | Uint8Array]) => Observable<Ticker>> & QueryableStorageEntry<ApiType>;
       /**
        * To track the index of the token address for the given STO
        * (Asset_ticker, sto_id, simple_token_ticker) -> index
        **/
-      tokenIndexForSTO: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u32, Ticker]>) => Observable<Option<u32>>> & QueryableStorageEntry<ApiType>;
+      tokenIndexForSTO: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u32, Ticker]> | [Ticker | string | Uint8Array, u32 | AnyNumber | Uint8Array, Ticker | string | Uint8Array]) => Observable<Option<u32>>> & QueryableStorageEntry<ApiType>;
       /**
        * To track the no of different tokens allowed as fund raised type for the given STO
        * (asset_ticker, sto_id) -> count
        **/
-      tokensCountForSto: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u32]>) => Observable<u32>> & QueryableStorageEntry<ApiType>;
+      tokensCountForSto: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u32]> | [Ticker | string | Uint8Array, u32 | AnyNumber | Uint8Array]) => Observable<u32>> & QueryableStorageEntry<ApiType>;
       /**
        * To track the investment data of the investor corresponds to ticker
        * (asset_ticker, sto_id, DID) -> Investment structure
        **/
-      investmentData: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u32, IdentityId]>) => Observable<Investment>> & QueryableStorageEntry<ApiType>;
+      investmentData: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u32, IdentityId]> | [Ticker | string | Uint8Array, u32 | AnyNumber | Uint8Array, IdentityId | string | Uint8Array]) => Observable<Investment>> & QueryableStorageEntry<ApiType>;
       /**
        * To track the investment amount of the investor corresponds to ticker using SimpleToken
        * (asset_ticker, simple_token_ticker, sto_id, accountId) -> Invested balance
        **/
-      simpleTokenSpent: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Ticker, u32, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      simpleTokenSpent: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, Ticker, u32, IdentityId]> | [Ticker | string | Uint8Array, Ticker | string | Uint8Array, u32 | AnyNumber | Uint8Array, IdentityId | string | Uint8Array]) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
     };
     percentageTM: {
 
@@ -880,18 +880,18 @@ declare module '@polkadot/api/types/storage' {
     };
     exemption: {
 
-      exemptionList: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u16, IdentityId]>) => Observable<bool>> & QueryableStorageEntry<ApiType>;
+      exemptionList: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, u16, IdentityId]> | [Ticker | string | Uint8Array, u16 | AnyNumber | Uint8Array, IdentityId | string | Uint8Array]) => Observable<bool>> & QueryableStorageEntry<ApiType>;
     };
     simpleToken: {
 
       /**
        * Mapping from (ticker, owner DID, spender DID) to allowance amount
        **/
-      allowance: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      allowance: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId, IdentityId]> | [Ticker | string | Uint8Array, IdentityId | string | Uint8Array, IdentityId | string | Uint8Array]) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       /**
        * Mapping from (ticker, owner DID) to their balance
        **/
-      balanceOf: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId]>) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
+      balanceOf: AugmentedQuery<ApiType, (arg: ITuple<[Ticker, IdentityId]> | [Ticker | string | Uint8Array, IdentityId | string | Uint8Array]) => Observable<Balance>> & QueryableStorageEntry<ApiType>;
       /**
        * The cost to create a new simple token
        **/

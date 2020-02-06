@@ -23,7 +23,7 @@ export function overview (api: ApiInterfaceRx): () => Observable<DerivedStakingO
       switchMap(([{ currentEra, currentIndex, validatorCount }, { currentElected, validators }]) =>
         combineLatest([
           of({ currentElected, currentEra, currentIndex, validators, validatorCount }),
-          api.query.staking.currentEraPointsEarned<EraPoints>(currentEra)
+          api.query.staking.currentEraPointsEarned<EraPoints>()
         ])
       ),
       map(([{ currentElected, currentEra, currentIndex, validators, validatorCount }, eraPoints]): DerivedStakingOverview => ({
