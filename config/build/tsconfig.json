@@ -5,12 +5,9 @@
   ],
   "exclude": [
     "build/**/*",
-    "**/build/**/*",
-    "build-tmp/**/*",
-    "**/build-tmp/**/*",
+    "**/build/**/*",    
     "./packages/**/*.spec.ts",
-    "./packages/types/scripts",
-    "packages-tmp/**/*"    
+    "./packages/types/scripts"
   ],
   "compilerOptions": {
     "baseUrl": ".",
