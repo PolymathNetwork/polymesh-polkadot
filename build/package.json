@@ -1,0 +1,28 @@
+{
+  "name": "@polymathnetwork/polkadot",
+  "version": "0.101.0-beta.1",
+  "private": true,
+  "engines": {
+    "yarn": "^1.10.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "semantic-release": "semantic-release"
+  },
+  "devDependencies": {
+    "@semantic-release/git": "^8.0.0",
+    "semantic-release": "17.0.2"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.8.3",
+    "@polkadot/keyring": "^2.1.0-beta.0",
+    "@polkadot/util-crypto": "^2.1.0-beta.0",
+    "@polkadot/util": "^2.1.0-beta.0",
+    "rxjs": "^6.5.4",
+    "eventemitter3": "^4.0.0",
+    "isomorphic-fetch": "^2.2.1",
+    "websocket": "^1.0.31",
+    "memoizee": "^0.4.14",
+    "yargs": "^15.1.0"
+  }
+}
