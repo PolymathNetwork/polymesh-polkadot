@@ -23,7 +23,8 @@
     "test": "jest --coverage --runInBand --testPathIgnorePatterns e2e",
     "test:all": "jest",
     "test:one": "jest",
-    "test:watch": "jest --coverage --watch"
+    "test:watch": "jest --coverage --watch",
+    "commit": "npx git-cz"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
