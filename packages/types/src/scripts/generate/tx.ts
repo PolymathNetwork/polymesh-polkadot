@@ -3,13 +3,13 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { ModuleMetadataLatest } from '../../interfaces/metadata';
+import { ModuleMetadataLatest, FunctionMetadataV10 } from '../../interfaces/metadata';
 import * as defaultDefs from '../../interfaces/definitions';
 import { Registry } from '../../types';
 
 import staticData from './tmp/polymesh_metadata';
 import { Text, Vec } from '@polkadot/types';
-import { stringCamelCase } from '@polkadot/util';
+import { stringCamelCase, stringUpperFirst, stringLowerFirst } from '@polkadot/util';
 
 import { Metadata, TypeRegistry } from '../..';
 import { FOOTER, HEADER, TypeImports, createImportCode, createImports, formatType, getSimilarTypes, indent, setImports, writeFile } from '../util';
@@ -17,6 +17,10 @@ import { FOOTER, HEADER, TypeImports, createImportCode, createImports, formatTyp
 const MAPPED_NAMES: Record<string, string> = {
   new: 'updated'
 };
+
+let namespaces: string = '';
+let txTag: string = 'export type TxTag =';
+let txTags: string = 'export const TxTags = {\n';
 
 function mapName (_name: Text): string {
   const name = stringCamelCase(_name.toString());
@@ -43,6 +47,21 @@ function tsDoc (documentation: Vec<Text>): string {
     });
   }
   return docs === '' ? '' : indent(6)(`/**\n${indent(6)(indent(1)(`* ${docs.toString().trim().replace(/^\w/, c => c.toUpperCase()).replace(/\.$/, '')}`))}\n${strarg}${indent(7)('*/')}\n`);
+}
+
+// Generate namespaces file
+/** @internal */
+function generateTxTags (moduleName: string, methods: FunctionMetadataV10[]): string {
+  const moduleNme = stringUpperFirst(stringCamelCase(moduleName));
+  txTag = txTag.concat(` ${moduleNme}Tx |`);
+  txTags = txTags.concat(indent(2)(`${stringLowerFirst(moduleName)}: ${moduleNme}Tx,\n`));
+  namespaces = namespaces.concat(`export enum ${moduleNme}Tx {\n`);
+  methods.forEach(({name}) => {
+    const nme = stringUpperFirst(stringCamelCase(name.toString()));
+    namespaces = namespaces.concat(indent(2)(`${nme} = '${nme}',\n`));
+  })
+  namespaces = namespaces.concat(`}\n\n`);
+  return namespaces;
 }
 
 // Generate types for one module
@@ -118,6 +137,17 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
       .concat(interfaceEnd)
       .concat(FOOTER);
   });
+
+  let transactionTagsBody = '';
+  meta.asLatest.modules.map(({name, calls}) => {
+    const allCalls = calls.unwrapOr<null>(null);
+    if (allCalls?.length) {
+      transactionTagsBody = generateTxTags(name.toString(), allCalls.toArray());
+    }
+  })
+  writeFile('packages/api/src/types/transaction-tags.ts', (): string => {
+    return transactionTagsBody;
+  })
 }
 
 // Call `generateForMeta()` with current static metadata

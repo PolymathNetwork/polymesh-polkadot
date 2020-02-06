@@ -26,6 +26,7 @@ export * from './base';
 export * from './rpc';
 export * from './storage';
 export * from './submittable';
+export * from './transaction-tags';
 
 export interface ApiOptions {
   /**
