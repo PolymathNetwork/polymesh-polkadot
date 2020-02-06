@@ -37,7 +37,7 @@ export default { types: {
             "Admin",
             "Operator",
             "SpendFunds"
-       ]
+        ]
     },
     "Link": {
         "link_data": "LinkData",
@@ -46,12 +46,12 @@ export default { types: {
         "previous_link": "u64"
     },
     "LinkData": {
-       "_enum": {
+        "_enum": {
             "TickerOwned": "Ticker",
             "TokenOwned": "Ticker"
-       }
+        }
     },
-    "SignerType": {
+    "SignatoryType": {
         "_enum": [
             "External",
             "Identity",
@@ -59,15 +59,15 @@ export default { types: {
             "Relayer"
         ]
     },
-    "Signer":{
-       "_enum": {
+    "Signatory":{
+        "_enum": {
             "Identity": "IdentityId",
             "AccountKey": "AccountKey"
         }
     },
     "SigningItem": {
-        "signer": "Signer",
-        "signer_type": "SignerType",
+        "signer": "Signatory",
+        "signer_type": "SignatoryType",
         "permissions": "Vec<Permission>"
     },
     "SigningItemWithAuth":{
@@ -266,6 +266,19 @@ export default { types: {
             "Active"
         ]
     },
+    "SmartExtensionType": {
+        "_enum": {
+            "TransferManager": "",
+            "Offerings": "",
+            "Custom": "Vec<u8>"
+        }
+    },
+    "SmartExtension": {
+        "extension_type": "SmartExtensionType",
+        "extension_name": "Vec<u8>",
+        "extension_id": "IdentityId",
+        "is_archive": "bool"
+    },
     "ProportionMatch": {
         "_enum": [
             "AtLeast",
@@ -273,6 +286,11 @@ export default { types: {
         ]
     },
     "AuthorizationNonce": "u64",
-    "Counter": "u64"
+    "Counter": "u64",
+    "Document": {
+        "name": "Vec<u8>",
+        "uri": "Vec<u8>",
+        "hash": "Vec<u8>"
+    }
 }
  }
