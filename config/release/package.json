@@ -8,6 +8,9 @@
   "scripts": {   
     "semantic-release": "semantic-release"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {    
     "@semantic-release/git": "9.0.0", 
     "semantic-release": "17.0.2"
