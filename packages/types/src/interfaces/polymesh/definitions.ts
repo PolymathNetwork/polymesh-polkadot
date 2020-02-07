@@ -1,6 +1,11 @@
 export default { types: {
     "IdentityId":"H256",
     "Ticker": "[u8; 12]",
+    "Document": {
+        "name": "Vec<u8>",
+        "uri": "Vec<u8>",
+        "hash": "Vec<u8>"
+    },
     "AssetType": {
         "_enum": {
             "Equity": "",
@@ -46,7 +51,8 @@ export default { types: {
         "previous_link": "u64"
     },
     "LinkData": {
-        "_enum": {
+       "_enum": {
+            "DocumentOwned": "Document",
             "TickerOwned": "Ticker",
             "TokenOwned": "Ticker"
         }
@@ -287,10 +293,11 @@ export default { types: {
     },
     "AuthorizationNonce": "u64",
     "Counter": "u64",
-    "Document": {
-        "name": "Vec<u8>",
-        "uri": "Vec<u8>",
-        "hash": "Vec<u8>"
+    "Commission": {
+        "_enum": {
+            "Individual": "",
+            "Global": "u32"
+        }
     }
 }
  }

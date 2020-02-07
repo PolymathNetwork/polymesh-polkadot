@@ -88,6 +88,13 @@ export interface ClaimValue extends Struct {
   readonly value: Bytes;
 }
 
+/** @name Commission */
+export interface Commission extends Enum {
+  readonly isIndividual: boolean;
+  readonly isGlobal: boolean;
+  readonly asGlobal: u32;
+}
+
 /** @name Compliance */
 export interface Compliance extends Enum {
   readonly isPending: boolean;
@@ -178,6 +185,8 @@ export interface Link extends Struct {
 
 /** @name LinkData */
 export interface LinkData extends Enum {
+  readonly isDocumentOwned: boolean;
+  readonly asDocumentOwned: Document;
   readonly isTickerOwned: boolean;
   readonly asTickerOwned: Ticker;
   readonly isTokenOwned: boolean;
