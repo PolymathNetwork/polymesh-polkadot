@@ -26,7 +26,9 @@ module.exports = {
         tarballDir: 'npm-package/'
       }
     ],
-    '@semantic-release/git',
+    ['@semantic-release/git', {
+      assets: false
+    }],
     '@semantic-release/github'
   ]
 };
