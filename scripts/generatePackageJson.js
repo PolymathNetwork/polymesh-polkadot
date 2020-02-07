@@ -14,7 +14,7 @@ packageJsons.forEach(({ dependencies }) => {
   if (dependencies) {
     for (dep in dependencies) {
       if (!blacklist.includes(dep)) {
-        deps[dep] = dependencies[dep];
+        deps[dep] = dependencies[dep].replace(/\^/gi, '');
       }
     }
   }
