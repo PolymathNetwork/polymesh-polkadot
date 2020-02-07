@@ -8,19 +8,20 @@ import * as defaultDefs from '../../interfaces/definitions';
 import { Registry } from '../../types';
 
 import staticData from './tmp/polymesh_metadata';
-import { Text, Vec } from '@polkadot/types';
+import Metadata from '@polkadot/metadata/Metadata';
+import { Text } from '@polkadot/types';
 import { stringCamelCase, stringUpperFirst, stringLowerFirst } from '@polkadot/util';
 
-import { Metadata, TypeRegistry } from '../..';
+import { TypeRegistry, Vec } from '../../codec';
 import { FOOTER, HEADER, TypeImports, createImportCode, createImports, formatType, getSimilarTypes, indent, setImports, writeFile } from '../util';
 
 const MAPPED_NAMES: Record<string, string> = {
   new: 'updated'
 };
 
-let namespaces: string = '';
-let txTag: string = 'export type TxTag =';
-let txTags: string = 'export const TxTags = {\n';
+let namespaces = '';
+let txTag = 'export type TxTag =';
+let txTags = 'export const TxTags = {\n';
 
 function mapName (_name: Text): string {
   const name = stringCamelCase(_name.toString());
@@ -56,11 +57,11 @@ function generateTxTags (moduleName: string, methods: FunctionMetadataV10[]): st
   txTag = txTag.concat(` ${moduleNme}Tx |`);
   txTags = txTags.concat(indent(2)(`${stringLowerFirst(moduleName)}: ${moduleNme}Tx,\n`));
   namespaces = namespaces.concat(`export enum ${moduleNme}Tx {\n`);
-  methods.forEach(({name}) => {
+  methods.forEach(({ name }) => {
     const nme = stringUpperFirst(stringCamelCase(name.toString()));
     namespaces = namespaces.concat(indent(2)(`${nme} = '${nme}',\n`));
-  })
-  namespaces = namespaces.concat(`}\n\n`);
+  });
+  namespaces = namespaces.concat('}\n\n');
   return namespaces;
 }
 
@@ -139,15 +140,15 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
   });
 
   let transactionTagsBody = '';
-  meta.asLatest.modules.map(({name, calls}) => {
+  meta.asLatest.modules.map(({ name, calls }) => {
     const allCalls = calls.unwrapOr<null>(null);
     if (allCalls?.length) {
       transactionTagsBody = generateTxTags(name.toString(), allCalls.toArray());
     }
-  })
+  });
   writeFile('packages/api/src/types/transaction-tags.ts', (): string => {
     return transactionTagsBody;
-  })
+  });
 }
 
 // Call `generateForMeta()` with current static metadata
