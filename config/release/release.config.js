@@ -27,7 +27,7 @@ module.exports = {
       }
     ],
     ['@semantic-release/git', {
-      assets: false
+      assets: []
     }],
     '@semantic-release/github'
   ]
