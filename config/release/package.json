@@ -1,5 +1,5 @@
 {
-  "name": "@polymathnetwork/polkadot",
+  "name": "polymesh-polkadot",
   "version": "0.0.0",
   "engines": {
     "yarn": "^1.10.1"
