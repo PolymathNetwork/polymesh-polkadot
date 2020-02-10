@@ -4,7 +4,7 @@
 import { AnyNumber, ITuple } from '@polkadot/types/types';
 import { Compact, Option, Vec } from '@polkadot/types/codec';
 import { Bytes, bool, u128, u16, u32, u64 } from '@polkadot/types/primitive';
-import { AccountId, AccountIndex, Address, Balance, BalanceOf, BlockNumber, Hash, Header, KeyValue, Moment, Signature } from '@polkadot/types/interfaces/runtime';
+import { AccountId, AccountIndex, Balance, BalanceOf, BlockNumber, Hash, Header, KeyValue, LookupSource, Moment, Perbill, Signature } from '@polkadot/types/interfaces/runtime';
 import { ProposalIndex } from '@polkadot/types/interfaces/collective';
 import { CodeHash, Gas, Schedule } from '@polkadot/types/interfaces/contracts';
 import { Proposal } from '@polkadot/types/interfaces/democracy';
@@ -60,7 +60,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Transfer some liquid free balance to another account. `transfer` will set the `FreeBalance` of the sender and receiver. It will decrease the total issuance of the system by the `TransferFee`. The dispatch origin for this call must be `Signed` by the transactor. # <weight> - Dependent on arguments but not critical, given proper implementations for   input config types. See related functions below. - It contains a limited number of reads and writes internally and no complex computation. Related functions:   - `ensure_can_withdraw` is always called internally but has a bounded complexity.   - Transferring balances to accounts that did not exist before will cause      `T::OnNewAccount::on_new_account` to be called
        */
-      transfer: AugmentedSubmittable<(_dest: Address | string | AccountId | AccountIndex | Uint8Array, _value: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transfer: AugmentedSubmittable<(_dest: LookupSource | string | AccountId | AccountIndex | Uint8Array, _value: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Move some poly from balance of self to balance of an identity
        */
@@ -76,11 +76,11 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Set the balances of a given account. This will alter `FreeBalance` and `ReservedBalance` in storage. it will also decrease the total issuance of the system (`TotalIssuance`). The dispatch origin for this call is `root`. # <weight> - Independent of the arguments. - Contains a limited number of reads and writes
        */
-      setBalance: AugmentedSubmittable<(_who: Address | string | AccountId | AccountIndex | Uint8Array, _newFree: Compact<Balance> | AnyNumber | Uint8Array, _newReserved: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      setBalance: AugmentedSubmittable<(_who: LookupSource | string | AccountId | AccountIndex | Uint8Array, _newFree: Compact<Balance> | AnyNumber | Uint8Array, _newReserved: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Exactly as `transfer`, except the origin must be root and the source account may be specified
        */
-      forceTransfer: AugmentedSubmittable<(_source: Address | string | AccountId | AccountIndex | Uint8Array, _dest: Address | string | AccountId | AccountIndex | Uint8Array, _value: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      forceTransfer: AugmentedSubmittable<(_source: LookupSource | string | AccountId | AccountIndex | Uint8Array, _dest: LookupSource | string | AccountId | AccountIndex | Uint8Array, _value: Compact<Balance> | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     authorship: {
 
@@ -94,7 +94,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Take the origin account as a stash and lock up `value` of its balance. `controller` will be the account that controls it. `value` must be more than the `minimum_balance` specified by `T::Currency`. The dispatch origin for this call must be _Signed_ by the stash account. # <weight> - Independent of the arguments. Moderate complexity. - O(1). - Three extra DB entries. NOTE: Two of the storage writes (`Self::bonded`, `Self::payee`) are _never_ cleaned unless the `origin` falls below _existential deposit_ and gets removed as dust
        */
-      bond: AugmentedSubmittable<(_controller: Address | string | AccountId | AccountIndex | Uint8Array, _value: Compact<BalanceOf> | AnyNumber | Uint8Array, _payee: RewardDestination | ('Staked' | 'Stash' | 'Controller') | number | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      bond: AugmentedSubmittable<(_controller: LookupSource | string | AccountId | AccountIndex | Uint8Array, _value: Compact<BalanceOf> | AnyNumber | Uint8Array, _payee: RewardDestination | ('Staked' | 'Stash' | 'Controller') | number | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Add some extra amount that have appeared in the stash `free_balance` into the balance up for staking. Use this if there are additional funds in your stash account that you wish to bond. Unlike [`bond`] or [`unbond`] this function does not impose any limitation on the amount that can be added. The dispatch origin for this call must be _Signed_ by the stash, not the controller. # <weight> - Independent of the arguments. Insignificant complexity. - O(1). - One DB entry
        */
@@ -114,7 +114,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Declare the desire to nominate `targets` for the origin controller. Effects will be felt at the beginning of the next era. The dispatch origin for this call must be _Signed_ by the controller, not the stash. # <weight> - The transaction's complexity is proportional to the size of `targets`, which is capped at `MAX_NOMINATIONS`. - It also depends upon the no. of claim issuers for a given stash account. - Both the reads and writes follow a similar pattern
        */
-      nominate: AugmentedSubmittable<(_targets: Vec<Address> | (Address | string | AccountId | AccountIndex | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      nominate: AugmentedSubmittable<(_targets: Vec<LookupSource> | (LookupSource | string | AccountId | AccountIndex | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Declare no desire to either validate or nominate. Effects will be felt at the beginning of the next era. The dispatch origin for this call must be _Signed_ by the controller, not the stash. # <weight> - Independent of the arguments. Insignificant complexity. - Contains one read. - Writes are limited to the `origin` account key
        */
@@ -126,7 +126,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * (Re-)set the controller of a stash. Effects will be felt at the beginning of the next era. The dispatch origin for this call must be _Signed_ by the stash, not the controller. # <weight> - Independent of the arguments. Insignificant complexity. - Contains a limited number of reads. - Writes are limited to the `origin` account key
        */
-      setController: AugmentedSubmittable<(_controller: Address | string | AccountId | AccountIndex | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      setController: AugmentedSubmittable<(_controller: LookupSource | string | AccountId | AccountIndex | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * The ideal number of validators
        */
@@ -151,6 +151,18 @@ declare module '@polkadot/api/types/submittable' {
        * Validate the nominators KYC expiry time If an account from a given set of address is nominating then check the KYC expiry time of it and if it is expired then the account should be unbonded and removed from the nominating process. #<weight> - Depends on passed list of AccountId - Depends on the no. of claim issuers an accountId has for the KYC expiry
        */
       validateKycExpiryNominators: AugmentedSubmittable<(_targets: Vec<AccountId> | (AccountId | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Enables individual commisions. This can be set only once. Once individual commission rates are enabled, there's no going back.  Only Governance committee is allowed to change this value
+       */
+      enableIndividualCommissions: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Changes commission rate which applies to all validators. Only Governance committee is allowed to change this value
+       */
+      setGlobalComission: AugmentedSubmittable<(_newValue: Perbill | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Changes min bond value to be used in bond(). Only Governance committee is allowed to change this value
+       */
+      setMinBondThreshold: AugmentedSubmittable<(_newValue: BalanceOf | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Force there to be no new eras indefinitely. # <weight> - No arguments
        */
@@ -210,11 +222,11 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Authenticates the current sudo key and sets the given AccountId (`new`) as the new sudo key. The dispatch origin for this call must be _Signed_. # <weight> - O(1). - Limited storage reads. - One DB change
        */
-      setKey: AugmentedSubmittable<(_updated: Address | string | AccountId | AccountIndex | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      setKey: AugmentedSubmittable<(_updated: LookupSource | string | AccountId | AccountIndex | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Authenticates the sudo key and dispatches a function call with `Signed` origin from a given account. The dispatch origin for this call must be _Signed_. # <weight> - O(1). - Limited storage reads. - One DB write (event). - Unknown weight of derivative `proposal` execution
        */
-      sudoAs: AugmentedSubmittable<(_who: Address | string | AccountId | AccountIndex | Uint8Array, _proposal: Proposal | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      sudoAs: AugmentedSubmittable<(_who: LookupSource | string | AccountId | AccountIndex | Uint8Array, _proposal: Proposal | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     multiSig: {
 
@@ -286,7 +298,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Makes a call to an account, optionally transferring some balance. * If the account is a smart-contract account, the associated code will be executed and any value will be transferred. * If the account is a regular account, any value will be transferred. * If no account exists and the call value is not less than `existential_deposit`, a regular account will be created and any value will be transferred
        */
-      call: AugmentedSubmittable<(_dest: Address | string | AccountId | AccountIndex | Uint8Array, _value: Compact<BalanceOf> | AnyNumber | Uint8Array, _gasLimit: Compact<Gas> | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      call: AugmentedSubmittable<(_dest: LookupSource | string | AccountId | AccountIndex | Uint8Array, _value: Compact<BalanceOf> | AnyNumber | Uint8Array, _gasLimit: Compact<Gas> | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Instantiates a new contract from the `codehash` generated by `put_code`, optionally transferring some balance. Instantiation is executed as follows: - The destination address is computed based on the sender and hash of the code. - The smart-contract account is created at the computed address. - The `ctor_code` is executed in the context of the newly-created account. Buffer returned   after the execution is saved as the `code` of the account. That code will be invoked   upon any call received by this account. - The contract is initialized
        */
@@ -301,7 +313,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Put forward a suggestion for spending. A deposit proportional to the value is reserved and slashed if the proposal is rejected. It is returned once the proposal is awarded. # <weight> - O(1). - Limited storage reads. - One DB change, one extra DB entry
        */
-      proposeSpend: AugmentedSubmittable<(_value: Compact<BalanceOf> | AnyNumber | Uint8Array, _beneficiary: Address | string | AccountId | AccountIndex | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      proposeSpend: AugmentedSubmittable<(_value: Compact<BalanceOf> | AnyNumber | Uint8Array, _beneficiary: LookupSource | string | AccountId | AccountIndex | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Reject a proposed spend. The original deposit will be slashed. # <weight> - O(1). - Limited storage reads. - One DB clear
        */

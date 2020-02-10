@@ -20,7 +20,7 @@ import { EraIndex, EraPoints, Exposure, Forcing, MomentOf, Nominations, RewardDe
 import { DigestOf, EventIndex, EventRecord } from '@polkadot/types/interfaces/system';
 import { TreasuryProposal } from '@polkadot/types/interfaces/treasury';
 import { Multiplier } from '@polkadot/types/interfaces/txpayment';
-import { AccountKey, AssetRule, Authorization, AuthorizationNonce, Ballot, Claim, ClaimMetaData, Counter, DidRecord, Dividend, IdentifierType, IdentityId, Investment, Link, LinkedKeyInfo, MIP, MipsMetadata, PermissionedValidator, PolymeshReferendumInfo, PolymeshVotes, PreAuthorizedKeyInfo, ProportionMatch, STO, SecurityToken, Signatory, SimpleTokenRecord, SmartExtension, SmartExtensionType, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig } from '@polkadot/types/interfaces/polymesh';
+import { AccountKey, AssetRule, Authorization, AuthorizationNonce, Ballot, Claim, ClaimMetaData, Commission, Counter, DidRecord, Dividend, IdentifierType, IdentityId, Investment, Link, LinkedKeyInfo, MIP, MipsMetadata, PermissionedValidator, PolymeshReferendumInfo, PolymeshVotes, PreAuthorizedKeyInfo, ProportionMatch, STO, SecurityToken, Signatory, SimpleTokenRecord, SmartExtension, SmartExtensionType, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig } from '@polkadot/types/interfaces/polymesh';
 import { Observable } from 'rxjs';
 
 declare module '@polkadot/api/types/storage' {
@@ -338,6 +338,14 @@ declare module '@polkadot/api/types/storage' {
        * The map from (wannabe) validators to the status of compliance
        **/
       permissionedValidators: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<Option<PermissionedValidator>>>;
+      /**
+       * Commision rate to be used by all validators.
+       **/
+      validatorCommission: AugmentedQuery<ApiType, () => Observable<Commission>>;
+      /**
+       * The minimum amount with which a validator can bond.
+       **/
+      minimumBondThreshold: AugmentedQuery<ApiType, () => Observable<BalanceOf>>;
     };
     offences: {
 
