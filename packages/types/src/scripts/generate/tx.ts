@@ -3,7 +3,7 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { ModuleMetadataLatest, FunctionMetadataV10 } from '../../interfaces/metadata';
+import { ModuleMetadataLatest, FunctionMetadataLatest } from '../../interfaces/metadata';
 import * as defaultDefs from '../../interfaces/definitions';
 import { Registry } from '../../types';
 
@@ -52,7 +52,7 @@ function tsDoc (documentation: Vec<Text>): string {
 
 // Generate namespaces file
 /** @internal */
-function generateTxTags (moduleName: string, methods: FunctionMetadataV10[]): string {
+function generateTxTags (moduleName: string, methods: FunctionMetadataLatest[]): string {
   const moduleNme = stringUpperFirst(stringCamelCase(moduleName));
   txTag = txTag.concat(` ${moduleNme}Tx |`);
   txTags = txTags.concat(indent(2)(`${stringLowerFirst(moduleName)}: ${moduleNme}Tx,\n`));
