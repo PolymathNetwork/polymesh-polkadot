@@ -297,6 +297,7 @@ export interface SecurityToken extends Struct {
   readonly owner_did: IdentityId;
   readonly divisible: bool;
   readonly asset_type: AssetType;
+  readonly link_id: u64;
 }
 
 /** @name Signatory */
@@ -385,6 +386,7 @@ export interface Ticker extends Uint8Array, Codec {}
 export interface TickerRegistration extends Struct {
   readonly owner: IdentityId;
   readonly expiry: Option<Moment>;
+  readonly link_id: u64;
 }
 
 /** @name TickerRegistrationConfig */
