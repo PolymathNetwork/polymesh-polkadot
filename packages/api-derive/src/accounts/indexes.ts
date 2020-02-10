@@ -63,7 +63,7 @@ function query (): Observable<AccountIndexes> {
 export function indexes (api: ApiInterfaceRx): () => Observable<AccountIndexes> {
   return memo((): Observable<AccountIndexes> =>
     api.query.indices
-      ? api.query.indices.accounts
+      ? (api.query.indices as any).accounts
         ? query()
         : queryEnumSet(api)
       : of({} as AccountIndexes)
