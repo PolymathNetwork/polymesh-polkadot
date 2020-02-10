@@ -53,13 +53,13 @@ function tsDoc (documentation: Vec<Text>): string {
 // Generate namespaces file
 /** @internal */
 function generateTxTags (moduleName: string, methods: FunctionMetadataLatest[]): string {
-  const moduleNme = stringUpperFirst(stringCamelCase(moduleName));
-  txTag = txTag.concat(` ${moduleNme}Tx |`);
-  txTags = txTags.concat(indent(2)(`${stringLowerFirst(moduleName)}: ${moduleNme}Tx,\n`));
-  namespaces = namespaces.concat(`export enum ${moduleNme}Tx {\n`);
+  const moduleNamePascal = stringUpperFirst(stringCamelCase(moduleName));
+  txTag = txTag.concat(` ${moduleNamePascal}Tx |`);
+  txTags = txTags.concat(indent(2)(`${stringLowerFirst(moduleName)}: ${moduleNamePascal}Tx,\n`));
+  namespaces = namespaces.concat(`export enum ${moduleNamePascal}Tx {\n`);
   methods.forEach(({ name }) => {
-    const nme = stringUpperFirst(stringCamelCase(name.toString()));
-    namespaces = namespaces.concat(indent(2)(`${nme} = '${nme}',\n`));
+    const namePascal = stringUpperFirst(stringCamelCase(name.toString()));
+    namespaces = namespaces.concat(indent(2)(`${namePascal} = '${namePascal}',\n`));
   });
   namespaces = namespaces.concat('}\n\n');
   return namespaces;
@@ -147,7 +147,7 @@ function generateForMeta (registry: Registry, meta: Metadata, dest: string, extr
     }
   });
   writeFile('packages/api/src/types/transaction-tags.ts', (): string => {
-    return transactionTagsBody;
+    return transactionTagsBody.concat(`${txTag.replace(/\|([^|]*)$/, '').trim()};\n\n${txTags}};\n`);
   });
 }
 

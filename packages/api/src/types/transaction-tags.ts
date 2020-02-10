@@ -241,3 +241,33 @@ export enum KycServiceProvidersTx {
   ResetMembers = 'ResetMembers',
 }
 
+export type TxTag = SystemTx | TimestampTx | BalancesTx | AuthorshipTx | StakingTx | SessionTx | FinalityTrackerTx | GrandpaTx | ImOnlineTx | SudoTx | MultiSigTx | ContractsTx | TreasuryTx | PolymeshCommitteeTx | CommitteeMembershipTx | MipsTx | AssetTx | DividendTx | IdentityTx | GeneralTmTx | VotingTx | StoCappedTx | PercentageTmTx | ExemptionTx | SimpleTokenTx | KycServiceProvidersTx;
+
+export const TxTags = {
+  system: SystemTx,
+  timestamp: TimestampTx,
+  balances: BalancesTx,
+  authorship: AuthorshipTx,
+  staking: StakingTx,
+  session: SessionTx,
+  finalityTracker: FinalityTrackerTx,
+  grandpa: GrandpaTx,
+  imOnline: ImOnlineTx,
+  sudo: SudoTx,
+  multiSig: MultiSigTx,
+  contracts: ContractsTx,
+  treasury: TreasuryTx,
+  polymeshCommittee: PolymeshCommitteeTx,
+  committeeMembership: CommitteeMembershipTx,
+  mips: MipsTx,
+  asset: AssetTx,
+  dividend: DividendTx,
+  identity: IdentityTx,
+  generalTM: GeneralTmTx,
+  voting: VotingTx,
+  stoCapped: StoCappedTx,
+  percentageTM: PercentageTmTx,
+  exemption: ExemptionTx,
+  simpleToken: SimpleTokenTx,
+  kYCServiceProviders: KycServiceProvidersTx,
+};
