@@ -30,8 +30,18 @@ const TYPES_MODULES: Record<string, OverrideModuleType> = {
 // definition as applicable. (4 keys in substrate vs 5 in Polkadot/CC3).
 const TYPES_POLKADOT_VERSIONED: OverrideVersionedType[] = [
   {
-    minmax: [1000, undefined], // from launch
+    minmax: [1000, undefined],
     types: {
+      Address: 'GenericAddress',
+      BalanceLock: 'BalanceLockTo212',
+      Keys: 'SessionKeys5'
+    }
+  },
+  {
+    minmax: [1010, undefined],
+    types: {
+      // Indices optional, not in transaction
+      Address: 'AccountId',
       Keys: 'SessionKeys5'
     }
   }
@@ -41,6 +51,7 @@ const TYPES_KUSAMA_VERSIONED: OverrideVersionedType[] = [
   {
     minmax: [1019, 1031],
     types: {
+      Address: 'GenericAddress',
       BalanceLock: 'BalanceLockTo212',
       DispatchError: 'DispatchErrorTo198',
       Keys: 'SessionKeys5',
@@ -51,6 +62,7 @@ const TYPES_KUSAMA_VERSIONED: OverrideVersionedType[] = [
   {
     minmax: [1032, 1042],
     types: {
+      Address: 'GenericAddress',
       BalanceLock: 'BalanceLockTo212',
       Keys: 'SessionKeys5',
       LookupSource: 'Address',
@@ -60,6 +72,7 @@ const TYPES_KUSAMA_VERSIONED: OverrideVersionedType[] = [
   {
     minmax: [1043, 1045],
     types: {
+      Address: 'GenericAddress',
       BalanceLock: 'BalanceLockTo212',
       Keys: 'SessionKeys5',
       LookupSource: 'Address'
@@ -70,6 +83,14 @@ const TYPES_KUSAMA_VERSIONED: OverrideVersionedType[] = [
     types: {
       Keys: 'SessionKeys5',
       LookupSource: 'AccountId'
+    }
+  },
+  {
+    minmax: [1046, undefined],
+    types: {
+      // Indices optional, not in transaction
+      Address: 'AccountId',
+      Keys: 'SessionKeys5'
     }
   }
 ];
@@ -86,6 +107,7 @@ const TYPES_META: OverrideVersionedType[] = [
     //   v4 = v1.0 branch
     minmax: [0, 4],
     types: {
+      Address: 'GenericAddress',
       BlockNumber: 'u64',
       Index: 'u64',
       EventRecord: 'EventRecordTo76',

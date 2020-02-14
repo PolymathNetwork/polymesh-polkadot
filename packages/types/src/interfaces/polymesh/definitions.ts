@@ -48,8 +48,7 @@ export default { types: {
     "Link": {
         "link_data": "LinkData",
         "expiry": "Option<Moment>",
-        "next_link": "u64",
-        "previous_link": "u64"
+        "link_id": "u64"
     },
     "LinkData": {
        "_enum": {
@@ -252,10 +251,9 @@ export default { types: {
     },
     "Authorization": {
         "authorization_data": "AuthorizationData",
-        "authorized_by": "IdentityId",
+        "authorized_by": "Signatory",
         "expiry": "Option<Moment>",
-        "next_authorization": "u64",
-        "previous_authorization": "u64"
+        "auth_id": "u64"
     },
     "AuthorizationData": {
         "_enum": {
@@ -267,6 +265,10 @@ export default { types: {
             "Custom": "Vec<u8>",
             "NoData": ""
         }
+    },
+    "AuthIdentifier": {
+        "signatory": "Signatory",
+        "auth_id": "u64"
     },
     "Compliance": {
         "_enum": [
