@@ -184,6 +184,7 @@ export enum IdentityTx {
   FreezeSigningKeys = 'FreezeSigningKeys',
   UnfreezeSigningKeys = 'UnfreezeSigningKeys',
   GetMyDid = 'GetMyDid',
+  GetAssetDid = 'GetAssetDid',
   AddAuthorization = 'AddAuthorization',
   AddAuthorizationAsKey = 'AddAuthorizationAsKey',
   BatchAddAuthorization = 'BatchAddAuthorization',
@@ -269,5 +270,5 @@ export const TxTags = {
   percentageTM: PercentageTmTx,
   exemption: ExemptionTx,
   simpleToken: SimpleTokenTx,
-  kYCServiceProviders: KycServiceProvidersTx,
+  kycServiceProviders: KycServiceProvidersTx,
 };
