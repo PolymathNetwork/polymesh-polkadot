@@ -1,6 +1,6 @@
 {
   "name": "@polkadot/types",
-  "version": "1.2.0-beta.4",
+  "version": "1.2.0-beta.18",
   "description": "Implementation of the Parity codec",
   "main": "index.js",
   "bin": {
@@ -29,17 +29,23 @@
     "url": "https://github.com/polkadot-js/api/issues"
   },
   "homepage": "https://github.com/polkadot-js/api/tree/master/packages/types#readme",
-  "dependencies": {
-    "@babel/runtime": "^7.8.3",
-    "@polkadot/metadata": "^1.2.0-beta.4",
-    "@polkadot/util": "^2.2.1",
-    "@polkadot/util-crypto": "^2.2.1",
+  "dependencies": {    
+    "@babel/core": "^7.8.4",
+    "@babel/register": "^7.8.3",
+    "@babel/runtime": "^7.8.4",
+    "@polkadot/api": "^1.2.0-beta.18",
+    "@polkadot/metadata": "^1.2.0-beta.18",
+    "@polkadot/util": "^2.3.0-beta.5",
+    "@polkadot/util-crypto": "^2.3.0-beta.5",
+    "bn.js": "^5.1.1",
     "memoizee": "^0.4.14",
+    "rxjs": "^6.5.4",
+    "websocket": "^1.0.31",
     "yargs": "^15.1.0"
   },
   "devDependencies": {
-    "@polkadot/keyring": "^2.2.1",
+    "@polkadot/keyring": "^2.3.0-beta.5",
     "@types/memoizee": "^0.4.3",
-    "@types/yargs": "^15.0.2"
+    "@types/yargs": "^15.0.3"
   }
 }

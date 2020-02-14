@@ -25,13 +25,18 @@ export interface AssetType extends Enum {
   readonly asCustom: Bytes;
 }
 
+/** @name AuthIdentifier */
+export interface AuthIdentifier extends Struct {
+  readonly signatory: Signatory;
+  readonly auth_id: u64;
+}
+
 /** @name Authorization */
 export interface Authorization extends Struct {
   readonly authorization_data: AuthorizationData;
-  readonly authorized_by: IdentityId;
+  readonly authorized_by: Signatory;
   readonly expiry: Option<Moment>;
-  readonly next_authorization: u64;
-  readonly previous_authorization: u64;
+  readonly auth_id: u64;
 }
 
 /** @name AuthorizationData */
@@ -179,8 +184,7 @@ export interface Investment extends Struct {
 export interface Link extends Struct {
   readonly link_data: LinkData;
   readonly expiry: Option<Moment>;
-  readonly next_link: u64;
-  readonly previous_link: u64;
+  readonly link_id: u64;
 }
 
 /** @name LinkData */
