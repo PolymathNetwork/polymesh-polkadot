@@ -87,7 +87,7 @@ declare module '@polkadot/api/types/storage' {
        * the `EventIndex` then in case if the topic has the same contents on the next block
        * no notification will be triggered thus the event might be lost.
        **/
-      eventTopics: AugmentedQuery<ApiType, (key1: null, key2: Hash | string | Uint8Array) => Observable<Vec<ITuple<[BlockNumber, EventIndex]>>>>;
+      eventTopics: AugmentedQueryDoubleMap<ApiType, (key1: null, key2: Hash | string | Uint8Array) => Observable<Vec<ITuple<[BlockNumber, EventIndex]>>>, null>;
     };
     babe: {
 
@@ -312,11 +312,11 @@ declare module '@polkadot/api/types/storage' {
        * All slashing events on validators, mapped by era to the highest slash proportion
        * and slash value of the era.
        **/
-      validatorSlashInEra: AugmentedQuery<ApiType, (key1: EraIndex | AnyNumber | Uint8Array, key2: AccountId | string | Uint8Array) => Observable<Option<ITuple<[Perbill, BalanceOf]>>>>;
+      validatorSlashInEra: AugmentedQueryDoubleMap<ApiType, (key1: EraIndex | AnyNumber | Uint8Array, key2: AccountId | string | Uint8Array) => Observable<Option<ITuple<[Perbill, BalanceOf]>>>, EraIndex | AnyNumber | Uint8Array>;
       /**
        * All slashing events on nominators, mapped by era to the highest slash value of the era.
        **/
-      nominatorSlashInEra: AugmentedQuery<ApiType, (key1: EraIndex | AnyNumber | Uint8Array, key2: AccountId | string | Uint8Array) => Observable<Option<BalanceOf>>>;
+      nominatorSlashInEra: AugmentedQueryDoubleMap<ApiType, (key1: EraIndex | AnyNumber | Uint8Array, key2: AccountId | string | Uint8Array) => Observable<Option<BalanceOf>>, EraIndex | AnyNumber | Uint8Array>;
       /**
        * Slashing spans for stash accounts.
        **/
@@ -356,7 +356,7 @@ declare module '@polkadot/api/types/storage' {
       /**
        * A vector of reports of the same kind that happened at the same time slot.
        **/
-      concurrentReportsIndex: AugmentedQuery<ApiType, (key1: Kind | string | Uint8Array, key2: OpaqueTimeSlot | string | Uint8Array) => Observable<Vec<ReportIdOf>>>;
+      concurrentReportsIndex: AugmentedQueryDoubleMap<ApiType, (key1: Kind | string | Uint8Array, key2: OpaqueTimeSlot | string | Uint8Array) => Observable<Vec<ReportIdOf>>, Kind | string | Uint8Array>;
       /**
        * Enumerates all reports of a kind along with the time they happened.
        * All reports are sorted by the time of offence.
@@ -395,13 +395,13 @@ declare module '@polkadot/api/types/storage' {
        * The first key is always `DEDUP_KEY_PREFIX` to have all the data in the same branch of
        * the trie. Having all data in the same branch should prevent slowing down other queries.
        **/
-      nextKeys: AugmentedQuery<ApiType, (key1: Bytes | string | Uint8Array, key2: ValidatorId | string | Uint8Array) => Observable<Option<Keys>>>;
+      nextKeys: AugmentedQueryDoubleMap<ApiType, (key1: Bytes | string | Uint8Array, key2: ValidatorId | string | Uint8Array) => Observable<Option<Keys>>, Bytes | string | Uint8Array>;
       /**
        * The owner of a key. The second key is the `KeyTypeId` + the encoded key.
        * The first key is always `DEDUP_KEY_PREFIX` to have all the data in the same branch of
        * the trie. Having all data in the same branch should prevent slowing down other queries.
        **/
-      keyOwner: AugmentedQuery<ApiType, (key1: Bytes | string | Uint8Array, key2: ITuple<[KeyTypeId, Bytes]> | [KeyTypeId | AnyNumber | Uint8Array, Bytes | string | Uint8Array]) => Observable<Option<ValidatorId>>>;
+      keyOwner: AugmentedQueryDoubleMap<ApiType, (key1: Bytes | string | Uint8Array, key2: ITuple<[KeyTypeId, Bytes]> | [KeyTypeId | AnyNumber | Uint8Array, Bytes | string | Uint8Array]) => Observable<Option<ValidatorId>>, Bytes | string | Uint8Array>;
     };
     grandpa: {
 
@@ -451,12 +451,12 @@ declare module '@polkadot/api/types/storage' {
        * For each session index, we keep a mapping of `AuthIndex`
        * to `offchain::OpaqueNetworkState`.
        **/
-      receivedHeartbeats: AugmentedQuery<ApiType, (key1: SessionIndex | AnyNumber | Uint8Array, key2: AuthIndex | AnyNumber | Uint8Array) => Observable<Option<Bytes>>>;
+      receivedHeartbeats: AugmentedQueryDoubleMap<ApiType, (key1: SessionIndex | AnyNumber | Uint8Array, key2: AuthIndex | AnyNumber | Uint8Array) => Observable<Option<Bytes>>, SessionIndex | AnyNumber | Uint8Array>;
       /**
        * For each session index, we keep a mapping of `T::ValidatorId` to the
        * number of blocks authored by the given authority.
        **/
-      authoredBlocks: AugmentedQuery<ApiType, (key1: SessionIndex | AnyNumber | Uint8Array, key2: ValidatorId | string | Uint8Array) => Observable<u32>>;
+      authoredBlocks: AugmentedQueryDoubleMap<ApiType, (key1: SessionIndex | AnyNumber | Uint8Array, key2: ValidatorId | string | Uint8Array) => Observable<u32>, SessionIndex | AnyNumber | Uint8Array>;
     };
     randomnessCollectiveFlip: {
 
@@ -810,21 +810,17 @@ declare module '@polkadot/api/types/storage' {
        **/
       revokeOffChainAuthorization: AugmentedQuery<ApiType, (arg: ITuple<[Signatory, TargetIdAuthorization]> | [Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, TargetIdAuthorization | { target_id?: any; nonce?: any; expires_at?: any } | string | Uint8Array]) => Observable<bool>>;
       /**
-       * All authorizations that an identity has
+       * All authorizations that an identity/key has
        **/
-      authorizations: AugmentedQuery<ApiType, (arg: ITuple<[Signatory, u64]> | [Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, u64 | AnyNumber | Uint8Array]) => Observable<Authorization>>;
-      /**
-       * Auth id of the latest auth of an identity. Used to allow iterating over auths
-       **/
-      lastAuthorization: AugmentedQuery<ApiType, (arg: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array) => Observable<u64>>;
+      authorizations: AugmentedQueryDoubleMap<ApiType, (key1: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, key2: u64 | AnyNumber | Uint8Array) => Observable<Authorization>, Signatory | { identity: any } | { accountKey: any } | string | Uint8Array>;
       /**
        * All links that an identity/key has
        **/
-      links: AugmentedQuery<ApiType, (arg: ITuple<[Signatory, u64]> | [Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, u64 | AnyNumber | Uint8Array]) => Observable<Link>>;
+      links: AugmentedQueryDoubleMap<ApiType, (key1: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, key2: u64 | AnyNumber | Uint8Array) => Observable<Link>, Signatory | { identity: any } | { accountKey: any } | string | Uint8Array>;
       /**
-       * Link id of the latest auth of an identity/key. Used to allow iterating over links
+       * All authorizations that an identity/key has given. (Authorizer, auth_id -> authorized)
        **/
-      lastLink: AugmentedQuery<ApiType, (arg: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array) => Observable<u64>>;
+      authorizationsGiven: AugmentedQueryDoubleMap<ApiType, (key1: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, key2: u64 | AnyNumber | Uint8Array) => Observable<Signatory>, Signatory | { identity: any } | { accountKey: any } | string | Uint8Array>;
     };
     generalTM: {
 
@@ -923,7 +919,7 @@ declare module '@polkadot/api/types/storage' {
        **/
       tokens: AugmentedQuery<ApiType, (arg: Ticker | string | Uint8Array) => Observable<SimpleTokenRecord>>;
     };
-    kYCServiceProviders: {
+    kycServiceProviders: {
 
       /**
        * Identities that are part of this group

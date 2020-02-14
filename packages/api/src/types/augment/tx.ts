@@ -12,7 +12,7 @@ import { Heartbeat } from '@polkadot/types/interfaces/imOnline';
 import { Keys } from '@polkadot/types/interfaces/session';
 import { EraIndex, RewardDestination, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
 import { Key } from '@polkadot/types/interfaces/system';
-import { AccountKey, AssetRule, AssetType, AuthorizationData, Ballot, ClaimRecord, ClaimValue, Document, IdentifierType, IdentityId, MipsIndex, OffChainSignature, Permission, ProportionMatch, Signatory, SigningItem, SigningItemWithAuth, SmartExtension, TargetIdAuthorization, Ticker } from '@polkadot/types/interfaces/polymesh';
+import { AccountKey, AssetRule, AssetType, AuthIdentifier, AuthorizationData, Ballot, ClaimRecord, ClaimValue, Document, IdentifierType, IdentityId, MipsIndex, OffChainSignature, Permission, ProportionMatch, Signatory, SigningItem, SigningItemWithAuth, SmartExtension, TargetIdAuthorization, Ticker } from '@polkadot/types/interfaces/polymesh';
 import { SubmittableExtrinsic } from '@polkadot/api/submittable/types';
 
 declare module '@polkadot/api/types/submittable' {
@@ -778,6 +778,7 @@ declare module '@polkadot/api/types/submittable' {
       freezeSigningKeys: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       unfreezeSigningKeys: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       getMyDid: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
+      getAssetDid: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Adds an authorization
        */
@@ -797,7 +798,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Removes an array of authorizations
        */
-      batchRemoveAuthorization: AugmentedSubmittable<(_authIdentifiers: Vec<ITuple<[Signatory, u64]>> | ([Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, u64 | AnyNumber | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
+      batchRemoveAuthorization: AugmentedSubmittable<(_authIdentifiers: Vec<AuthIdentifier> | (AuthIdentifier | { signatory?: any; auth_id?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Accepts an authorization
        */

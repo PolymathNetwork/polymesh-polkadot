@@ -14,6 +14,7 @@ import { ApiTypes, MethodResult, ObsInnerType, PromiseOrObs, UnsubscribePromise 
 export interface AugmentedQueries<ApiType extends ApiTypes> { }
 
 export type AugmentedQuery<ApiType extends ApiTypes, F extends AnyFunction> = MethodResult<ApiType, F> & StorageEntryBase<ApiType, F>
+export type AugmentedQueryDoubleMap<ApiType extends ApiTypes, F extends AnyFunction, FirstKeyType = any> = MethodResult<ApiType, F> & StorageEntryDoubleMap<ApiType, F, FirstKeyType>
 
 // This is the most generic typings we can have for a storage entry function
 type GenericStorageEntryFunction = (arg1?: CodecArg, arg2?: CodecArg) => Observable<Codec>
@@ -32,6 +33,10 @@ export interface StorageEntryBase<ApiType extends ApiTypes, F extends AnyFunctio
   keyPrefix: () => string;
   size: (...args: Parameters<F>) => PromiseOrObs<ApiType, u64>;
   multi: ApiType extends 'rxjs' ? StorageEntryObservableMulti : StorageEntryPromiseMulti;
+}
+
+export interface StorageEntryDoubleMap<ApiType extends ApiTypes, F extends AnyFunction, FirstKeyType> extends StorageEntryBase<ApiType, F> {
+  entries: (arg?: FirstKeyType) => PromiseOrObs<ApiType, [StorageKey, ObsInnerType<ReturnType<F>>][]>;
 }
 
 interface StorageEntryObservableMulti {
