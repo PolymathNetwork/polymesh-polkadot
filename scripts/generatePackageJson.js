@@ -5,7 +5,7 @@ const path = require('path');
 const mainJson = JSON.parse(fs.readFileSync(path.resolve('build', 'package.json'), { encoding: 'utf8' }));
 
 const deps = {};
-const devDeps = {};
+const devDeps = mainJson.devDependencies;
 
 const dirNames = fs.readdirSync(path.resolve('build'), { withFileTypes: true }).filter(dir => dir.isDirectory() && dir.name !== 'node_modules').map(({ name }) => name);
 const packageJsons = dirNames.map(name => JSON.parse(fs.readFileSync(path.resolve('build', name, 'package.json'), { encoding: 'utf8' })));
