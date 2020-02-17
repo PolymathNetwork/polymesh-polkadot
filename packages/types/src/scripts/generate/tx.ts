@@ -9,10 +9,10 @@ import { Registry } from '../../types';
 
 import staticData from './tmp/polymesh_metadata';
 import Metadata from '@polkadot/metadata/Metadata';
-import { Text } from '@polkadot/types';
+import { Text, Vec } from '@polkadot/types';
 import { stringCamelCase, stringUpperFirst, stringLowerFirst } from '@polkadot/util';
 
-import { TypeRegistry, Vec } from '../../codec';
+import { TypeRegistry } from '../../create';
 import { FOOTER, HEADER, TypeImports, createImportCode, createImports, formatType, getSimilarTypes, indent, setImports, writeFile } from '../util';
 
 const MAPPED_NAMES: Record<string, string> = {
