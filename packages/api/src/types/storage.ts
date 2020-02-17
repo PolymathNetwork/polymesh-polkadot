@@ -14,6 +14,7 @@ import { ApiTypes, MethodResult, ObsInnerType, PromiseOrObs, UnsubscribePromise 
 export interface AugmentedQueries<ApiType extends ApiTypes> { }
 
 export type AugmentedQuery<ApiType extends ApiTypes, F extends AnyFunction> = MethodResult<ApiType, F> & StorageEntryBase<ApiType, F>
+
 export type AugmentedQueryDoubleMap<ApiType extends ApiTypes, F extends AnyFunction, FirstKeyType = any> = MethodResult<ApiType, F> & StorageEntryDoubleMap<ApiType, F, FirstKeyType>
 
 // This is the most generic typings we can have for a storage entry function
@@ -27,7 +28,7 @@ export type QueryableStorageEntry<ApiType extends ApiTypes> =
 export interface StorageEntryBase<ApiType extends ApiTypes, F extends AnyFunction> {
   at: (hash: Hash | Uint8Array | string, ...args: Parameters<F>) => PromiseOrObs<ApiType, ObsInnerType<ReturnType<F>>>;
   creator: StorageEntry;
-  entries: () => PromiseOrObs<ApiType, [StorageKey, ObsInnerType<ReturnType<F>>][]>;
+  entries: (arg?: any) => PromiseOrObs<ApiType, [StorageKey, ObsInnerType<ReturnType<F>>][]>;
   hash: (...args: Parameters<F>) => PromiseOrObs<ApiType, Hash>;
   key: (...args: Parameters<F>) => string;
   keyPrefix: () => string;

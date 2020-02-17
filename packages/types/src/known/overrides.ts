@@ -38,7 +38,7 @@ const TYPES_POLKADOT_VERSIONED: OverrideVersionedType[] = [
     }
   },
   {
-    minmax: [1010, undefined],
+    minmax: [1004, undefined],
     types: {
       // Indices optional, not in transaction
       Address: 'AccountId',
@@ -83,6 +83,14 @@ const TYPES_KUSAMA_VERSIONED: OverrideVersionedType[] = [
     types: {
       Keys: 'SessionKeys5',
       LookupSource: 'AccountId'
+    }
+  },
+  {
+    minmax: [1046, undefined],
+    types: {
+      // Indices optional, not in transaction
+      Address: 'AccountId',
+      Keys: 'SessionKeys5'
     }
   },
   {
