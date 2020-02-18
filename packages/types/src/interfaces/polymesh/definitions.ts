@@ -310,11 +310,6 @@ export default { types: {
             "ForceValid"
         ]
     },
-    "Document": {
-        "name": "Vec<u8>",
-        "uri": "Vec<u8>",
-        "hash": "Vec<u8>"
-    },
     "IssueRecipient": {
         "_enum": {
             "Account": "AccountKey",
