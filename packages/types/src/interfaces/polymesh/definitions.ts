@@ -302,6 +302,29 @@ export default { types: {
             "Individual": "",
             "Global": "u32"
         }
+    },
+    "RestrictionResult": {
+        "_enum": [
+            "Valid",
+            "Invalid",
+            "ForceValid"
+        ]
+    },
+    "IssueRecipient": {
+        "_enum": {
+            "Account": "AccountKey",
+            "Identity": "IdentityId"
+        }
+    },
+    "BridgeTx": {
+        "nonce": "u64",
+        "recipient": "IssueRecipient",
+        "value": "u128",
+        "tx_hash": "H256"
+    },
+    "PendingTx": {
+        "did": "IdentityId",
+        "bridge_tx": "BridgeTx"
     }
 }
  }

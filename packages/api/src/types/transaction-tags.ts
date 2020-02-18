@@ -163,6 +163,14 @@ export enum AssetTx {
   UnarchiveExtension = 'UnarchiveExtension',
 }
 
+export enum BridgeTx {
+  ChangeRelayers = 'ChangeRelayers',
+  ProposeBridgeTx = 'ProposeBridgeTx',
+  FinalizePending = 'FinalizePending',
+  HandleRelayers = 'HandleRelayers',
+  HandleBridgeTx = 'HandleBridgeTx',
+}
+
 export enum DividendTx {
   New = 'New',
   Cancel = 'Cancel',
@@ -242,7 +250,7 @@ export enum KycServiceProvidersTx {
   ResetMembers = 'ResetMembers',
 }
 
-export type TxTag = SystemTx | TimestampTx | BalancesTx | AuthorshipTx | StakingTx | SessionTx | FinalityTrackerTx | GrandpaTx | ImOnlineTx | SudoTx | MultiSigTx | ContractsTx | TreasuryTx | PolymeshCommitteeTx | CommitteeMembershipTx | MipsTx | AssetTx | DividendTx | IdentityTx | GeneralTmTx | VotingTx | StoCappedTx | PercentageTmTx | ExemptionTx | SimpleTokenTx | KycServiceProvidersTx;
+export type TxTag = SystemTx | TimestampTx | BalancesTx | AuthorshipTx | StakingTx | SessionTx | FinalityTrackerTx | GrandpaTx | ImOnlineTx | SudoTx | MultiSigTx | ContractsTx | TreasuryTx | PolymeshCommitteeTx | CommitteeMembershipTx | MipsTx | AssetTx | BridgeTx | DividendTx | IdentityTx | GeneralTmTx | VotingTx | StoCappedTx | PercentageTmTx | ExemptionTx | SimpleTokenTx | KycServiceProvidersTx;
 
 export const TxTags = {
   system: SystemTx,
@@ -262,6 +270,7 @@ export const TxTags = {
   committeeMembership: CommitteeMembershipTx,
   mips: MipsTx,
   asset: AssetTx,
+  bridge: BridgeTx,
   dividend: DividendTx,
   identity: IdentityTx,
   generalTM: GeneralTmTx,
