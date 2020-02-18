@@ -12,7 +12,7 @@ import { Heartbeat } from '@polkadot/types/interfaces/imOnline';
 import { Keys } from '@polkadot/types/interfaces/session';
 import { EraIndex, RewardDestination, ValidatorPrefs } from '@polkadot/types/interfaces/staking';
 import { Key } from '@polkadot/types/interfaces/system';
-import { AccountKey, AssetRule, AssetType, AuthIdentifier, AuthorizationData, Ballot, ClaimRecord, ClaimValue, Document, IdentifierType, IdentityId, MipsIndex, OffChainSignature, Permission, ProportionMatch, Signatory, SigningItem, SigningItemWithAuth, SmartExtension, TargetIdAuthorization, Ticker } from '@polkadot/types/interfaces/polymesh';
+import { AccountKey, AssetRule, AssetType, AuthIdentifier, AuthorizationData, Ballot, BridgeTx, ClaimRecord, ClaimValue, Document, IdentifierType, IdentityId, MipsIndex, OffChainSignature, Permission, ProportionMatch, Signatory, SigningItem, SigningItemWithAuth, SmartExtension, TargetIdAuthorization, Ticker } from '@polkadot/types/interfaces/polymesh';
 import { SubmittableExtrinsic } from '@polkadot/api/submittable/types';
 
 declare module '@polkadot/api/types/submittable' {
@@ -341,18 +341,15 @@ declare module '@polkadot/api/types/submittable' {
       setMembers: AugmentedSubmittable<(_newMembers: Vec<IdentityId> | (IdentityId | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Any committee member proposes a dispatchable
-       *
-       * @param did - Identity of the proposer
        */
-      propose: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _proposal: Proposal | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      propose: AugmentedSubmittable<(_proposal: Proposal | { callIndex?: any; args?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Member casts a vote
        *
-       * @param did - Identity of the proposer
        * @param proposal - Hash of proposal to be voted on
        * @param index - Proposal index
        */
-      vote: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _proposal: Hash | string | Uint8Array, _index: Compact<ProposalIndex> | AnyNumber | Uint8Array, _approve: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      vote: AugmentedSubmittable<(_proposal: Hash | string | Uint8Array, _index: Compact<ProposalIndex> | AnyNumber | Uint8Array, _approve: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     committeeMembership: {
 
@@ -451,7 +448,6 @@ declare module '@polkadot/api/types/submittable' {
        * Initializes a new security token makes the initiating account the owner of the security token & the balance of the owner is set to total supply
        *
        * @param origin - Contains the signing key of the caller (i.e who signed the transaction to execute this function)
-       * @param did - The DID of the creator of the token or the owner of the token
        * @param name - The name of the token
        * @param ticker - The ticker symbol of the token
        * @param total_supply - The total supply of the token
@@ -459,7 +455,7 @@ declare module '@polkadot/api/types/submittable' {
        * @param asset_type - The asset type
        * @param identifiers - A vector of asset identifiers
        */
-      createToken: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _name: Bytes | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _totalSupply: Balance | AnyNumber | Uint8Array, _divisible: bool | boolean | Uint8Array, _assetType: AssetType | { equity: any } | { debt: any } | { commodity: any } | { structuredProduct: any } | { custom: any } | string | Uint8Array, _identifiers: Vec<ITuple<[IdentifierType, Bytes]>> | ([IdentifierType | { isin: any } | { cusip: any } | { custom: any } | string | Uint8Array, Bytes | string | Uint8Array])[], _fundingRound: Option<Bytes> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      createToken: AugmentedSubmittable<(_name: Bytes | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _totalSupply: Balance | AnyNumber | Uint8Array, _divisible: bool | boolean | Uint8Array, _assetType: AssetType | { equity: any } | { debt: any } | { commodity: any } | { structuredProduct: any } | { custom: any } | string | Uint8Array, _identifiers: Vec<ITuple<[IdentifierType, Bytes]>> | ([IdentifierType | { isin: any } | { cusip: any } | { custom: any } | string | Uint8Array, Bytes | string | Uint8Array])[], _fundingRound: Option<Bytes> | null | object | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Freezes transfers and minting of a given token
        *
@@ -483,103 +479,92 @@ declare module '@polkadot/api/types/submittable' {
        * Transfer tokens from one DID to another DID as tokens are stored/managed on the DID level
        *
        * @param _origin - Signing key of the sender
-       * @param did - DID of the `from` token holder, from whom tokens needs to transferred
        * @param ticker - Ticker of the token
        * @param to_did - DID of the `to` token holder, to whom token needs to transferred
        */
-      transfer: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transfer: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Forces a transfer between two DIDs & This can only be called by security token owner. This function doesn't validate any type of restriction beside a valid KYC check
        *
        * @param _origin - Signing key of the token owner DID
-       * @param did - Token owner DID
        * @param ticker - Symbol of the token
        * @param from_did - DID of the token holder from whom balance token will be transferred
        * @param to_did - DID of token holder to whom token balance will be transferred
        * @param value - Amount of tokens
        * @param data - Some off chain data to validate the restriction
        */
-      controllerTransfer: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _fromDid: IdentityId | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array, _operatorData: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      controllerTransfer: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _fromDid: IdentityId | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array, _operatorData: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Approve token transfer from one DID to DID once this is done, transfer_from can be called with corresponding values
        *
        * @param _origin - Signing key of the token owner (i.e sender)
-       * @param did - DID of the sender
        * @param spender_did - DID of the spender
        */
-      approve: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _spenderDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      approve: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _spenderDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * If sufficient allowance provided, transfer from a DID to another DID without token owner's signature
        *
        * @param _origin - Signing key of spender
-       * @param did - DID of the spender
        * @param _ticker - Ticker of the token
        * @param from_did - DID from whom token is being transferred
        * @param to_did - DID to whom token is being transferred
        */
-      transferFrom: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _fromDid: IdentityId | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transferFrom: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _fromDid: IdentityId | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Function used to create the checkpoint
        *
-       * @param _origin - Signing key of the token owner. (Only token owner can call this function)
-       * @param did - DID of the token owner
+       * @param origin - Signing key of the token owner. (Only token owner can call this function)
        */
-      createCheckpoint: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      createCheckpoint: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Function is used to issue(or mint) new tokens for the given DID can only be executed by the token owner
        *
        * @param origin - Signing key of token owner
-       * @param did - DID of the token owner
        * @param ticker - Ticker of the token
        * @param to_did - DID of the token holder to whom new tokens get issued
        */
-      issue: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      issue: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Function is used issue(or mint) new tokens for the given DIDs can only be executed by the token owner
        *
        * @param origin - Signing key of token owner
-       * @param did - DID of the token owner
        * @param ticker - Ticker of the token
        * @param investor_dids - Array of the DID of the token holders to whom new tokens get issued
        */
-      batchIssue: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _investorDids: Vec<IdentityId> | (IdentityId | string | Uint8Array)[], _values: Vec<Balance> | (Balance | AnyNumber | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      batchIssue: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _investorDids: Vec<IdentityId> | (IdentityId | string | Uint8Array)[], _values: Vec<Balance> | (Balance | AnyNumber | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Used to redeem the security tokens
        *
        * @param _origin - Signing key of the token holder who wants to redeem the tokens
-       * @param did - DID of the token holder
        * @param ticker - Ticker of the token
        * @param value - Amount of the tokens needs to redeem
        */
-      redeem: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      redeem: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Used to redeem the security tokens by some other DID who has approval
        *
        * @param _origin - Signing key of the spender who has valid approval to redeem the tokens
-       * @param did - DID of the spender
        * @param ticker - Ticker of the token
        * @param from_did - DID from whom balance get reduced
        * @param value - Amount of the tokens needs to redeem
        */
-      redeemFrom: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _fromDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      redeemFrom: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _fromDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Forces a redemption of an DID's tokens. Can only be called by token owner
        *
        * @param _origin - Signing key of the token owner
-       * @param did - DID of the token holder
        * @param ticker - Ticker of the token
        * @param token_holder_did - DID from whom balance get reduced
        * @param value - Amount of the tokens needs to redeem
        * @param data - An off chain data blob used to validate the redeem functionality
        */
-      controllerRedeem: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _tokenHolderDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array, _operatorData: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      controllerRedeem: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _tokenHolderDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array, _operatorData: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Makes an indivisible token divisible. Only called by the token owner
        *
        * @param origin - Signing key of the token owner
-       * @param did - DID of the token owner
        */
-      makeDivisible: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      makeDivisible: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Checks whether a transaction with given parameters can take place or not This function is state less function and used to validate the transfer before actual transfer call
        *
@@ -594,23 +579,21 @@ declare module '@polkadot/api/types/submittable' {
        * An ERC1594 transfer with data This function can be used by the exchanges of other third parties to dynamically validate the transaction by passing the data blob
        *
        * @param origin - Signing key of the sender
-       * @param did - DID from whom tokens will be transferred
        * @param ticker - Ticker of the token
        * @param to_did - DID to whom tokens will be transferred
        * @param value - Amount of the tokens
        */
-      transferWithData: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transferWithData: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * An ERC1594 transfer_from with data This function can be used by the exchanges of other third parties to dynamically validate the transaction by passing the data blob
        *
        * @param origin - Signing key of the spender
-       * @param did - DID of spender
        * @param ticker - Ticker of the token
        * @param from_did - DID from whom tokens will be transferred
        * @param to_did - DID to whom tokens will be transferred
        * @param value - Amount of the tokens
        */
-      transferFromWithData: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _fromDid: IdentityId | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transferFromWithData: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _fromDid: IdentityId | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array, _data: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Used to know whether the given token will issue new tokens or not
        *
@@ -621,26 +604,23 @@ declare module '@polkadot/api/types/submittable' {
        * Add documents for a given token. To be called only by the token owner
        *
        * @param origin - Signing key of the token owner
-       * @param did - DID of the token owner
        * @param ticker - Ticker of the token
        */
-      addDocuments: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _documents: Vec<Document> | (Document | { name?: any; uri?: any; hash?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      addDocuments: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _documents: Vec<Document> | (Document | { name?: any; uri?: any; hash?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Remove documents for a given token. To be called only by the token owner
        *
        * @param origin - Signing key of the token owner
-       * @param did - DID of the token owner
        * @param ticker - Ticker of the token
        */
-      removeDocuments: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _docIds: Vec<u64> | (u64 | AnyNumber | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      removeDocuments: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _docIds: Vec<u64> | (u64 | AnyNumber | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Update documents for the given token, Only be called by the token owner
        *
        * @param origin - Signing key of the token owner
-       * @param did - DID of the token owner
        * @param ticker - Ticker of the token
        */
-      updateDocuments: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _docs: Vec<ITuple<[u64, Document]>> | ([u64 | AnyNumber | Uint8Array, Document | { name?: any; uri?: any; hash?: any } | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
+      updateDocuments: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _docs: Vec<ITuple<[u64, Document]>> | ([u64 | AnyNumber | Uint8Array, Document | { name?: any; uri?: any; hash?: any } | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * ERC-2258 Implementation Used to increase the allowance for a given custodian Any investor/token holder can add a custodian and transfer the token transfer ownership to the custodian Through that investor balance will remain the same but the given token are only transfer by the custodian. This implementation make sure to have an accurate investor count from omnibus wallets
        *
@@ -677,19 +657,17 @@ declare module '@polkadot/api/types/submittable' {
        * Sets the name of the current funding round
        *
        * @param origin - The signing key of the token owner DID
-       * @param did - The token owner DID
        * @param ticker - The ticker of the token
        */
-      setFundingRound: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _name: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      setFundingRound: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _name: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Updates the asset identifiers. Can only be called by the token owner
        *
        * @param origin - The signing key of the token owner
-       * @param did - The DID of the token owner
        * @param ticker - The ticker of the token
        * @param identifiers - The asset identifiers to be updated in the form of a vector of pairs
        */
-      updateIdentifiers: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _identifiers: Vec<ITuple<[IdentifierType, Bytes]>> | ([IdentifierType | { isin: any } | { cusip: any } | { custom: any } | string | Uint8Array, Bytes | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
+      updateIdentifiers: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _identifiers: Vec<ITuple<[IdentifierType, Bytes]>> | ([IdentifierType | { isin: any } | { cusip: any } | { custom: any } | string | Uint8Array, Bytes | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Whitelisting the Smart-Extension address for a given ticker
        *
@@ -712,24 +690,47 @@ declare module '@polkadot/api/types/submittable' {
        */
       unarchiveExtension: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _extensionId: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
+    bridge: {
+
+      /**
+       * Change the signer set account as root
+       */
+      changeRelayers: AugmentedSubmittable<(_accountId: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Proposes a bridge transaction, which amounts to making a multisig proposal for the bridge transaction if the transaction is new or approving an existing proposal if the transaction has already been proposed
+       */
+      proposeBridgeTx: AugmentedSubmittable<(_bridgeTx: BridgeTx | { nonce?: any; recipient?: any; value?: any; tx_hash?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Finalizes pending bridge transactions following a receipt of a valid KYC by the recipient identity
+       */
+      finalizePending: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Handles an approved signer set multisig account change proposal
+       */
+      handleRelayers: AugmentedSubmittable<(_accountId: AccountId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      /**
+       * Handles an approved bridge transaction proposal. NOTE: Extrinsics without `pub` are exported too. This function is declared as `pub` only to test that it cannot be called from a wrong `origin`
+       */
+      handleBridgeTx: AugmentedSubmittable<(_bridgeTx: BridgeTx | { nonce?: any; recipient?: any; value?: any; tx_hash?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+    };
     dividend: {
 
       /**
        * Creates a new dividend entry without payout. Token must have at least one checkpoint
        */
-      new: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _amount: Balance | AnyNumber | Uint8Array, _ticker: Ticker | string | Uint8Array, _maturesAt: Moment | AnyNumber | Uint8Array, _expiresAt: Moment | AnyNumber | Uint8Array, _payoutTicker: Ticker | string | Uint8Array, _checkpointId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      new: AugmentedSubmittable<(_amount: Balance | AnyNumber | Uint8Array, _ticker: Ticker | string | Uint8Array, _maturesAt: Moment | AnyNumber | Uint8Array, _expiresAt: Moment | AnyNumber | Uint8Array, _payoutTicker: Ticker | string | Uint8Array, _checkpointId: u64 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Lets the owner cancel a dividend before start/maturity date
        */
-      cancel: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _dividendId: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      cancel: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _dividendId: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Withdraws from a dividend the adequate share of the `amount` field. All dividend shares are rounded by truncation (down to first integer below)
        */
-      claim: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _dividendId: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      claim: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _dividendId: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * After a dividend had expired, collect the remaining amount to owner address
        */
-      claimUnclaimed: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _dividendId: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      claimUnclaimed: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _dividendId: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     identity: {
 
@@ -740,15 +741,15 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Adds new signing keys for a DID. Only called by master key owner
        */
-      addSigningItems: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _signingItems: Vec<SigningItem> | (SigningItem | { signer?: any; signer_type?: any; permissions?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      addSigningItems: AugmentedSubmittable<(_signingItems: Vec<SigningItem> | (SigningItem | { signer?: any; signer_type?: any; permissions?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Removes specified signing keys of a DID if present
        */
-      removeSigningItems: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _signersToRemove: Vec<Signatory> | (Signatory | { identity: any } | { accountKey: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      removeSigningItems: AugmentedSubmittable<(_signersToRemove: Vec<Signatory> | (Signatory | { identity: any } | { accountKey: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Sets a new master key for a DID
        */
-      setMasterKey: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _newKey: AccountKey | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      setMasterKey: AugmentedSubmittable<(_newKey: AccountKey | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Call this with the new master key. By invoking this method, caller accepts authorization with the new master key. If a KYC service provider approved this change, master key of the DID is updated
        *
@@ -767,16 +768,16 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Marks the specified claim as revoked
        */
-      revokeClaim: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _claimKey: Bytes | string | Uint8Array, _didIssuer: IdentityId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      revokeClaim: AugmentedSubmittable<(_claimKey: Bytes | string | Uint8Array, _didIssuer: IdentityId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * It sets permissions for an specific `target_key` key. Only the master key of an identity is able to set signing key permissions
        */
-      setPermissionToSigner: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _signer: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, _permissions: Vec<Permission> | (Permission | ('Full' | 'Admin' | 'Operator' | 'SpendFunds') | number | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      setPermissionToSigner: AugmentedSubmittable<(_signer: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array, _permissions: Vec<Permission> | (Permission | ('Full' | 'Admin' | 'Operator' | 'SpendFunds') | number | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * It disables all signing keys at `did` identity
        */
-      freezeSigningKeys: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
-      unfreezeSigningKeys: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      freezeSigningKeys: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
+      unfreezeSigningKeys: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
       getMyDid: AugmentedSubmittable<() => SubmittableExtrinsic<ApiType>>;
       getAssetDid: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
@@ -818,7 +819,7 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * It adds signing keys to target identity `id`. Keys are directly added to identity because each of them has an authorization. Arguments:     - `origin` Master key of `id` identity.     - `id` Identity where new signing keys will be added.     - `additional_keys` New signing items (and their authorization data) to add to target     identity. Failure     - It can only called by master key owner.     - Keys should be able to linked to any identity
        */
-      addSigningItemsWithAuthorization: AugmentedSubmittable<(_id: IdentityId | string | Uint8Array, _expiresAt: Moment | AnyNumber | Uint8Array, _additionalKeys: Vec<SigningItemWithAuth> | (SigningItemWithAuth | { signing_item?: any; auth_signature?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      addSigningItemsWithAuthorization: AugmentedSubmittable<(_expiresAt: Moment | AnyNumber | Uint8Array, _additionalKeys: Vec<SigningItemWithAuth> | (SigningItemWithAuth | { signing_item?: any; auth_signature?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * It revokes the `auth` off-chain authorization of `signer`. It only takes effect if the authorized transaction is not yet executed
        */
@@ -835,41 +836,38 @@ declare module '@polkadot/api/types/submittable' {
       /**
        * Adds an asset rule to active rules for a ticker
        */
-      addActiveRule: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _assetRule: AssetRule | { sender_rules?: any; receiver_rules?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      addActiveRule: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _assetRule: AssetRule | { sender_rules?: any; receiver_rules?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Removes a rule from active asset rules
        */
-      removeActiveRule: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _assetRule: AssetRule | { sender_rules?: any; receiver_rules?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      removeActiveRule: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _assetRule: AssetRule | { sender_rules?: any; receiver_rules?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Removes all active rules of a ticker
        */
-      resetActiveRules: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      resetActiveRules: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     voting: {
 
       /**
        * Adds a ballot
        *
-       * @param did - DID of the token owner. Sender must be a signing key or master key of this DID
        * @param ticker - Ticker of the token for which ballot is to be created
        * @param ballot_name - Name of the ballot
        */
-      addBallot: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _ballotName: Bytes | string | Uint8Array, _ballotDetails: Ballot | { checkpoint_id?: any; voting_start?: any; voting_end?: any; motions?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      addBallot: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _ballotName: Bytes | string | Uint8Array, _ballotDetails: Ballot | { checkpoint_id?: any; voting_start?: any; voting_end?: any; motions?: any } | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Casts a vote
        *
-       * @param did - DID of the voter. Sender must be a signing key or master key of this DID
        * @param ticker - Ticker of the token for which vote is to be cast
        * @param ballot_name - Name of the ballot
        */
-      vote: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _ballotName: Bytes | string | Uint8Array, _votes: Vec<Balance> | (Balance | AnyNumber | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      vote: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _ballotName: Bytes | string | Uint8Array, _votes: Vec<Balance> | (Balance | AnyNumber | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Cancels a vote by setting it as expired
        *
-       * @param did - DID of the token owner. Sender must be a signing key or master key of this DID
        * @param ticker - Ticker of the token for which ballot is to be cancelled
        */
-      cancelBallot: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _ballotName: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      cancelBallot: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _ballotName: Bytes | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     stoCapped: {
 
@@ -877,7 +875,6 @@ declare module '@polkadot/api/types/submittable' {
        * Used to initialize the STO for a given asset
        *
        * @param origin - Signing key of the token owner who wants to initialize the sto
-       * @param did - DID of the token owner
        * @param ticker - Ticker of the token
        * @param beneficiary_did - DID which holds all the funds collected
        * @param cap - Total amount of tokens allowed for sale
@@ -885,7 +882,7 @@ declare module '@polkadot/api/types/submittable' {
        * @param start_date - Unix timestamp at when STO starts
        * @param end_date - Unix timestamp at when STO ends
        */
-      launchSto: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _beneficiaryDid: IdentityId | string | Uint8Array, _cap: Balance | AnyNumber | Uint8Array, _rate: u128 | AnyNumber | Uint8Array, _startDate: Moment | AnyNumber | Uint8Array, _endDate: Moment | AnyNumber | Uint8Array, _simpleTokenTicker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      launchSto: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _beneficiaryDid: IdentityId | string | Uint8Array, _cap: Balance | AnyNumber | Uint8Array, _rate: u128 | AnyNumber | Uint8Array, _startDate: Moment | AnyNumber | Uint8Array, _endDate: Moment | AnyNumber | Uint8Array, _simpleTokenTicker: Ticker | string | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Used to buy tokens
        *
@@ -894,22 +891,20 @@ declare module '@polkadot/api/types/submittable' {
        * @param ticker - Ticker of the token
        * @param sto_id - A unique identifier to know which STO investor wants to invest in
        */
-      buyTokens: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _stoId: u32 | AnyNumber | Uint8Array, _value: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      buyTokens: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _stoId: u32 | AnyNumber | Uint8Array, _value: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Modify the list of allowed tokens (stable coins) corresponds to given token/asset
        *
        * @param origin - Signing key of the token owner
-       * @param did - DID of the token owner
        * @param ticker - Ticker of the token
        * @param sto_id - A unique identifier to know which STO investor wants to invest in
        * @param simple_token_ticker - Ticker of the stable coin
        */
-      modifyAllowedTokens: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _stoId: u32 | AnyNumber | Uint8Array, _simpleTokenTicker: Ticker | string | Uint8Array, _modifyStatus: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      modifyAllowedTokens: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _stoId: u32 | AnyNumber | Uint8Array, _simpleTokenTicker: Ticker | string | Uint8Array, _modifyStatus: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Used to buy tokens using stable coins
        *
        * @param origin - Signing key of the investor
-       * @param did - DID of the investor
        * @param ticker - Ticker of the token
        * @param sto_id - A unique identifier to know which STO investor wants to invest in
        * @param value - Amount of POLY wants to invest in
@@ -919,48 +914,46 @@ declare module '@polkadot/api/types/submittable' {
        * Pause the STO, Can only be called by the token owner By doing this every operations on given sto_id would get freezed like buy_tokens
        *
        * @param origin - Signing key of the token owner
-       * @param did - DID of the token owner
        * @param ticker - Ticker of the token
        */
-      pauseSto: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _stoId: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      pauseSto: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _stoId: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Un-pause the STO, Can only be called by the token owner By doing this every operations on given sto_id would get un freezed
        *
        * @param origin - Signing key of the token owner
-       * @param did - DID of the token owner
        * @param ticker - Ticker of the token
        */
-      unpauseSto: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _stoId: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      unpauseSto: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _stoId: u32 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     percentageTm: {
 
       /**
        * Set a maximum percentage that can be owned by a single investor
        */
-      toggleMaximumPercentageRestriction: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _maxPercentage: u16 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      toggleMaximumPercentageRestriction: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _maxPercentage: u16 | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     exemption: {
 
-      modifyExemptionList: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _tm: u16 | AnyNumber | Uint8Array, _assetHolderDid: IdentityId | string | Uint8Array, _exempted: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      modifyExemptionList: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _tm: u16 | AnyNumber | Uint8Array, _assetHolderDid: IdentityId | string | Uint8Array, _exempted: bool | boolean | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     simpleToken: {
 
       /**
        * Create a new token and mint a balance to the issuing identity
        */
-      createToken: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _totalSupply: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      createToken: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _totalSupply: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Approve another identity to transfer tokens on behalf of the caller
        */
-      approve: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _spenderDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      approve: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _spenderDid: IdentityId | string | Uint8Array, _value: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Transfer tokens to another identity
        */
-      transfer: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transfer: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
       /**
        * Transfer tokens to another identity using the approval mechanic
        */
-      transferFrom: AugmentedSubmittable<(_did: IdentityId | string | Uint8Array, _ticker: Ticker | string | Uint8Array, _fromDid: IdentityId | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
+      transferFrom: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _fromDid: IdentityId | string | Uint8Array, _toDid: IdentityId | string | Uint8Array, _amount: Balance | AnyNumber | Uint8Array) => SubmittableExtrinsic<ApiType>>;
     };
     kycServiceProviders: {
 

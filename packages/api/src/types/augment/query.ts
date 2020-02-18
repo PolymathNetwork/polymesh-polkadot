@@ -20,7 +20,7 @@ import { EraIndex, EraPoints, Exposure, Forcing, MomentOf, Nominations, RewardDe
 import { DigestOf, EventIndex, EventRecord } from '@polkadot/types/interfaces/system';
 import { TreasuryProposal } from '@polkadot/types/interfaces/treasury';
 import { Multiplier } from '@polkadot/types/interfaces/txpayment';
-import { AccountKey, AssetRule, Authorization, AuthorizationNonce, Ballot, Claim, ClaimMetaData, Commission, Counter, DidRecord, Dividend, IdentifierType, IdentityId, Investment, Link, LinkedKeyInfo, MIP, MipsMetadata, PermissionedValidator, PolymeshReferendumInfo, PolymeshVotes, PreAuthorizedKeyInfo, ProportionMatch, STO, SecurityToken, Signatory, SimpleTokenRecord, SmartExtension, SmartExtensionType, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig } from '@polkadot/types/interfaces/polymesh';
+import { AccountKey, AssetRule, Authorization, AuthorizationNonce, Ballot, BridgeTx, Claim, ClaimMetaData, Commission, Counter, DidRecord, Dividend, IdentifierType, IdentityId, Investment, Link, LinkedKeyInfo, MIP, MipsMetadata, PermissionedValidator, PolymeshReferendumInfo, PolymeshVotes, PreAuthorizedKeyInfo, ProportionMatch, STO, SecurityToken, Signatory, SimpleTokenRecord, SmartExtension, SmartExtensionType, TargetIdAuthorization, Ticker, TickerRegistration, TickerRegistrationConfig } from '@polkadot/types/interfaces/polymesh';
 import { Observable } from 'rxjs';
 
 declare module '@polkadot/api/types/storage' {
@@ -485,9 +485,13 @@ declare module '@polkadot/api/types/storage' {
        **/
       multiSigNonce: AugmentedQuery<ApiType, () => Observable<u64>>;
       /**
-       * Signers of a multisig. (mulisig, signer) => true/false
+       * Signers of a multisig. (mulisig, signer) => signer.
        **/
-      multiSigSigners: AugmentedQuery<ApiType, (arg: ITuple<[AccountId, Signatory]> | [AccountId | string | Uint8Array, Signatory | { identity: any } | { accountKey: any } | string | Uint8Array]) => Observable<bool>>;
+      multiSigSigners: AugmentedQueryDoubleMap<ApiType, (key1: AccountId | string | Uint8Array, key2: Signatory | { identity: any } | { accountKey: any } | string | Uint8Array) => Observable<Signatory>, AccountId | string | Uint8Array>;
+      /**
+       * Number of approved/accepted signers of a multisig.
+       **/
+      numberOfSigners: AugmentedQuery<ApiType, (arg: AccountId | string | Uint8Array) => Observable<u64>>;
       /**
        * Confirmations required before processing a multisig tx
        **/
@@ -740,6 +744,26 @@ declare module '@polkadot/api/types/storage' {
        * ticker -> bool
        **/
       frozen: AugmentedQuery<ApiType, (arg: Ticker | string | Uint8Array) => Observable<bool>>;
+    };
+    bridge: {
+
+      /**
+       * The multisig account of the bridge relayer set. The genesis signers must accept their
+       * authorizations to be able to get their proposals delivered.
+       **/
+      relayers: AugmentedQuery<ApiType, () => Observable<AccountId>>;
+      /**
+       * Correspondence between bridge transaction proposals and multisig proposal IDs.
+       **/
+      bridgeTxProposals: AugmentedQuery<ApiType, (arg: BridgeTx | { nonce?: any; recipient?: any; value?: any; tx_hash?: any } | string | Uint8Array) => Observable<Option<u64>>>;
+      /**
+       * Pending issuance transactions to identities.
+       **/
+      pendingTxs: AugmentedQuery<ApiType, (arg: IdentityId | string | Uint8Array) => Observable<Vec<BridgeTx>>>;
+      /**
+       * Handled bridge transaction proposals.
+       **/
+      handledProposals: AugmentedQuery<ApiType, (arg: BridgeTx | { nonce?: any; recipient?: any; value?: any; tx_hash?: any } | string | Uint8Array) => Observable<bool>>;
     };
     dividend: {
 

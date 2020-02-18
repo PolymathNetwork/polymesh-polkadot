@@ -3,7 +3,7 @@
 
 import { Codec, ITuple } from '@polkadot/types/types';
 import { Enum, Option, Struct, Vec } from '@polkadot/types/codec';
-import { Bytes, H256, H512, bool, u16, u32, u64, u8 } from '@polkadot/types/primitive';
+import { Bytes, H256, H512, bool, u128, u16, u32, u64, u8 } from '@polkadot/types/primitive';
 import { Balance, Call, Hash, Moment, Signature } from '@polkadot/types/interfaces/runtime';
 
 /** @name AccountKey */
@@ -64,6 +64,14 @@ export interface Ballot extends Struct {
   readonly voting_start: Moment;
   readonly voting_end: Moment;
   readonly motions: Vec<Motion>;
+}
+
+/** @name BridgeTx */
+export interface BridgeTx extends Struct {
+  readonly nonce: u64;
+  readonly recipient: IssueRecipient;
+  readonly value: u128;
+  readonly tx_hash: H256;
 }
 
 /** @name Claim */
@@ -180,6 +188,14 @@ export interface Investment extends Struct {
   readonly last_purchase_date: Moment;
 }
 
+/** @name IssueRecipient */
+export interface IssueRecipient extends Enum {
+  readonly isAccount: boolean;
+  readonly asAccount: AccountKey;
+  readonly isIdentity: boolean;
+  readonly asIdentity: IdentityId;
+}
+
 /** @name Link */
 export interface Link extends Struct {
   readonly link_data: LinkData;
@@ -247,6 +263,12 @@ export interface Operators extends Enum {
   readonly isGreaterOrEqualTo: boolean;
 }
 
+/** @name PendingTx */
+export interface PendingTx extends Struct {
+  readonly did: IdentityId;
+  readonly bridge_tx: BridgeTx;
+}
+
 /** @name Permission */
 export interface Permission extends Enum {
   readonly isFull: boolean;
@@ -284,6 +306,13 @@ export interface PreAuthorizedKeyInfo extends Struct {
 export interface ProportionMatch extends Enum {
   readonly isAtLeast: boolean;
   readonly isMoreThan: boolean;
+}
+
+/** @name RestrictionResult */
+export interface RestrictionResult extends Enum {
+  readonly isValid: boolean;
+  readonly isInvalid: boolean;
+  readonly isForceValid: boolean;
 }
 
 /** @name RuleData */
