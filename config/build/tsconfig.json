@@ -7,7 +7,7 @@
     "build/**/*",
     "**/build/**/*",    
     "./packages/**/*.spec.ts",
-    "./packages/types/scripts"
+    "./packages/typegen/**/*"    
   ],
   "compilerOptions": {
     "baseUrl": ".",
