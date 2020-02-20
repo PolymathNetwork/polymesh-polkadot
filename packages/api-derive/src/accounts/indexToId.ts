@@ -7,7 +7,7 @@ import { AccountId, AccountIndex } from '@polkadot/types/interfaces';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ApiInterfaceRx } from '@polkadot/api/types';
-import { ENUMSET_SIZE } from '@polkadot/types/primitive/Generic/AccountIndex';
+import { ENUMSET_SIZE } from '@polkadot/types/generic/AccountIndex';
 import { ClassOf, Vec, createType } from '@polkadot/types';
 
 import { memo } from '../util';

@@ -1,13 +1,13 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
 /* eslint-disable @typescript-eslint/no-empty-interface */
 
-import { Codec, ITuple } from '@polkadot/types/types';
-import { Enum, Option, Struct, Vec } from '@polkadot/types/codec';
-import { Bytes, H256, H512, bool, u128, u16, u32, u64, u8 } from '@polkadot/types/primitive';
-import { Balance, Call, Hash, Moment, Signature } from '@polkadot/types/interfaces/runtime';
+import { ITuple } from '@polkadot/types/types';
+import { Enum, Option, Struct, U8aFixed, Vec } from '@polkadot/types/codec';
+import { Bytes, bool, u128, u16, u32, u64, u8 } from '@polkadot/types/primitive';
+import { Balance, Call, H256, H512, Hash, Moment, Signature } from '@polkadot/types/interfaces/runtime';
 
 /** @name AccountKey */
-export interface AccountKey extends Uint8Array, Codec {}
+export interface AccountKey extends U8aFixed {}
 
 /** @name AssetRule */
 export interface AssetRule extends Struct {
@@ -413,7 +413,7 @@ export interface TargetIdAuthorization extends Struct {
 }
 
 /** @name Ticker */
-export interface Ticker extends Uint8Array, Codec {}
+export interface Ticker extends U8aFixed {}
 
 /** @name TickerRegistration */
 export interface TickerRegistration extends Struct {

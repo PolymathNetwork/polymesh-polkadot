@@ -11,7 +11,6 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
-    "target": "ES6",
     "paths":
     {
       "@polkadot/api": ["packages/api"],

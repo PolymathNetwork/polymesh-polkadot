@@ -2,7 +2,8 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { AnyJsonObject, BareOpts, Codec, Constructor, ConstructorDef, IHash, InterfaceTypes, Registry } from '../types';
+import { H256 } from '../interfaces/runtime';
+import { AnyJsonObject, BareOpts, Codec, Constructor, ConstructorDef, InterfaceTypes, Registry } from '../types';
 
 import { hexToU8a, isBoolean, isHex, isObject, isU8a, isUndefined, u8aConcat, u8aToHex } from '@polkadot/util';
 import { blake2AsU8a } from '@polkadot/util-crypto';
@@ -188,7 +189,7 @@ export default class Struct<
   /**
    * @description returns a hash of the contents
    */
-  public get hash (): IHash {
+  public get hash (): H256 {
     return new Raw(this.registry, blake2AsU8a(this.toU8a(), 256));
   }
 
@@ -226,6 +227,20 @@ export default class Struct<
    */
   public toHex (): string {
     return u8aToHex(this.toU8a());
+  }
+
+  /**
+   * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
+   */
+  public toHuman (isExtended?: boolean): AnyJsonObject {
+    return [...this.keys()].reduce((json, key): any => {
+      const jsonKey = this._jsonMap.get(key) || key;
+      const value = this.get(key);
+
+      json[jsonKey] = value && value.toHuman(isExtended);
+
+      return json;
+    }, {} as any);
   }
 
   /**

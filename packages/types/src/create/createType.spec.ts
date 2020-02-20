@@ -2,22 +2,43 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
+import Int from '../codec/Int';
 import CodecSet from '../codec/Set';
 import { createClass, createType, createTypeUnsafe, ClassOf, TypeRegistry } from '.';
 
 describe('createType', (): void => {
   const registry = new TypeRegistry();
 
-  it('allows creation of a Struct', (): void => {
+  it('allows creation of a H256 (with proper toRawType)', (): void => {
     expect(
-      createTypeUnsafe(registry, '{"balance":"Balance","index":"u32"}', [{
-        balance: 1234,
-        index: '0x10'
-      }]).toJSON()
-    ).toEqual({
+      createType(registry, 'H256').toRawType()
+    ).toEqual('H256');
+    expect(
+      createType(registry, 'Hash').toRawType()
+    ).toEqual('H256');
+  });
+
+  it('allows creation of a Fixed64 (with proper toRawType & instance)', (): void => {
+    const f64 = createType(registry, 'Fixed64');
+
+    expect(f64.toRawType()).toEqual('Fixed64');
+    expect(f64.bitLength()).toEqual(64);
+    expect(f64.isUnsigned).toBe(false);
+    expect(f64 instanceof Int).toBe(true);
+  });
+
+  it('allows creation of a Struct', (): void => {
+    const raw = '{"balance":"Balance","index":"u32"}';
+    const struct = createTypeUnsafe(registry, raw, [{
+      balance: 1234,
+      index: '0x10'
+    }]);
+
+    expect(struct.toJSON()).toEqual({
       balance: 1234,
       index: 16
     });
+    expect(struct.toRawType()).toEqual(raw);
   });
 
   it('allows creation of a BTreeMap', (): void => {
@@ -32,18 +53,6 @@ describe('createType', (): void => {
     ).toEqual('[2,24,30,80]');
   });
 
-  it('allows creation of a Result', (): void => {
-    expect(
-      createTypeUnsafe(registry, 'Result<u32,Text>', ['0x011064656667']).toJSON()
-    ).toEqual({ Error: 'defg' });
-  });
-
-  it('allows creation of a Tuple', (): void => {
-    expect(
-      createTypeUnsafe(registry, '(Balance,u32)', [[1234, 5678]]).toJSON()
-    ).toEqual([1234, 5678]);
-  });
-
   it('allows creation of a Enum (simple)', (): void => {
     expect(
       createTypeUnsafe(registry, '{"_enum": ["A", "B", "C"]}', [1]).toJSON()
@@ -56,10 +65,34 @@ describe('createType', (): void => {
     ).toEqual({ B: 0 });
   });
 
+  it('allows creation of a Result', (): void => {
+    expect(
+      createTypeUnsafe(registry, 'Result<u32,Text>', ['0x011064656667']).toJSON()
+    ).toEqual({ Error: 'defg' });
+  });
+
   it('allows creation of a Set', (): void => {
     expect(
       createTypeUnsafe<CodecSet>(registry, '{"_set": { "A": 1, "B": 2, "C": 4, "D": 8, "E": 16, "G": 32, "H": 64, "I": 128 } }', [1 + 4 + 16 + 64]).strings
     ).toEqual(['A', 'C', 'E', 'H']);
+  });
+
+  it('allows creation of a Tuple', (): void => {
+    expect(
+      createTypeUnsafe(registry, '(Balance,u32)', [[1234, 5678]]).toJSON()
+    ).toEqual([1234, 5678]);
+  });
+
+  it('allows creation for a UInt<bitLength>', (): void => {
+    expect(
+      createTypeUnsafe(registry, 'UInt<2048>').toRawType()
+    ).toEqual('u2048');
+  });
+
+  it('fails creation for a UInt<bitLength> where bitLength is not power of 8', (): void => {
+    expect(
+      () => createTypeUnsafe(registry, 'UInt<20>').toRawType()
+    ).toThrow('UInt<20>: Only support for UInt<bitLength>, where length <= 8192 and a power of 8');
   });
 
   it('allows creation of a [u8; 8]', (): void => {
