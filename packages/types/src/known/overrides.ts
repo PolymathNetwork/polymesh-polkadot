@@ -19,6 +19,9 @@ const TYPES_MODULES: Record<string, OverrideModuleType> = {
     Judgement: 'SocietyJudgement',
     Vote: 'SocietyVote'
   },
+  staking: {
+    Compact: 'CompactAssignments'
+  },
   treasury: {
     Proposal: 'TreasuryProposal'
   }
@@ -83,6 +86,14 @@ const TYPES_KUSAMA_VERSIONED: OverrideVersionedType[] = [
     types: {
       Keys: 'SessionKeys5',
       LookupSource: 'AccountId'
+    }
+  },
+  {
+    minmax: [1046, undefined],
+    types: {
+      // Indices optional, not in transaction
+      Address: 'AccountId',
+      Keys: 'SessionKeys5'
     }
   },
   {

@@ -7,11 +7,10 @@
     "build/**/*",
     "**/build/**/*",    
     "./packages/**/*.spec.ts",
-    "./packages/types/scripts"
+    "./packages/typegen/**/*"    
   ],
   "compilerOptions": {
     "baseUrl": ".",
-    "target": "ES6",
     "paths":
     {
       "@polkadot/api": ["packages/api"],

@@ -3,8 +3,8 @@
 // of the Apache-2.0 license. See the LICENSE file for details.
 /* eslint-disable @typescript-eslint/interface-name-prefix */
 
+import { H256 } from '../interfaces/runtime';
 import { AnyJson, BareOpts } from './helpers';
-import { IHash } from './interfaces';
 import { Registry } from './registry';
 
 import BN from 'bn.js';
@@ -45,7 +45,7 @@ export interface Codec {
   /**
    * @description Returns a hash of the value
    */
-  readonly hash: IHash;
+  readonly hash: H256;
 
   /**
    * @description Checks if the value is an empty value
@@ -66,6 +66,11 @@ export interface Codec {
    * @description Returns a hex string representation of the value. isLe returns a LE (number-only) representation
    */
   toHex (isLe?: boolean): string;
+
+  /**
+   * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
+   */
+  toHuman (isExtended?: boolean): AnyJson;
 
   /**
    * @description Converts the Object to JSON, typically used for RPC transfers

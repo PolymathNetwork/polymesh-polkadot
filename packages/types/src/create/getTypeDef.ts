@@ -2,7 +2,7 @@
 // This software may be modified and distributed under the terms
 // of the Apache-2.0 license. See the LICENSE file for details.
 
-import { TypeDef, TypeDefExtVecFixed, TypeDefInfo } from './types';
+import { TypeDef, TypeDefExtUInt, TypeDefExtVecFixed, TypeDefInfo } from './types';
 
 import { assert } from '@polkadot/util';
 
@@ -67,13 +67,13 @@ function _decodeStruct (value: TypeDef, type: string, _: string): TypeDef {
 // decode a fixed vector, e.g. [u8;32]
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function _decodeFixedVec (value: TypeDef, type: string, _: string): TypeDef {
-  const [vecType, _vecLen] = type.substr(1, type.length - 2).split(';');
+  const [vecType, _vecLen, rawName] = type.substr(1, type.length - 2).split(';');
   const vecLen = parseInt(_vecLen.trim(), 10);
 
   // as a first round, only u8 via u8aFixed, we can add more support
   assert(vecLen <= 256, `${type}: Only support for [Type; <length>], where length <= 256`);
 
-  value.ext = { length: vecLen, type: vecType } as TypeDefExtVecFixed;
+  value.ext = { length: vecLen, rawName, type: vecType } as TypeDefExtVecFixed;
 
   return value;
 }
@@ -88,6 +88,24 @@ function _decodeTuple (value: TypeDef, _: string, subType: string): TypeDef {
     );
 
   return value;
+}
+
+// decode a Int/UInt<bitLength[, name]>
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function _decodeInt (value: TypeDef, type: string, _: string, clazz: 'Int' | 'UInt' = 'Int'): TypeDef {
+  const [strLength, typeName] = type.substr(clazz.length + 1, type.length - clazz.length - 1 - 1).split(',');
+  const length = parseInt(strLength.trim(), 10);
+
+  // as a first round, only u8 via u8aFixed, we can add more support
+  assert(length <= 8192 && (length % 8) === 0, `${type}: Only support for ${clazz}<bitLength>, where length <= 8192 and a power of 8, found ${length}`);
+
+  value.ext = { length, typeName } as TypeDefExtUInt;
+
+  return value;
+}
+
+function _decodeUInt (value: TypeDef, type: string, subType: string): TypeDef {
+  return _decodeInt(value, type, subType, 'UInt');
 }
 
 function hasWrapper (type: string, [start, end]: [string, string, TypeDefInfo, any?]): boolean {
@@ -106,7 +124,9 @@ const nestedExtraction: [string, string, TypeDefInfo, (value: TypeDef, type: str
   ['(', ')', TypeDefInfo.Tuple, _decodeTuple],
   // the inner for these are the same as tuple, multiple values
   ['BTreeMap<', '>', TypeDefInfo.BTreeMap, _decodeTuple],
-  ['Result<', '>', TypeDefInfo.Result, _decodeTuple]
+  ['Int<', '>', TypeDefInfo.Int, _decodeInt],
+  ['Result<', '>', TypeDefInfo.Result, _decodeTuple],
+  ['UInt<', '>', TypeDefInfo.UInt, _decodeUInt]
 ];
 
 const wrappedExtraction: [string, string, TypeDefInfo][] = [

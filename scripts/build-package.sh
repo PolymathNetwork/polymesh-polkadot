@@ -18,4 +18,5 @@ do
     cp -R ./packages-tmp/${module}/src/* ./packages/${module}
     cp ./packages-tmp/${module}/package.json ./packages/${module}/package.json
 done
+rm -rf ./packages/typegen
 ttsc --outDir build
