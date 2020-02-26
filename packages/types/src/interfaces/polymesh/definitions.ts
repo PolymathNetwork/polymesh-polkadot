@@ -1,10 +1,13 @@
 export default { types: {
     "IdentityId":"H256",
     "Ticker": "[u8; 12]",
+    "DocumentName": "Text",
+    "DocumentUri": "Text",
+    "DocumentHash": "Text",
     "Document": {
-        "name": "Vec<u8>",
-        "uri": "Vec<u8>",
-        "hash": "Vec<u8>"
+        "name": "DocumentName",
+        "uri": "DocumentUri",
+        "content_hash": "DocumentHash"
     },
     "AssetType": {
         "_enum": {
@@ -22,8 +25,11 @@ export default { types: {
             "Custom": "Vec<u8>"
         }
     },
+    "TokenName": "Text",
+    "AssetIdentifier": "Text",
+    "FundingRoundName": "Text",
     "SecurityToken": {
-        "name": "Vec<u8>",
+        "name": "TokenName",
         "total_supply": "Balance",
         "owner_did": "IdentityId",
         "divisible": "bool",
@@ -179,7 +185,7 @@ export default { types: {
         "active": "bool",
         "maturates_at": "Option<u64>",
         "expires_at": "Option<u64>",
-        "payout_currency": "Option<Vec<u8>>",
+        "payout_currency": "Option<Ticker>",
         "checkpoint_id": "u64"
     },
     "TargetIdAuthorization": {
@@ -203,10 +209,12 @@ export default { types: {
         "value": "Balance",
         "nonce": "u16"
     },
+    "MotionTitle": "Text",
+    "MotionInfoLink": "Text",
     "Motion": {
-        "title": "Vec<u8>",
-        "info_link": "Vec<u8>",
-        "choices": "Vec<Vec<u8>>"
+        "title": "MotionTitle",
+        "info_link": "MotionInfoLink",
+        "choices": "Vec<MotionTitle>"
     },
     "Ballot": {
         "checkpoint_id": "u64",
@@ -217,7 +225,8 @@ export default { types: {
     "MipsMetadata": {
         "index": "u32",
         "end": "u64",
-        "proposal_hash": "Hash"
+        "proposal_hash": "Hash",
+        "url": "Text"
     },
     "PolymeshVotes": {
         "index": "u32",
@@ -283,9 +292,10 @@ export default { types: {
             "Custom": "Vec<u8>"
         }
     },
+    "SmartExtensionName": "Text",
     "SmartExtension": {
         "extension_type": "SmartExtensionType",
-        "extension_name": "Vec<u8>",
+        "extension_name": "SmartExtensionName",
         "extension_id": "IdentityId",
         "is_archive": "bool"
     },
@@ -310,6 +320,7 @@ export default { types: {
             "ForceValid"
         ]
     },
+    "Memo": "[u8;32]",
     "IssueRecipient": {
         "_enum": {
             "Account": "AccountKey",
@@ -325,6 +336,15 @@ export default { types: {
     "PendingTx": {
         "did": "IdentityId",
         "bridge_tx": "BridgeTx"
+    },
+    "OfflineSlashingParams": {
+        "max_offline_percent": "u32",
+        "constant": "u32",
+        "max_slash_percent": "u32"
+    },
+    "AssetRules": {
+        "is_paused": "bool",
+        "rules": "Vec<AssetRule>"
     }
 }
  }

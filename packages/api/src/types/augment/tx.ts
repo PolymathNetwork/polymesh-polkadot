@@ -606,7 +606,7 @@ declare module '@polkadot/api/types/submittable' {
        * @param origin - Signing key of the token owner
        * @param ticker - Ticker of the token
        */
-      addDocuments: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _documents: Vec<Document> | (Document | { name?: any; uri?: any; hash?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
+      addDocuments: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _documents: Vec<Document> | (Document | { name?: any; uri?: any; content_hash?: any } | string | Uint8Array)[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * Remove documents for a given token. To be called only by the token owner
        *
@@ -620,7 +620,7 @@ declare module '@polkadot/api/types/submittable' {
        * @param origin - Signing key of the token owner
        * @param ticker - Ticker of the token
        */
-      updateDocuments: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _docs: Vec<ITuple<[u64, Document]>> | ([u64 | AnyNumber | Uint8Array, Document | { name?: any; uri?: any; hash?: any } | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
+      updateDocuments: AugmentedSubmittable<(_ticker: Ticker | string | Uint8Array, _docs: Vec<ITuple<[u64, Document]>> | ([u64 | AnyNumber | Uint8Array, Document | { name?: any; uri?: any; content_hash?: any } | string | Uint8Array])[]) => SubmittableExtrinsic<ApiType>>;
       /**
        * ERC-2258 Implementation Used to increase the allowance for a given custodian Any investor/token holder can add a custodian and transfer the token transfer ownership to the custodian Through that investor balance will remain the same but the given token are only transfer by the custodian. This implementation make sure to have an accurate investor count from omnibus wallets
        *
