@@ -3,16 +3,25 @@
 
 import { ITuple } from '@polkadot/types/types';
 import { Enum, Option, Struct, U8aFixed, Vec } from '@polkadot/types/codec';
-import { Bytes, bool, u128, u16, u32, u64, u8 } from '@polkadot/types/primitive';
+import { Bytes, Text, bool, u128, u16, u32, u64, u8 } from '@polkadot/types/primitive';
 import { Balance, Call, H256, H512, Hash, Moment, Signature } from '@polkadot/types/interfaces/runtime';
 
 /** @name AccountKey */
 export interface AccountKey extends U8aFixed {}
 
+/** @name AssetIdentifier */
+export interface AssetIdentifier extends Text {}
+
 /** @name AssetRule */
 export interface AssetRule extends Struct {
   readonly sender_rules: Vec<RuleData>;
   readonly receiver_rules: Vec<RuleData>;
+}
+
+/** @name AssetRules */
+export interface AssetRules extends Struct {
+  readonly is_paused: bool;
+  readonly rules: Vec<AssetRule>;
 }
 
 /** @name AssetType */
@@ -141,19 +150,31 @@ export interface Dividend extends Struct {
   readonly active: bool;
   readonly maturates_at: Option<u64>;
   readonly expires_at: Option<u64>;
-  readonly payout_currency: Option<Bytes>;
+  readonly payout_currency: Option<Ticker>;
   readonly checkpoint_id: u64;
 }
 
 /** @name Document */
 export interface Document extends Struct {
-  readonly name: Bytes;
-  readonly uri: Bytes;
-  readonly hash: Bytes;
+  readonly name: DocumentName;
+  readonly uri: DocumentUri;
+  readonly content_hash: DocumentHash;
 }
+
+/** @name DocumentHash */
+export interface DocumentHash extends Text {}
+
+/** @name DocumentName */
+export interface DocumentName extends Text {}
+
+/** @name DocumentUri */
+export interface DocumentUri extends Text {}
 
 /** @name FeeOf */
 export interface FeeOf extends Balance {}
+
+/** @name FundingRoundName */
+export interface FundingRoundName extends Text {}
 
 /** @name IdentifierType */
 export interface IdentifierType extends Enum {
@@ -221,6 +242,9 @@ export interface LinkedKeyInfo extends Enum {
   readonly asGroup: Vec<IdentityId>;
 }
 
+/** @name Memo */
+export interface Memo extends U8aFixed {}
+
 /** @name MIP */
 export interface MIP extends Struct {
   readonly index: MipsIndex;
@@ -235,6 +259,7 @@ export interface MipsMetadata extends Struct {
   readonly index: u32;
   readonly end: u64;
   readonly proposal_hash: Hash;
+  readonly url: Text;
 }
 
 /** @name MipsPriority */
@@ -245,13 +270,26 @@ export interface MipsPriority extends Enum {
 
 /** @name Motion */
 export interface Motion extends Struct {
-  readonly title: Bytes;
-  readonly info_link: Bytes;
-  readonly choices: Vec<Bytes>;
+  readonly title: MotionTitle;
+  readonly info_link: MotionInfoLink;
+  readonly choices: Vec<MotionTitle>;
 }
+
+/** @name MotionInfoLink */
+export interface MotionInfoLink extends Text {}
+
+/** @name MotionTitle */
+export interface MotionTitle extends Text {}
 
 /** @name OffChainSignature */
 export interface OffChainSignature extends H512 {}
+
+/** @name OfflineSlashingParams */
+export interface OfflineSlashingParams extends Struct {
+  readonly max_offline_percent: u32;
+  readonly constant: u32;
+  readonly max_slash_percent: u32;
+}
 
 /** @name Operators */
 export interface Operators extends Enum {
@@ -325,7 +363,7 @@ export interface RuleData extends Struct {
 
 /** @name SecurityToken */
 export interface SecurityToken extends Struct {
-  readonly name: Bytes;
+  readonly name: TokenName;
   readonly total_supply: Balance;
   readonly owner_did: IdentityId;
   readonly divisible: bool;
@@ -381,10 +419,13 @@ export interface SimpleTokenRecord extends Struct {
 /** @name SmartExtension */
 export interface SmartExtension extends Struct {
   readonly extension_type: SmartExtensionType;
-  readonly extension_name: Bytes;
+  readonly extension_name: SmartExtensionName;
   readonly extension_id: IdentityId;
   readonly is_archive: bool;
 }
+
+/** @name SmartExtensionName */
+export interface SmartExtensionName extends Text {}
 
 /** @name SmartExtensionType */
 export interface SmartExtensionType extends Enum {
@@ -434,3 +475,6 @@ export interface TickerTransferApproval extends Struct {
   readonly next_ticker: Option<Ticker>;
   readonly previous_ticker: Option<Ticker>;
 }
+
+/** @name TokenName */
+export interface TokenName extends Text {}
